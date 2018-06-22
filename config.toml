@@ -1,0 +1,60 @@
+languageCode = "en-us"
+title = "SA Dev"
+baseurl = "https://palikar.github.io/"
+
+
+theme = "hyde-hyde"
+
+## Hugo Built-in Features
+# disqusShortname = "your-disqus-shortname"
+# googleAnalytics = "your-google-analytics-id"
+ enableRobotsTXT = true
+# pygmentsCodeFences = true
+
+## Site Settings
+[params]
+    author = "Stanislav Arnaudov"
+    description = "Develompent, CS, AI and whatever my little heart desires"
+    authorimage = "/img/profile.jpg"
+    dateformat = "Jan 2, 2006"
+    highlightjs = true
+    highlightjsstyle = "github"
+    # please choose either GraphComment or Disqus
+    # GraphCommentId = "your-graph-comment-id" 
+
+## Social Accounts
+[params.social]
+    github = "palikar"
+    linkedin = ""
+    twitter = "palikar22"
+    facebook = "stanislav.ts"
+    email = "stanislav_ts@abv.bg"
+
+
+
+## Main Menu
+[[menu.main]]
+    name = "Home"
+    identifier = "home"
+    weight = 50
+    url = "/"
+[[menu.main]]
+    name = "About"
+    identifier = "about"
+    weight = 100
+    url = "/about/"
+[[menu.main]]
+    name = "Blog Posts"
+    weight = 200
+    identifier = "posts"
+    url = "/posts/"
+[[menu.main]]
+    name = "Projects"
+    identifier = "projects"
+    weight = 400
+    url = "/projects/"
+[[menu.main]]
+    name = "Categories"
+    identifier = "categories"
+    weight = 500
+    url = "/categories/"
