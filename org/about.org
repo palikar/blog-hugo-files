@@ -7,7 +7,7 @@
 #+TITLE: About
 #+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
 #+AUTHOR: Stanislav Arnaudov
-#+DATE: <2018-06-07 Thu>
+#+DATE: <2018-06-15 Thu>
 #+EMAIL: stanislav_ts@abv.bg
 #+CREATOR: Emacs 25.2.2 (Org mode 9.1.13 + ox-hugo)
 #+HUGO_FRONT_MATTER_FORMAT: toml
@@ -24,13 +24,7 @@
 #+KEYWORDS:
 #+HUGO_TAGS:
 #+HUGO_CATEGORIES:
-#+HUGO_WEIGHT: 100
-
-
-
-
-
-
+#+HUGO_WEIGHT: 90
 
 
 * My assigned character

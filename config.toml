@@ -6,10 +6,14 @@ baseurl = "https://palikar.github.io/"
 theme = "hyde-hyde"
 
 ## Hugo Built-in Features
-# disqusShortname = "your-disqus-shortname"
+disqusShortname = "palikar-github-io"
 # googleAnalytics = "your-google-analytics-id"
- enableRobotsTXT = true
-# pygmentsCodeFences = true
+enableRobotsTXT = true
+pygmentsCodeFences = true
+pygmentsuseclasses = false
+pygmentsstyle = ""
+# pgmentsUseClassic = true
+
 
 ## Site Settings
 [params]

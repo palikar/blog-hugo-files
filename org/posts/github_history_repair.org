@@ -7,7 +7,7 @@
 #+TITLE: Github commits' emails change
 #+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
 #+AUTHOR: Stanislav Arnaudov
-#+DATE: <2018-06-07 Thu>
+#+DATE: <2018-06-22 Thu>
 #+EMAIL: stanislav_ts@abv.bg
 #+CREATOR: Emacs 25.2.2 (Org mode 9.1.13 + ox-hugo)
 #+HUGO_FRONT_MATTER_FORMAT: toml
@@ -19,11 +19,11 @@
 #+HUGO_ALLOW_SPACES_IN_TAGS: nil
 #+HUGO_AUTO_SET_LASTMOD: t
 #+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
-#+DESCRIPTION: 
+#+DESCRIPTION: A short description of a solution to a github related problem with the email addresses associated with a commit historys
 #+HUGO_DRAFT: false
-#+KEYWORDS: 
-#+HUGO_TAGS:
-#+HUGO_CATEGORIES: github, git
+#+KEYWORDS: github git commit change history
+#+HUGO_TAGS: 
+#+HUGO_CATEGORIES: github
 #+HUGO_WEIGHT: 100
 
 
@@ -33,7 +33,7 @@ You know that /Contributions/ panel on your [[http://github.com/][Github]] profi
 * My problem with github and some contributions in limbo
 So, yeah, I had the problem myself. I was committing things on a regular basis to github and my repositories but only a very small portion of my commits where showing in the /Contributions/ panel. It took me while to notice that and I was kinda freaked about it as I thought that my 'hard work' will forgotten and the future generations would not be able to see it.
 \\
-A little research(I literally just click on [[https://help.github.com/articles/why-are-my-contributions-not-showing-up-on-my-profile/][Learn how we count contributions]]) about how github actually counts contributions and I found out that the email address of the commits must match the main email of your github account. Some other hints taken from github page about how contributions are counted:
+A little research(I literally just clicked on [[https://help.github.com/articles/why-are-my-contributions-not-showing-up-on-my-profile/][Learn how we count contributions]]) about how github actually counts contributions and I found out that the email address of the commits must match the main email of your github account. Some other hints taken from github page about how contributions are counted:
 #+BEGIN_QUOTE
 Commits will appear on your contributions graph if they meet all of the following conditions:
 
@@ -41,21 +41,21 @@ Commits will appear on your contributions graph if they meet all of the followin
 -The commits were made in a standalone repository, not a fork.
 -The commits were made:
    + In the repository's default branch (usually master)
-   + In the gh-pages branch (for repositories with [[https://help.github.com/articles/user-organization-and-project-pages/#project-pages-sites][Project Pages]] sites)
+   + In the /gh-pages/ branch (for repositories with [[https://help.github.com/articles/user-organization-and-project-pages/#project-pages-sites][Project Pages]] sites)
 #+END_QUOTE
-The thing is, sometimes I cloned one of my repositories, made some work on it and then committed it pushed it on github, the email address for the commit would be set to =arnaud@localhost.localdomain= which is some weird default configuration of debian and absolutely not the address I want to use on github. This commits github to think that commits aren't coming from you.
+The thing is, sometimes I cloned one of my repositories, made some work on it and then committed it pushed it on github, the email address for the commit would be set to =arnaud@localhost.localdomain= which is some weird default configuration of Debian and absolutely not the address I want to use on github. This leads github to think that commits aren't coming from you.
 
 * Proper github configuration
 In order to avoid the problem for the future, you have two options. You can set your name and email address manually for each repository you are working on. Just go in the repository's folder and set the =user.name= and =user.email= fields like:
 #+BEGIN_SRC sh
 git config user.name 'Stanislav Arnaudov'
-git config user.emial 'stanislav_ts@abv.bg'
+git config user.emial 'email_adress@somewhere.org'
 #+END_SRC
-This sets the name and the email on a repository 'local' level. After that each commit will have those name and email address. If you want to set global name and email address for your system and not worry about each individual repo, you would have to edit(create if you don't have the file) your ~/.gitconfig file. Somewhere in there you should have something like
+This sets the name and the email on a repository 'local' level. After that each commit will have those name and email address. If you want to set global name and email address for your system and not worry about each individual repo, you would have to edit(create if you don't have the file) your =~/.gitconfig= file. Somewhere in there you should have something like
 #+BEGIN_SRC sh
 [user]
         name = Stanislav Arnaudov
-        email = stanislav_ts@abv.bg
+        email = email_adress@somewhere.org
 #+END_SRC
 This sets the name and email globally and every commit made on your system will have the proper fields. On git hub, you can see the raw path of a commit with  =https://github.com/<user_name>/<repo>/commict/<commit_id>.patch=. On this page you could inspect the commit and see exactly which email address is associated with it.
 
@@ -68,15 +68,15 @@ grep -r "arnaud@localhost.localdomain" ./.git
 #+END_SRC
 you get all the occurrences of your 'wrong' email in your commits...or everywhere else for that matter. Ok, so if you change those github probably will notice and everything will be OK, right? So, I run /[[https://en.wikipedia.org/wiki/Sed][sed]]/ in conjunction with /find/ like:
 #+BEGIN_SRC sh
-find ./.git/ -type f -exec sed 's/arnaud@scc-wkit-clxa-23-139.scc.kit.edu/stanislav_ts@abv.bg/' -i {} +;
+find ./.git/ -type f -exec sed 's/arnaud@scc-wkit-clxa-23-139.scc.kit.edu/email_adress@somewhere.org/' -i {} +;
 #+END_SRC
-This find every regular file in the /.git/ folder and runs ~sed 's/arnaud@localhost.localdomain/stanislav_ts@abv.bg/' -i~ on it. With the expression in the quotation marks /sed/ replaces everything that matches 'arnaud@localhost.localdomain' with 'stanislav_ts@abv.bg'. The ~-i~ means "inplace" so be careful when running /sed/ like that because you may break something. So I do that and then push onto github...and nothing happens. The thing is ~git push~ the things "in" your repo and kinda is disregarding of changes in =.git=. In some cases, git may refuse to make the push crying "histories don't match"(or something). In those case one would have to call push as
+This find every regular file in the /.git/ folder and runs ~sed 's/arnaud@localhost.localdomain/email_adress@somewhere.org/' -i~ on it. With the expression in the quotation marks /sed/ replaces everything that matches ~arnaud@localhost.localdomain~ with ~email_adress@somewhere.org~. The ~-i~ means "inplace" so be careful when running /sed/ like that because you may break something. So I do that and then push onto github...and nothing happens. The thing is ~git push~ the things "in" your repo and kinda is disregarding of changes in =.git=. In some cases, git may refuse to make the push crying "histories don't match"(or something). In those case one would have to call push as
 #+BEGIN_SRC  sh
 git push --force
 #+END_SRC
 which overwrites 'everything' in the github repo. So I do that and....again, this didn't work. When I expected the commits in the repository on github my profile picture still wasn't there. I am not sure what the reason for that is although I was pretty sure I would change at least /something/ while messing with the /.git/ folder.
 \\
-Here I will stop boring you with my "personal experience" and just give you the solution.
+Here I will stop rambling and boring you with my "personal experience" and just give you the solution.
 ** The right solution
 After some more research I found [[https://help.github.com/articles/changing-author-info/][this help page]] on github. I guess the problem is actually not uncommon. The page describers the whole process of "re-authoring" your commit history. They even provide a script that could be run in a bare repository(one only for pushing and pulling from) that changes everything. Something to not - the provided script must be given old(wrong) and new(right one) email to re-placed. This is done because while preforming the "hack" on a shared repo where not one but a few developers have commits. Of course you don't really want to overwrite the email of someone else.
 \\
@@ -103,31 +103,18 @@ cd ..
 echo "Deleting folder..."
 rm -rf new_repo
 #+END_SRC
-in a =.sh= file, adjust the =<user_name>= and =<user email>= fields with your name and email and run the script like =./file.sh https://github/<user>/<repo>.git=. This will:
+in a =.sh= file, adjust the =<user_name>= and =<user email>= fields with your name and email and run the script like =./file.sh https://github/<user>/<repo>.git= This will:
 1. Clone the repo in new folder with name new_repo
 2. Run a slight modification of github's script
 3. Push the change repo on github(eventually you will be asked to give your username and password)
 4. Deletes the newly created folder.
 At the end everything is as it was but all of the commits in the repo will have the email that was in the script.
 \\
-/Note:/ This will create a file in your home directory with name .git-credentials and it will contain your github username and password. I do this so I can use ~git config --global credential.helper cache~ which removes the necessity of typing your name and pass on every commit.(Yes, I know, I should set up the ssh thing, shut up)
+_Note:_ This will create a file in your home directory with name .git-credentials and it will contain your github username and password. I do this so I can use ~git config --global credential.helper cache~ which removes the necessity of typing your name and pass on every commit.(Yes, I know, I should set up the ssh thing, shut up)
 *Caution:* My script changes the committer's emails and names of _*ALL*_ commits. If you run the script on a repo with several developers. This could potentially and most likely will cause some people to be angry with you...and rightfully so. I mean, you just ruined someone's /Contributions/ panel...how would you like that if done to you.
 \\
 And there you have it. With your newly acquired knowledge you could transform your /Contributions/ panel form this:
 [[./images/panel_bad.png]]
 to this.
 [[./images/pane_good.png]]
-And you know, the ultimate bragging writes are yours!
-
-
-
-
-
-
-
-
-
-
-
-
-
+And you know, the ultimate bragging rights are yours!

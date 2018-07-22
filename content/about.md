@@ -2,10 +2,10 @@
 title = "About"
 author = ["Stanislav Arnaudov"]
 description = "Simple and basic description of who am I and what the hell I'm all about."
-date = 2018-06-07T00:00:00+02:00
-lastmod = 2018-06-19T01:29:11+02:00
+date = 2018-06-15T00:00:00+02:00
+lastmod = 2018-06-22T22:01:34+02:00
 draft = false
-weight = 100
+weight = 90
 +++
 
 ## My assigned character {#my-assigned-character}
@@ -53,11 +53,11 @@ As previously implied the delusion I've chosen to believe in is that I'll do CS 
 ## Technologies {#technologies}
 
 -   git
--   Tensorflow, SciKit-learn, Jupytor
+-   Tensorflow, SciKit-learn, Pandas, Jupytor
 -   Cmake, make, g++, Robot Operating System(ROS), RabbitMQ
 -   JavaFX/Java-Swing, JUnit, Maven
 -   Frontend(AngularJS, VueJS), Backend(NodeJS, Express), Websockets, Karma, Jasmine, SQL
--   LaTeX, Emacs Org-mode, UML
+-   LaTeX, [Emacs Org-mode](https://orgmode.org/), UML
 
 
 ## Current work {#current-work}
