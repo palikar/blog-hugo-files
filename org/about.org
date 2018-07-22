@@ -74,8 +74,8 @@ As previously implied the delusion I've chosen to believe in is that I'll do CS 
 * Current work
 - In the process of writing my Bachelor thesis that has to do with Machine Learning, stochastic probability models(Bayesian Neural Networks and Mixture of Gaussian Process Experts) and data from pollution sensors. One of my supervisors currently working in [[https://www.h-its.org/en/][HITS]] and those guys absolutely blew my mind with their research groups and institute so yeah, of course I am going to namedrop them here.
 - Working as a research assistant(yes, so pretentious) in  [[https://www.fraunhofer.de/en.html][Fraunhofer IOSB]]. I deal mainly with "intelligent systems"
-- At Uni I am currently participating in a Practical Course about drawing curves(with BSplines) in the plane, doing tricks with them(finding parallel curve, crating closed curve, interpolating curve) and extending those to surfaces(tensor product surfaces)
 * Previous work
+- At Uni I took a Practical Course about drawing curves(with BSplines) in the plane, doing tricks with them(finding parallel curve, crating closed curve, interpolating curve) and extending those to surfaces(tensor product surfaces)
 - Practical course in software development - I an five other people developing a Software product(Web App) following the waterfall methodology(it's really better when you are knew to everything)
 - Algorithms Teaching assistant in [[https://www.kit.edu/][KIT]] - teaching basic data structures, algorithms for sorting, graphs and spanning trees, complexity, algorithm analysis and algorithm engineering. Also, again, checking homeworks.
 - Linear Algebra Teaching assistant in [[https://www.kit.edu/][KIT]] - teaching a bunch of people about basic mathematical notation, group theory, rings, bodies, vector spaces and some other things. Also checking homeworks of said people.

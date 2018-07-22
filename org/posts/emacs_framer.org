@@ -19,13 +19,14 @@
 #+HUGO_ALLOW_SPACES_IN_TAGS: nil
 #+HUGO_AUTO_SET_LASTMOD: t
 #+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
-#+DESCRIPTION: A short description of a solution to a github related problem with the email addresses associated with a commit historys
+#+DESCRIPTION: Short walkthrough of a Emacs package for windows resizing that I recently wrote.
 #+HUGO_DRAFT: false
 #+KEYWORDS: github git commit change history
 #+HUGO_TAGS: 
 #+HUGO_CATEGORIES: github
 #+HUGO_WEIGHT: 100
 #+HUGO_CODE_FENCE: t
+
 
 
 * Abstract
