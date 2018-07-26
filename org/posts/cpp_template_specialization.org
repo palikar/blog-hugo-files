@@ -7,7 +7,7 @@
 #+TITLE:C++ Template Specialization
 #+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
 #+AUTHOR: Stanislav Arnaudov
-#+DATE: <2018-07-06 Thu>
+#+DATE: <2018-07-06 Fri>
 #+EMAIL: stanislav_ts@abv.bg
 #+CREATOR: Emacs 25.2.2 (Org mode 9.1.13 + ox-hugo)
 #+HUGO_FRONT_MATTER_FORMAT: toml
@@ -23,7 +23,7 @@
 #+HUGO_DRAFT: false
 #+KEYWORDS: c++ cpp templates programming
 #+HUGO_TAGS: 
-#+HUGO_CATEGORIES: github
+#+HUGO_CATEGORIES: c++
 #+HUGO_WEIGHT: 100
 
 
