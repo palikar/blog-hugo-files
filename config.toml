@@ -12,7 +12,7 @@ enableRobotsTXT = true
 pygmentsCodeFences = true
 pygmentsuseclasses = false
 pygmentsstyle = ""
-# pgmentsUseClassic = true
+
 
 
 ## Site Settings
@@ -23,6 +23,7 @@ pygmentsstyle = ""
     dateformat = "Jan 2, 2006"
     highlightjs = true
     highlightjsstyle = "github"
+    customCSS = ["./static/css/new_custom.css"]
     # please choose either GraphComment or Disqus
     # GraphCommentId = "your-graph-comment-id" 
 

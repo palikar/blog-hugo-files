@@ -1,4 +1,15 @@
 <h1 class="title">{{ .Title }}</h1>
+
+
+<link rel="stylesheet" href="{{ .Site.BaseURL }}css/new_custom.css" type="text/css" media="screen" />
+<!-- 
+     <div class="card">
+     <div class="container">
+     <h4><b>Category:C++</b></h4>
+     <hr/>
+     </div>
+     </div>
+-->
 <ul class="posts">
   {{ range .Data.Pages -}}
   <li>
@@ -10,7 +21,6 @@
       </time>    
       {{end}}
     </span>
-    <hr/>
   </li>
   {{- end }}
 </ul>

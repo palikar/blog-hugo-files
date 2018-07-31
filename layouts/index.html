@@ -4,6 +4,7 @@
 
 {{ define "content" -}}
 <div class="posts">
+  <h4>Those are the posts!</h4>
   {{ range (where .Data.Pages "Type" "!=" "about").GroupBy "Section" }}
   {{ range .Pages }}
   <div class="post">
