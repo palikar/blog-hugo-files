@@ -12,7 +12,7 @@ enableRobotsTXT = true
 pygmentsCodeFences = true
 pygmentsuseclasses = false
 pygmentsstyle = ""
-
+pygmentsUseClassic=false
 
 
 ## Site Settings
@@ -43,21 +43,25 @@ pygmentsstyle = ""
     identifier = "home"
     weight = 50
     url = "/"
+
 [[menu.main]]
     name = "About"
     identifier = "about"
     weight = 100
     url = "/about/"
+
 [[menu.main]]
     name = "Blog Posts"
     weight = 200
     identifier = "posts"
     url = "/posts/"
+
 [[menu.main]]
     name = "Projects"
     identifier = "projects"
     weight = 400
     url = "/projects/"
+
 [[menu.main]]
     name = "Categories"
     identifier = "categories"

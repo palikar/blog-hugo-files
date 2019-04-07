@@ -14,7 +14,7 @@
 #+HUGO_LEVEL_OFFSET: 1
 #+HUGO_PRESERVE_FILLING:
 #+HUGO_SECTION: posts
-#+HUGO_BASE_DIR: ~/code/palikar.github.io
+#+HUGO_BASE_DIR: ~/code/blog-hugo-files/
 #+HUGO_PREFER_HYPHEN_IN_TAGS: t 
 #+HUGO_ALLOW_SPACES_IN_TAGS: nil
 #+HUGO_AUTO_SET_LASTMOD: t
@@ -28,12 +28,12 @@
 
 
 * Abstract
-You know that /Contributions/ panel on your [[http://github.com/][Github]] profile page. Let's face it, developers these day take much pride when they can show their consistent work and progress of their own/forked repositories...even when some of their commits are nothing more than a implementations of a single function. Said panel is clear indication to you, future employee or members of your 'coding community' that you are pretty much a big deal with a good work ethic. Imagine in what of pickle of a situation you would be if for some random reason your commits don't show up there. This post addresses the issue of not having proper /git/ configuration(=~/.gitconfig=) file on your system and commit to github with the wrong email address.
+You know that /Contributions/ panel on your [[http://github.com/][Github]] profile page. Let's face it, developers these day take much pride when they can show their consistent work and progress of their own/forked repositories...even when some of their commits are nothing more than a implementations of a single function. Said panel is clear indication to you, future employee or members of your 'coding community' that you are pretty much a big deal with a good work ethic. Imagine in what of pickle of a situation you would be if for some random reason your commits don't show up there. This post addresses the issue of not having proper /git/ configuration (=~/.gitconfig=) file on your system and commit to Github with the wrong email address.
 
 * My problem with github and some contributions in limbo
-So, yeah, I had the problem myself. I was committing things on a regular basis to github and my repositories but only a very small portion of my commits where showing in the /Contributions/ panel. It took me while to notice that and I was kinda freaked about it as I thought that my 'hard work' will forgotten and the future generations would not be able to see it.
+So, yeah, I had the problem myself. I was committing things on a regular basis to Github and my repositories but only a very small portion of my commits where showing in the /Contributions/ panel. It took me while to notice that and I was kinda freaked about it as I thought that my 'hard work' will forgotten and the future generations would not be able to see it.
 \\
-A little research(I literally just clicked on [[https://help.github.com/articles/why-are-my-contributions-not-showing-up-on-my-profile/][Learn how we count contributions]]) about how github actually counts contributions and I found out that the email address of the commits must match the main email of your github account. Some other hints taken from github page about how contributions are counted:
+A little research(I literally just clicked on [[https://help.github.com/articles/why-are-my-contributions-not-showing-up-on-my-profile/][Learn how we count contributions]]) about how github actually counts contributions and I found out that the email address of the commits must match the main email of your Github account. Some other hints taken from Github page about how contributions are counted:
 #+BEGIN_QUOTE
 Commits will appear on your contributions graph if they meet all of the following conditions:
 
@@ -43,7 +43,7 @@ Commits will appear on your contributions graph if they meet all of the followin
    + In the repository's default branch (usually master)
    + In the /gh-pages/ branch (for repositories with [[https://help.github.com/articles/user-organization-and-project-pages/#project-pages-sites][Project Pages]] sites)
 #+END_QUOTE
-The thing is, sometimes I cloned one of my repositories, made some work on it and then committed it pushed it on github, the email address for the commit would be set to =arnaud@localhost.localdomain= which is some weird default configuration of Debian and absolutely not the address I want to use on github. This leads github to think that commits aren't coming from you.
+The thing is, sometimes I cloned one of my repositories, made some work on it and then committed it pushed it on Github, the email address for the commit would be set to =arnaud@localhost.localdomain= which is some weird default configuration of Debian and absolutely not the address I want to use on Github. This makes it think that the commits aren't coming from me.
 
 * Proper github configuration
 In order to avoid the problem for the future, you have two options. You can set your name and email address manually for each repository you are working on. Just go in the repository's folder and set the =user.name= and =user.email= fields like:
@@ -66,15 +66,15 @@ First, some of my experiments and findings. The thing about git repos - everythi
 #+BEGIN_SRC sh
 grep -r "arnaud@localhost.localdomain" ./.git
 #+END_SRC
-you get all the occurrences of your 'wrong' email in your commits...or everywhere else for that matter. Ok, so if you change those github probably will notice and everything will be OK, right? So, I run /[[https://en.wikipedia.org/wiki/Sed][sed]]/ in conjunction with /find/ like:
+you get all the occurrences of your 'wrong' email in your commits...or everywhere else for that matter. OK, so if you change those github probably will notice and everything will be OK, right? So, I run /[[https://en.wikipedia.org/wiki/Sed][sed]]/ in conjunction with /find/ like:
 #+BEGIN_SRC sh
 find ./.git/ -type f -exec sed 's/arnaud@scc-wkit-clxa-23-139.scc.kit.edu/email_adress@somewhere.org/' -i {} +;
 #+END_SRC
-This find every regular file in the /.git/ folder and runs ~sed 's/arnaud@localhost.localdomain/email_adress@somewhere.org/' -i~ on it. With the expression in the quotation marks /sed/ replaces everything that matches ~arnaud@localhost.localdomain~ with ~email_adress@somewhere.org~. The ~-i~ means "inplace" so be careful when running /sed/ like that because you may break something. So I do that and then push onto github...and nothing happens. The thing is ~git push~ the things "in" your repo and kinda is disregarding of changes in =.git=. In some cases, git may refuse to make the push crying "histories don't match"(or something). In those case one would have to call push as
+This find every regular file in the /.git/ folder and runs ~sed 's/arnaud@localhost.localdomain/email_adress@somewhere.org/' -i~ on it. With the expression in the quotation marks /sed/ replaces everything that matches ~arnaud@localhost.localdomain~ with ~email_adress@somewhere.org~. The ~-i~ means "inplace" so be careful when running /sed/ like that because you may break something. So I do that and then push onto Github, And nothing happened. The thing is ~git push~ the things "in" your repository and kinda is disregarding of changes in =.git=. In some cases, git may refuse to make the push, crying about "histories don't match" (or something). In those case one would have to call push as
 #+BEGIN_SRC  sh
 git push --force
 #+END_SRC
-which overwrites 'everything' in the github repo. So I do that and....again, this didn't work. When I expected the commits in the repository on github my profile picture still wasn't there. I am not sure what the reason for that is although I was pretty sure I would change at least /something/ while messing with the /.git/ folder.
+which overwrites 'everything' in the Github repository. So I do that and....again, this didn't work. When I expected the commits in the repository on Github my profile picture still wasn't there. I am not sure what the reason for that is although I was pretty sure I would change at least /something/ while messing with the /.git/ folder.
 \\
 Here I will stop rambling and boring you with my "personal experience" and just give you the solution.
 ** The right solution
@@ -105,8 +105,8 @@ rm -rf new_repo
 #+END_SRC
 in a =.sh= file, adjust the =<user_name>= and =<user email>= fields with your name and email and run the script like =./file.sh https://github/<user>/<repo>.git= This will:
 1. Clone the repo in new folder with name new_repo
-2. Run a slight modification of github's script
-3. Push the change repo on github(eventually you will be asked to give your username and password)
+2. Run a slight modification of Github's script
+3. Push the change repo on Github (eventually you will be asked to give your username and password)
 4. Deletes the newly created folder.
 At the end everything is as it was but all of the commits in the repo will have the email that was in the script.
 \\

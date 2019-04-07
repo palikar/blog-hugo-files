@@ -4,7 +4,7 @@ author = ["Stanislav Arnaudov"]
 description = "A short description of a solution to a github related problem with the email addresses associated with a commit historys"
 date = 2018-06-22T00:00:00+02:00
 keywords = ["github", "git", "commit", "change", "history"]
-lastmod = 2018-07-22T16:38:20+02:00
+lastmod = 2019-04-07T00:54:15+02:00
 categories = ["github"]
 draft = false
 weight = 100
@@ -12,12 +12,12 @@ weight = 100
 
 ## Abstract {#abstract}
 
-You know that _Contributions_ panel on your [Github](http://github.com/) profile page. Let's face it, developers these day take much pride when they can show their consistent work and progress of their own/forked repositories...even when some of their commits are nothing more than a implementations of a single function. Said panel is clear indication to you, future employee or members of your 'coding community' that you are pretty much a big deal with a good work ethic. Imagine in what of pickle of a situation you would be if for some random reason your commits don't show up there. This post addresses the issue of not having proper _git_ configuration(`~/.gitconfig`) file on your system and commit to github with the wrong email address.
+You know that _Contributions_ panel on your [Github](http://github.com/) profile page. Let's face it, developers these day take much pride when they can show their consistent work and progress of their own/forked repositories...even when some of their commits are nothing more than a implementations of a single function. Said panel is clear indication to you, future employee or members of your 'coding community' that you are pretty much a big deal with a good work ethic. Imagine in what of pickle of a situation you would be if for some random reason your commits don't show up there. This post addresses the issue of not having proper _git_ configuration(`~/.gitconfig`) file on your system and commit to Github with the wrong email address.
 
 
 ## My problem with github and some contributions in limbo {#my-problem-with-github-and-some-contributions-in-limbo}
 
-So, yeah, I had the problem myself. I was committing things on a regular basis to github and my repositories but only a very small portion of my commits where showing in the _Contributions_ panel. It took me while to notice that and I was kinda freaked about it as I thought that my 'hard work' will forgotten and the future generations would not be able to see it. <br /> A little research(I literally just clicked on [Learn how we count contributions](https://help.github.com/articles/why-are-my-contributions-not-showing-up-on-my-profile/)) about how github actually counts contributions and I found out that the email address of the commits must match the main email of your github account. Some other hints taken from github page about how contributions are counted:
+So, yeah, I had the problem myself. I was committing things on a regular basis to Github and my repositories but only a very small portion of my commits where showing in the _Contributions_ panel. It took me while to notice that and I was kinda freaked about it as I thought that my 'hard work' will forgotten and the future generations would not be able to see it. <br /> A little research(I literally just clicked on [Learn how we count contributions](https://help.github.com/articles/why-are-my-contributions-not-showing-up-on-my-profile/)) about how github actually counts contributions and I found out that the email address of the commits must match the main email of your Github account. Some other hints taken from Github page about how contributions are counted:
 
 > Commits will appear on your contributions graph if they meet all of the following conditions:
 >
@@ -57,19 +57,19 @@ But of course, so far we've only prevented the problem of occurring in the futur
 grep -r "arnaud@localhost.localdomain" ./.git
 ```
 
-you get all the occurrences of your 'wrong' email in your commits...or everywhere else for that matter. Ok, so if you change those github probably will notice and everything will be OK, right? So, I run _[sed](https://en.wikipedia.org/wiki/Sed)_ in conjunction with _find_ like:
+you get all the occurrences of your 'wrong' email in your commits...or everywhere else for that matter. OK, so if you change those github probably will notice and everything will be OK, right? So, I run _[sed](https://en.wikipedia.org/wiki/Sed)_ in conjunction with _find_ like:
 
 ```sh
 find ./.git/ -type f -exec sed 's/arnaud@scc-wkit-clxa-23-139.scc.kit.edu/email_adress@somewhere.org/' -i {} +;
 ```
 
-This find every regular file in the _.git_ folder and runs `sed 's/arnaud@localhost.localdomain/email_adress@somewhere.org/' -i` on it. With the expression in the quotation marks _sed_ replaces everything that matches `arnaud@localhost.localdomain` with `email_adress@somewhere.org`. The `-i` means "inplace" so be careful when running _sed_ like that because you may break something. So I do that and then push onto github...and nothing happens. The thing is `git push` the things "in" your repo and kinda is disregarding of changes in `.git`. In some cases, git may refuse to make the push crying "histories don't match"(or something). In those case one would have to call push as
+This find every regular file in the _.git_ folder and runs `sed 's/arnaud@localhost.localdomain/email_adress@somewhere.org/' -i` on it. With the expression in the quotation marks _sed_ replaces everything that matches `arnaud@localhost.localdomain` with `email_adress@somewhere.org`. The `-i` means "inplace" so be careful when running _sed_ like that because you may break something. So I do that and then push onto Github, And nothing happened. The thing is `git push` the things "in" your repository and kinda is disregarding of changes in `.git`. In some cases, git may refuse to make the push, crying about "histories don't match" (or something). In those case one would have to call push as
 
 ```sh
 git push --force
 ```
 
-which overwrites 'everything' in the github repo. So I do that and....again, this didn't work. When I expected the commits in the repository on github my profile picture still wasn't there. I am not sure what the reason for that is although I was pretty sure I would change at least _something_ while messing with the _.git_ folder. <br /> Here I will stop rambling and boring you with my "personal experience" and just give you the solution.
+which overwrites 'everything' in the Github repository. So I do that and....again, this didn't work. When I expected the commits in the repository on Github my profile picture still wasn't there. I am not sure what the reason for that is although I was pretty sure I would change at least _something_ while messing with the _.git_ folder. <br /> Here I will stop rambling and boring you with my "personal experience" and just give you the solution.
 
 
 ### The right solution {#the-right-solution}
@@ -102,8 +102,8 @@ rm -rf new_repo
 in a `.sh` file, adjust the `<user_name>` and `<user email>` fields with your name and email and run the script like `./file.sh https://github/<user>/<repo>.git` This will:
 
 1.  Clone the repo in new folder with name new\_repo
-2.  Run a slight modification of github's script
-3.  Push the change repo on github(eventually you will be asked to give your username and password)
+2.  Run a slight modification of Github's script
+3.  Push the change repo on Github (eventually you will be asked to give your username and password)
 4.  Deletes the newly created folder.
 
 At the end everything is as it was but all of the commits in the repo will have the email that was in the script. <br /> <span class="underline">Note:</span> This will create a file in your home directory with name .git-credentials and it will contain your github username and password. I do this so I can use `git config --global credential.helper cache` which removes the necessity of typing your name and pass on every commit.(Yes, I know, I should set up the ssh thing, shut up) **Caution:** My script changes the committer's emails and names of <span class="underline">**ALL**</span> commits. If you run the script on a repo with several developers. This could potentially and most likely will cause some people to be angry with you...and rightfully so. I mean, you just ruined someone's _Contributions_ panel...how would you like that if done to you. <br /> And there you have it. With your newly acquired knowledge you could transform your _Contributions_ panel form this: ![](/ox-hugo/panel_bad.png) to this. ![](/ox-hugo/pane_good.png) And you know, the ultimate bragging rights are yours!

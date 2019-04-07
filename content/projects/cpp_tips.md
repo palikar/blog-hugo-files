@@ -4,7 +4,7 @@ author = ["Stanislav Arnaudov"]
 description = "Several tips that I've explained to myself after I read Effective Modern C++"
 date = 2018-07-27T00:00:00+02:00
 keywords = ["c++", "programming", "code", "type-deduction", "rvalue", "lvalue", "template"]
-lastmod = 2018-08-01T01:02:51+02:00
+lastmod = 2019-04-07T00:45:21+02:00
 categories = ["c++"]
 draft = false
 weight = 100
@@ -12,18 +12,14 @@ weight = 100
 
 ## Abstract {#abstract}
 
-C++ is hard! C++ is even harder when you want to write good code. There are a lot of things to think about when your write C++ code and if you don't think about them, you are probable going to mess things up. Recently I found that one good book (see references) that gives 42(hehe!) concrete tips on how to be a better c++ programmer. This is my summery of sorts about the contents of said book.
-
-
-## Contents {#contents}
+C++ is hard! C++ is even harder when you want to write a good code. There are a lot of things to think about when your write code and if you don't think about them, you are probable going to mess things up. Recently I've found that one good book (see references) that gives 42 (hehe!) concrete tips on how to be a better c++ programmer. This is my summary of sorts about the contents of said book.
 
 <div class="ox-hugo-toc toc">
 <div></div>
 
-## Table of Contents
+<div class="heading">Table of Contents</div>
 
 - [Abstract](#abstract)
-- [Contents](#contents)
 - [The cool new things](#the-cool-new-things)
     - [Rvalue, lvalue and move semantics](#rvalue-lvalue-and-move-semantics)
     - [Auto](#auto)
@@ -31,38 +27,26 @@ C++ is hard! C++ is even harder when you want to write good code. There are a lo
     - [Some random abbreviations](#some-random-abbreviations)
 - [Tips](#tips)
     - [Knowing your template type deduction is a bless.](#knowing-your-template-type-deduction-is-a-bless-dot)
-        - [**ParamType** is a reference or a pointer](#paramtype-is-a-reference-or-a-pointer)
-        - [**ParamType** is a Universal Reference](#paramtype-is-a-universal-reference)
-        - [**ParamType** is neither a reference nor a pointer](#paramtype-is-neither-a-reference-nor-a-pointer)
-        - [Bonus](#bonus)
-    - [`auto` type deduction is also something to thinks about](#auto-type-deduction-is-also-something-to-thinks-about)
-    - [`decltype` is cool little thing](#decltype-is-cool-little-thing)
-    - [Prefer `auto` to explicit type declarations](#prefer-auto-to-explicit-type-declarations)
-        - [General advantages of `auto`](#general-advantages-of-auto)
-        - [Explicitly typed initializer idiom](#explicitly-typed-initializer-idiom)
-    - [`nullptr` is a pointer to nothing, `0` and `NULL` are not that](#nullptr-is-a-pointer-to-nothing-0-and-null-are-not-that)
-    - [Alias declarations are better than `typedef`](#alias-declarations-are-better-than-typedef)
-        - [What even I am talking about](#what-even-i-am-talking-about)
-        - [Advantages of `using`](#advantages-of-using)
-        - [Type transformations that come in handy](#type-transformations-that-come-in-handy)
-    - [Deleted functions are to be used - `= deleted` - instead of private ones](#deleted-functions-are-to-be-used-deleted-instead-of-private-ones)
-    - [Use `override`](#use-override)
-        - [Virtual functions](#virtual-functions)
-        - [Overloading on rvalue and lvalue](#overloading-on-rvalue-and-lvalue)
-    - [Think when you need `const_iterator` and when `iterator`](#think-when-you-need-const-iterator-and-when-iterator)
-        - [Const iterators](#const-iterators)
-        - [Want generic code, use std::begin(), std::end(),... etc](#want-generic-code-use-std-begin-std-end-dot-dot-dot-etc)
-    - [`noexcept` is good and it is to be used carefully](#noexcept-is-good-and-it-is-to-be-used-carefully)
-    - [`constexpr` is the new hot thing!](#constexpr-is-the-new-hot-thing)
-    - [The `mutable` keyword exists and you should know about it!](#the-mutable-keyword-exists-and-you-should-know-about-it)
-    - [`std::unique_ptr` is for exclusive ownership!](#std-unique-ptr-is-for-exclusive-ownership)
-    - [`std::shared_ptr` is for... shared ownership!](#std-shared-ptr-is-for-dot-dot-dot-shared-ownership)
+    - [auto type deduction is also something to thinks about](#auto-type-deduction-is-also-something-to-thinks-about)
+    - [decltype is cool little thing](#decltype-is-cool-little-thing)
+    - [Prefer auto to explicit type declarations](#prefer-auto-to-explicit-type-declarations)
+    - [nullptr is a pointer to nothing, 0 and NULL are not that](#nullptr-is-a-pointer-to-nothing-0-and-null-are-not-that)
+    - [Alias declarations are better than typedef](#alias-declarations-are-better-than-typedef)
+    - [Deleted functions are to be used instead of private ones](#deleted-functions-are-to-be-used-instead-of-private-ones)
+    - [Use override](#use-override)
+    - [Think when you need const\_iterator and when iterator](#think-when-you-need-const-iterator-and-when-iterator)
+    - [noexcept is good and it is to be used carefully](#noexcept-is-good-and-it-is-to-be-used-carefully)
+    - [constexpr is the new hot thing!](#constexpr-is-the-new-hot-thing)
+    - [The mutable keyword exists and you should know about it!](#the-mutable-keyword-exists-and-you-should-know-about-it)
+    - [std::unique\_ptr is for exclusive ownership!](#std-unique-ptr-is-for-exclusive-ownership)
+    - [std::shared\_ptr is for... shared ownership!](#std-shared-ptr-is-for-dot-dot-dot-shared-ownership)
     - [Pimpl and the proper way to use it.](#pimpl-and-the-proper-way-to-use-it-dot)
-    - [`std::forward` and `std::move` are quite interesting.](#std-forward-and-std-move-are-quite-interesting-dot)
+    - [std::forward and std::move are quite interesting.](#std-forward-and-std-move-are-quite-interesting-dot)
     - [Universal references and rvalue references](#universal-references-and-rvalue-references)
-    - [_Pass by value_ is not what your first C++ book would have you believe+](#pass-by-value-is-not-what-your-first-c-book-would-have-you-believe)
+    - [_Pass by value_ is not what your first C++ book would have you believe](#pass-by-value-is-not-what-your-first-c-book-would-have-you-believe)
     - [Return value optimization(RVO) - don't return std:::move of local variable](#return-value-optimization--rvo--don-t-return-std-move-of-local-variable)
-    - [`std::async` is something that exists and it's generally to be preferred over `std::thread`.](#std-async-is-something-that-exists-and-it-s-generally-to-be-preferred-over-std-thread-dot)
+    - [std::async is something that exists and it's generally to be preferred over std::thread.](#std-async-is-something-that-exists-and-it-s-generally-to-be-preferred-over-std-thread-dot)
+- [Conclusion](#conclusion)
 - [References](#references)
 
 </div>
@@ -74,14 +58,14 @@ C++ is hard! C++ is even harder when you want to write good code. There are a lo
 
 ### Rvalue, lvalue and move semantics {#rvalue-lvalue-and-move-semantics}
 
-<a id="org0d5c157"></a> "Move semantics" is a thing that we have in C++ now. It make a ton of sense once you get it but it may be a little hard to get by in the beginning. First off - why do we need move semantics? For code efficiency! If you now what you are doing, your code could run faster, with fewer object copies and fewer object created. Second, and perhaps more importantly, what are move semantics? The way I like to put it - the ability to distinguish between object that won't be needed after the evaluation of a expression and the possibility to do different thing if you are dealing with such object.<br /> Take a look at the following code:
+<a id="orgacb9fa7"></a> "Move semantics" is a thing that we have in C++ now (since C++11 actually). It makes a ton of sense once you get it but it may be a little hard to wrap your head around it. At lest in the beginning, of course. First off - why do we need move semantics? For code efficiency! If you now what you are doing, your code can run faster, with fewer object copies and fewer objects created. Second, and perhaps more importantly, what are move semantics? The way I like to think about it - the ability to distinguish between object that won't be needed after the evaluation of an expression and the ability to do a different thing, if you are dealing with such object.<br /> Take a look at the following code:
 
 ```c++
 MyObject obj1, obj2;
 MyObject new_obj = obj1 + obj2;
 ```
 
-Lets say that the part `obj1 + obj2` creates a new object. This new object then gets copied through the copy assignment operator of the class `MyObject`. This creates another object that is stored in the `new_object` variable. All in all, two object were created in this situation. The object that was originally created by `obj1 + obj2` is..well, gone. We just copied it and threw it away. Shame on us! Wouldn't it have been nice if we just used that object and just "moved" it in `new_obj`. Yes, yes it would! And yes, it is possible. Through move semantics. Those kind of object that won't continue to live after the expression evaluation are called **rvalue** object. All other objects are **lvalue**. In the class `MyObject` we can define a special kind of constructor(move constructor) that "creates" object from rvalues, i. e. "moves" the data from the given object in **\*this**. So,
+Lets say that the part `obj1 + obj2` creates a new object. This new object then gets copied through the copy assignment operator of the class `MyObject`. This creates another object that is stored in the `new_object` variable. All in all, two object were created in this situation. The object that was originally created by `obj1 + obj2` is... well, gone. We just copied it and threw it away. Shame on us! Wouldn't it have been nice, if we could have just used that object and just "moved" it in `new_obj`. Yes, yes it would! And yes, it is possible. Through move semantics. Those kind of object that won't continue to live after the expression evaluation are called **rvalue** object. All other objects are **lvalue**. In the class `MyObject` we can define a special kind of constructor (move constructor) that "creates" object from rvalues, i. e. "moves" the data from the given object in **\*this**. So,
 
 -   Lvalue - an object that can be used on left hand side of an expression; an object with identifiable address;
 -   Rvalue - an object that won't persist after the evaluation of a given expression; no identifiable address
@@ -95,20 +79,20 @@ Type deduction for variables. Almost the same rules as the template arguments ty
 
 ```c++
 std::unordered_map<std::string, std::string> map;
-for(auto it : map){... } //just look how simple that is!!!
+for(auto it : map){...} //just look how simple that is!!!
 ```
 
 
 ### Smart pointers {#smart-pointers}
 
-<a id="org48dd419"></a> For the last year I only hear how the C++ gurus scream how raw pointers are dangerous and will probably cause memory leaks when used so...smart pointers! For the price of a tiny bit of overhead, you will make harder(but not impossible!) for yourself to do something stupid with your code. Your new two best friends `shared_ptr<>` and `unique_ptrt<>`:
+<a id="org5a1d292"></a> For an year now, I only hear how the C++ gurus scream how raw pointers are dangerous and will probably cause memory leaks when used so... smart pointers! For the price of a tiny bit of overhead, you will make harder (but not impossible!) for yourself to do something stupid with your code. Your new two best friends are `shared_ptr<>` and `unique_ptrt<>`:
 
 ```c++
 std::shared_ptr<int> int_ptr = std::maked_shared<int>(2);
 std::unique_ptr<float> float_ptr = std::make_unique<float>(3.3);
 ```
 
-When it comes to `unique_ptr` it's important to know how does one transfer the ownership of an object.
+When it comes to `unique_ptr`, it's important to know how does one transfer the ownership of an object.
 
 ```c++
 void take_ownership(std::unique_ptr<float> ptr)
@@ -119,7 +103,7 @@ std::unique_ptr<int[]> int_arr_ptr = std::make_unique<int[]>(10);
 take_ownership(std::move(int_arr_ptr));
 ```
 
-`shared_ptr` on the other hand can share their ownership. Again, it's good to know how is this done because you could messed it up.x
+`shared_ptr`, on the other hand, can share their ownership. Again, it's good to know how is this done because you can messed it up.
 
 ```c++
 class PtrHolder {
@@ -139,12 +123,12 @@ int main(int argc, char *argv[])
 }
 ```
 
-**Important:** <span class="underline">Do not</span> return or take smart pointers by reference! <br /> Creating factory methods is also relatively straightforward. Just return them by value! There is however one things to remember about `unique_ptr` - if the return type does not match the thing you are returning, you ought to use `std::move`. This holds true even if the return of the function type is a base class and you are returning derived class(explained [here](https://stackoverflow.com/questions/39478956/how-does-returning-stdmake-uniquesubclass-work/39479117)).
+**Important:** <span class="underline">Do not</span> return or take smart pointers by reference! <br /> Creating factory methods is also relatively straightforward. Just return them by value! There is however one things to remember about `unique_ptr` - if the return type does not match the thing you are returning, you ought to use `std::move`. This holds true even, if the return of the function type is a base class and you are returning derived class (explained [here](https://stackoverflow.com/questions/39478956/how-does-returning-stdmake-uniquesubclass-work/39479117)).
 
 
 ### Some random abbreviations {#some-random-abbreviations}
 
-It is well knows fact that C++ programmers love their abbreviations. And you know what, it actually makes a lot sense to know those. The abbreviations in the C++ world reveal some really cool, use-full and right out elegant concepts that everyone should know about. Also, just to be prepared, C++ programmers are also really bad at naming things.
+It is well knows fact that C++ programmers love their abbreviations. And you know what, it actually makes a lot sense to know those. The abbreviations in the C++ world reveal some really cool, useful and right out elegant concepts that everyone should know about. Also, just to be prepared, C++ programmers are also really bad at naming things.
 
 | Abbreviations | Expansion                              |
 |---------------|----------------------------------------|
@@ -161,7 +145,7 @@ It is well knows fact that C++ programmers love their abbreviations. And you kno
 
 ### Knowing your template type deduction is a bless. {#knowing-your-template-type-deduction-is-a-bless-dot}
 
-So every c++ programmer knows how you can define generic templetize functions and then you can call them with different types of arguments. The calling itself will cause the compiler to instantiate the function by replacing the generic type with the deduced type. The thing you should know in this process - how the type is being deduced when it's not given explicitly (the function is called without the <>-brackets). <br /> So, based on **T**, **ParamType** and **expr** you have to know what type would be deduced in
+So every C++ programmer knows how you can define generic "templetized" functions and then you can call them with different types of arguments. The calling itself will cause the compiler to instantiate the function by replacing the generic type with the deduced type. The thing you should know in this process - how the type is being deduced when it's not given explicitly (i. e.the function is called without the <>-brackets). <br /> So, based on `T`, `ParamType` and `expr` you have to know what type would be deduced in
 
 ```c++
 template<T>
@@ -173,14 +157,14 @@ f(expr);
 Several cases to look at:
 
 
-#### **ParamType** is a reference or a pointer {#paramtype-is-a-reference-or-a-pointer}
+#### ParamType is a reference or a pointer {#paramtype-is-a-reference-or-a-pointer}
 
 ```c++
 template<T>
 void f(T& arg);
 ```
 
-In this case, if **expr** is a reference type, the reference part is ignored and the rest of the type is taken verbatim.
+In this case, if `expr` is a reference type, the reference part is ignored and the rest of the type is taken verbatim.
 
 ```c++
 int x = 42;
@@ -194,7 +178,7 @@ f(cx); // T is const int
 f(rx); // T is again const int
 ```
 
-_Note:_ This means that depending on how **f** is called, this may not compile
+_Note:_ This means that depending on how `f` is called, this may not compile
 
 ```c++
 template<T>
@@ -206,7 +190,7 @@ T f(T& arg)
 }
 ```
 
-<br /> If we now change the definition of **f** to
+<br /> If we now change the definition of `f` to
 
 ```c++
 template<T>
@@ -216,7 +200,7 @@ void f(const T& arg);
 the things to be "ignored" during the deduction of T are the _reference_ part <span class="underline">and</span> the _const_ part. This means that in the above examples, T will be deduced to _int_ every time.
 
 
-#### **ParamType** is a Universal Reference {#paramtype-is-a-universal-reference}
+#### ParamType is a Universal Reference {#paramtype-is-a-universal-reference}
 
 Here we are getting a little bit fancier with come cool c++11 features. We define **f** like:
 
@@ -244,7 +228,7 @@ f(27); // T is int
 ```
 
 
-#### **ParamType** is neither a reference nor a pointer {#paramtype-is-neither-a-reference-nor-a-pointer}
+#### ParamType is neither a reference, nor a pointer {#paramtype-is-neither-a-reference-nor-a-pointer}
 
 This is just pass by value.
 
@@ -258,7 +242,7 @@ By instantiation we ignore everything except the "pure type" (i.e. _reference_, 
 
 #### Bonus {#bonus}
 
-Array arguments decay to pointers so when passing arrays to template function the **T** will be deduced with the rules for pointers.<br /> One can however define e reference to an array so, with this "trick" you can force your **T** to be deduced to array type.
+Array arguments decay to pointers so when passing arrays to template function the `T` will be deduced with the rules for pointers.<br /> One can, however, define e reference to an array so, with this "trick" you can force your `T` to be deduced to array type.
 
 ```c++
 template<T>
@@ -269,7 +253,7 @@ f(arr) // T is int[13]
        // and ParamType is int(&)[13]
 ```
 
-"int(&)[13]" is a reference type to an array with 13 elements.....myeah! With such references to arrays you can write this extraordinary function that will deduce the number of elements in an array at compile time
+"int(&)[13]" is a reference type to an array with 13 elements... myeah! With such references to arrays you can write this extraordinary function that will deduce the number of elements in an array at compile time
 
 ```c++
 template<typename T, std::size_t N>
@@ -279,10 +263,10 @@ constexpr std::size_t arraySize(T (&)[N]) noexcept
 }
 ```
 
-And....with that knowledge, you can now punish people who claim they "know C++"...ugh, plebs!
+And... with that knowledge, you can now punish people who claim they "know C++"...ugh, plebs!
 
 
-### `auto` type deduction is also something to thinks about {#auto-type-deduction-is-also-something-to-thinks-about}
+### auto type deduction is also something to thinks about {#auto-type-deduction-is-also-something-to-thinks-about}
 
 The deduction of auto while used as "type" of a local variable behaves almost exactly as deduction of template types. This means you already know the most of the rules.
 
@@ -330,7 +314,7 @@ auto x{12, "random string"};
 If you try using bracketed expression with templated function on the other side, it just won't compile even if the objects in the brackets are all of the same type. Template type deduction just cannot handle bracketed expressions.
 
 
-### `decltype` is cool little thing {#decltype-is-cool-little-thing}
+### decltype is cool little thing {#decltype-is-cool-little-thing}
 
 At its core `decltype` has a simple concept. It takes a single argument and it "returns" its type. The quotation marks are there because the thing returned thing can be used further as a part of the code. For example, you can declare new variable with given deduced from `decltype` type. This is possible:
 
@@ -364,7 +348,7 @@ decltype(auto) doSomethingAndAcess(Container& c, Index i)
 This way the type of the return statement will be used as a return type and it will be done in a `decltype`-y kind of way.
 
 
-### Prefer `auto` to explicit type declarations {#prefer-auto-to-explicit-type-declarations}
+### Prefer auto to explicit type declarations {#prefer-auto-to-explicit-type-declarations}
 
 
 #### General advantages of `auto` {#general-advantages-of-auto}
@@ -433,7 +417,7 @@ auto ep = static_cast<float>(calcEpsilon()); // explicitly reducing double to fl
 ```
 
 
-### `nullptr` is a pointer to nothing, `0` and `NULL` are not that {#nullptr-is-a-pointer-to-nothing-0-and-null-are-not-that}
+### nullptr is a pointer to nothing, 0 and NULL are not that {#nullptr-is-a-pointer-to-nothing-0-and-null-are-not-that}
 
 `O` and `NULL` sound so logical but they are not what you probably think they are. `0` is a an _int_. If the compiler sees `0` in the context of pointer it will be interpreted as the null-pointer. There are, however, many situations where the context is not that clear. In those case, `0` will be treated as a simple int. <br /> The same story with `NULL`. Depending on the implementation it is usually some integral type and it will be treated as number in situations where you don't expect it to behave like this. <br /> All problems can be solved, if you just forget about the existence of `NULL` and `0` and start using `nullptr`. `nullptr` is designed to be a pointer to nothing and pointer is the only way it can be interpreted. The following snippet demonstrates everything:
 
@@ -468,7 +452,7 @@ lockAndCall(f1,f1m, nullptr); // finex
 ```
 
 
-### Alias declarations are better than `typedef` {#alias-declarations-are-better-than-typedef}
+### Alias declarations are better than typedef {#alias-declarations-are-better-than-typedef}
 
 
 #### What even I am talking about {#what-even-i-am-talking-about}
@@ -543,7 +527,7 @@ std::add_lvalue_reference_t<T>;
 ```
 
 
-### Deleted functions are to be used - `= deleted` - instead of private ones {#deleted-functions-are-to-be-used-deleted-instead-of-private-ones}
+### Deleted functions are to be used instead of private ones {#deleted-functions-are-to-be-used-instead-of-private-ones}
 
 In some cases what you want is to prevent certain functions from being called from user code. In the good old day programmers just defined such functions private. The smarter way to do the same thing nowadays is to delete the function. This can even be done from a derived class that wants to "hide" some of the functions from its base class.
 
@@ -574,7 +558,7 @@ if(isLucky(2.5)){...} // error!
 Without the deletions the function calls will compile and may not behave the way you expect them to because of the implicit conversations to _int_.
 
 
-### Use `override` {#use-override}
+### Use override {#use-override}
 
 
 #### Virtual functions {#virtual-functions}
@@ -633,7 +617,7 @@ public:
 ```
 
 
-### Think when you need `const_iterator` and when `iterator` {#think-when-you-need-const-iterator-and-when-iterator}
+### Think when you need const\_iterator and when iterator {#think-when-you-need-const-iterator-and-when-iterator}
 
 
 #### Const iterators {#const-iterators}
@@ -668,7 +652,7 @@ void findAndInsert(C& container, const V& target, const V& insert)
 ```
 
 
-### `noexcept` is good and it is to be used carefully {#noexcept-is-good-and-it-is-to-be-used-carefully}
+### noexcept is good and it is to be used carefully {#noexcept-is-good-and-it-is-to-be-used-carefully}
 
 Today the C++ compilers are quite the smart little things. Much smarter than before. Therefore they can optimize a lot of things and produce more efficient binary. `noexcept` is one of the conditions that must be met in order for a function to be "most optimizable". It means that the function <span class="underline">cannot</span> and <span class="underline">won't</span> emit exception at runtime,
 
@@ -686,7 +670,7 @@ void swap(T (&a)[N], T (&b)[N]) noexcept(noexcept(swap_el(*a,*b)));
 This function is noexcept only if the condition in the `noexcept` block is true. In this case, only if the function swap\_el applied on two elements of of the arrays a and b is `noexcept`.
 
 
-### `constexpr` is the new hot thing! {#constexpr-is-the-new-hot-thing}
+### constexpr is the new hot thing! {#constexpr-is-the-new-hot-thing}
 
 `constexpr` indicates a value(when used for variable definition) that is known during compilation. This is quite different from simply being _const_. Function parameters can be _const_ but are are not known during compilation. This:
 
@@ -770,7 +754,7 @@ constexpr Point reflection(const Point& p) noexcept
 If invoked with a `constexpr` variable of type _Point_ the function will be evaluated at compile time. <br /> It's important to keep in mind that `constexpr` is a part of a function's interface. Again, as `noexcept`, users may rely on this interface. Also, if `constexpr` is used with `constexpr` variables in `constexpr` context <span class="underline">**and**</span> it has some side effects(as I/O or simply logging something to the standard output) it will cause compile time error. So yeah, be careful. `constexpr` is pretty close to the new `const` but not quite! <br /> One final thing. Please do yourself a favor and check out [this](https://www.youtube.com/watch?v=PJwd4JLYJJY)! A talk with [Jason Turnen](https://articles.emptycrate.com/about.html) and [Ben Deane](https://github.com/elbeno) that shows exactly what you can do with `constexpr`.
 
 
-### The `mutable` keyword exists and you should know about it! {#the-mutable-keyword-exists-and-you-should-know-about-it}
+### The mutable keyword exists and you should know about it! {#the-mutable-keyword-exists-and-you-should-know-about-it}
 
 So lets say you have the following class that is used not only by you but by someone that is not you and over whom you have to direct control.
 
@@ -871,12 +855,12 @@ private:
 You ship it. Everyone is happy. The code is clean. You can live in peace with the new knowledge now!
 
 
-### `std::unique_ptr` is for exclusive ownership! {#std-unique-ptr-is-for-exclusive-ownership}
+### std::unique\_ptr is for exclusive ownership! {#std-unique-ptr-is-for-exclusive-ownership}
 
 Generally when you want to use pointer in the new modern C++ world, your first thought should be "Can I use `unique_ptr` here?". And yes, this is the preferred way of using "pointers" these days. `unique_ptr` can be viewed to as small as raw pointer and for most operations they behave exactly the same way as raw pointers. <br /> There are few things to keep in mind while using `unique_ptr`.
 
 -   `unique_ptr` embodies exclusive ownership. Every `unique_ptr` that is not empty "owns" the resource it's holding and you have guarantee (generally) that this is the only object holding pointer to the underlying object. The `unique_ptr` cannot be copy as this would create another holder of the resource so `unique_ptr`-s are only movable
--   You can know <span class="underline">exactly</span> when an `unique_ptr` object would be destroyed and with that the resource released. It is said that one of the greatest features of C++ is the closing brackets `}`. In order words, the fact that you know exact moment at which an object will be destroyed and the destructor of the class will be ran for this object. The ramifications for `unique_ptr` is that the object will be destroyed when the enclosing scopes comes to an end. Of course you could move the `unique_ptr` before that and transfer its ownership to some other part of the program. The moving was talked about in the [beginning](#org48dd419).
+-   You can know <span class="underline">exactly</span> when an `unique_ptr` object would be destroyed and with that the resource released. It is said that one of the greatest features of C++ is the closing brackets `}`. In order words, the fact that you know exact moment at which an object will be destroyed and the destructor of the class will be ran for this object. The ramifications for `unique_ptr` is that the object will be destroyed when the enclosing scopes comes to an end. Of course you could move the `unique_ptr` before that and transfer its ownership to some other part of the program. The moving was talked about in the [beginning](#org5a1d292).
 
 <br /> Typical use of `unique_ptr` are the factory methods. The factory function could even return different type(from some hierarchy of course) of object depending on the inputs input parameters.
 
@@ -906,7 +890,7 @@ std::unique_ptr<Base, decltype(del_base)> ptr(new Base(), del_base);
 ```
 
 
-### `std::shared_ptr` is for... shared ownership! {#std-shared-ptr-is-for-dot-dot-dot-shared-ownership}
+### std::shared\_ptr is for... shared ownership! {#std-shared-ptr-is-for-dot-dot-dot-shared-ownership}
 
 Not having garbage collection in C++ is a curse and a bless at the same time. The knowledge of when exactly your objects are being destroyed and memory released gives you quite the freedom to write high performing code. On the other hand this freedom comes with a lot of pitfalls and potential problems that you can introduce into your program. `shared_ptr` aims to provide you with "garbage collection"-like solution while staying true to the C++ "optimize everything" principles. <br /> `shared_ptr` implements a reference counting system. Several different `shared_ptr` objects can hold a pointer to the same underlying resource. The resource will be destroyed only then when all `shared_ptr` have exited their respective scopes (i.e. are destroyed). There is a little bit of overhead once you bring the whole _reference_-spiel. The important things to keep in mind:
 
@@ -1034,9 +1018,9 @@ Widget& Widget::operator=(const Widget& rhs)
 _Note:_ Use your header for only for declaration when possible. Also `= defualt` is <span class="underline">implementation</span> so put in the `.cpp` file, not in the header. If in this case you did that in the header file, the compiler would not how to generate the move constructor and the move assignment operator as implementation of the calls is <span class="underline">not</span> in the header. In the header the `struct Impl` is incomplete and `*impl` is pointer to incomplete type so the compiler could not deal with that. <br /> The compiler happily generates the move constructors for us as the default implementation is exactly the thing we want. Just perform _move_ on the implementation. The default copy constructors however would only perform shallow copy of the object so we have to write them ourselves. <br /> The detractor is also the default one because we have no code to put in it. The `unique_ptr` automatically deletes its contents once it is destroyed.
 
 
-### `std::forward` and `std::move` are quite interesting. {#std-forward-and-std-move-are-quite-interesting-dot}
+### std::forward and std::move are quite interesting. {#std-forward-and-std-move-are-quite-interesting-dot}
 
-<a id="org6b96aa2"></a> Ok, hopefully by now you at least have heard of **move semantics**. Inevitably you've also probably seen `std::move()` and `std::forward<T>()` used in some weird way and wondered "What the hell is happening here?". First thing to understand about hose functions - they are functions that don't do much in run-time. They don't generate code. The don't "move". At their core, those functions are casts. They cast _rvalue_ object to _lvalue_ ones. Refer to one of the [intro sections](#org0d5c157) for more information about what are those. The difference between `std::move()` and `std::forward<T>()` is that they perform the cast under different conditions. `std::move()` performs it always with no conditions. `std::forward<T>()` casts to revalue only if a certain conditions is met - if the argument is bind to rvalue. <br /> Yes, it is well known and by this point accepted fact that `std::move()` has confusing AF name but... just roll with it and it will grow on you. `std::move()` doesn't actually move anything. `std::move()` merely makes an object eligible for moving. This is no guarnatee however that an object will be moved from. Consider this:
+<a id="org3c1977d"></a> Ok, hopefully by now you at least have heard of **move semantics**. Inevitably you've also probably seen `std::move()` and `std::forward<T>()` used in some weird way and wondered "What the hell is happening here?". First thing to understand about hose functions - they are functions that don't do much in run-time. They don't generate code. The don't "move". At their core, those functions are casts. They cast _rvalue_ object to _lvalue_ ones. Refer to one of the [intro sections](#orgacb9fa7) for more information about what are those. The difference between `std::move()` and `std::forward<T>()` is that they perform the cast under different conditions. `std::move()` performs it always with no conditions. `std::forward<T>()` casts to revalue only if a certain conditions is met - if the argument is bind to rvalue. <br /> Yes, it is well known and by this point accepted fact that `std::move()` has confusing AF name but... just roll with it and it will grow on you. `std::move()` doesn't actually move anything. `std::move()` merely makes an object eligible for moving. This is no guarnatee however that an object will be moved from. Consider this:
 
 ```c++
 class Anotation
@@ -1056,7 +1040,7 @@ Think about what is happening here. We are passing a string to the constructor w
 template<typename T>
 void logAndProcess(T&& param)
 {
-  auto now = std::crono::system_clock::now();
+  auto now = std::chrono::system_clock::now();
   makeEntry("Calling process", now);
   /* Here we dont't know whether the function was invoed
    with rvalue or lvalue. Therefore we forward the
@@ -1086,10 +1070,10 @@ Here param can bind to _rvalues_ <span class="underline">and</span> to _lvalues_
 1.  Type deduction must occur
 2.  The reference must have exactly the form "T&&". No `const`, no nothing. Just "T&&".
 
-If the `const` qualifier is used for the function parameter, it(the parameter) will "collapse" _rvalue const reference_ which pretty useless on itself as we say in the [previous tip](#org6b96aa2). <br /> As stated if universal reference is bound to rvalue, it is an rvalue reference and lvalue reference if it's bound to lvalue. This means that universal references are exactly thing to be used with `std::forward<T>()`.
+If the `const` qualifier is used for the function parameter, it(the parameter) will "collapse" _rvalue const reference_ which pretty useless on itself as we say in the [previous tip](#org3c1977d). <br /> As stated if universal reference is bound to rvalue, it is an rvalue reference and lvalue reference if it's bound to lvalue. This means that universal references are exactly thing to be used with `std::forward<T>()`.
 
 
-### _Pass by value_ is not what your first C++ book would have you believe+ {#pass-by-value-is-not-what-your-first-c-book-would-have-you-believe}
+### _Pass by value_ is not what your first C++ book would have you believe {#pass-by-value-is-not-what-your-first-c-book-would-have-you-believe}
 
 Maybe this is exclusive to me but when I was learning C++ I was left with the impression that passing things by value is kinda dumb if you can pass it by reference. I mean, who needs the extra copy, right?! Not quite. Consider the case of a simple setter
 
@@ -1152,6 +1136,7 @@ To summarize (taken from an answer from [this](https://stackoverflow.com/questio
 | bar(foo f);        | want to obtain a copy of f |
 | bar(const foo& f); | want to read f             |
 | bar(foo& f);       | want to modify f           |
+|                    |                            |
 
 
 ### Return value optimization(RVO) - don't return std:::move of local variable {#return-value-optimization--rvo--don-t-return-std-move-of-local-variable}
@@ -1209,7 +1194,7 @@ Widget makeWIdget()
 So no. You would never need to return with `std::move` of local object.
 
 
-### `std::async` is something that exists and it's generally to be preferred over `std::thread`. {#std-async-is-something-that-exists-and-it-s-generally-to-be-preferred-over-std-thread-dot}
+### std::async is something that exists and it's generally to be preferred over std::thread. {#std-async-is-something-that-exists-and-it-s-generally-to-be-preferred-over-std-thread-dot}
 
 A lot times you will want to run something asynchronously in your program. C++ and the standard library make this relatively easy and give you two approaches.
 
@@ -1231,6 +1216,11 @@ Further reason why `std::async` is better is because with it, we can get result 
 -   If you are implementing some concurrency technology that is not offered by C++, yeah you bet you'll need to use threads and deal with them.
 
 
+## Conclusion {#conclusion}
+
+I just want to say one thing. Never, never ever say that you "know C++" and be deeply sceptical of people who use the said expression. C++ is complex and you can do everything in a lot of different ways and probably things are going to work no matter what. HOWEVER, some solutions in C++ are very clearly better than others and a lot of times it is not clear what is the "optimal" way of achieving your goal. Do not be mislead by your own knowledge! C++ offers you an ever expanding world of good\bad solutions and knowing everything that there is to know is most likely infeasible. And you know what, that's actually OK. Because let's face it, software engineering is all about learning something new everyday in the process of horribly breaking your code.
+
+
 ## References {#references}
 
 I'm very thankfully to these sources:
@@ -1238,6 +1228,5 @@ I'm very thankfully to these sources:
 -   [Effective modern C++](https://www.amazon.de/Effective-Modern-Specific-Ways-Improve/dp/1491903996) - the book am talking about in this post
 -   [Smart pointers guidelines](https://www.chromium.org/developers/smart-pointer-guidelines) - a very useful guide on how to be smart with your smart pointers
 -   [Understanding the meaning of lvalue or rvalues](https://www.internalpointers.com/post/understanding-meaning-lvalues-and-rvalues-c) - a good blog post that will walk you through the usages and meaning of move semantics and how are they implemented through _rvalue_ and _lvalue_.
--
 
 Check them out if you want to be a better C++ programmer.

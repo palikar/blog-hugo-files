@@ -14,12 +14,12 @@
 #+HUGO_LEVEL_OFFSET: 1
 #+HUGO_PRESERVE_FILLING:
 #+HUGO_SECTION: posts
-#+HUGO_BASE_DIR: ~/code/palikar.github.io
+#+HUGO_BASE_DIR: ~/code/blog-hugo-files/
 #+HUGO_PREFER_HYPHEN_IN_TAGS: t 
 #+HUGO_ALLOW_SPACES_IN_TAGS: nil
 #+HUGO_AUTO_SET_LASTMOD: t
 #+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
-#+DESCRIPTION: Short walkthrough of a Emacs package for windows resizing that I recently wrote.
+#+DESCRIPTION: A short walkthrough of a Emacs package for windows resizing that I recently wrote.
 #+HUGO_DRAFT: false
 #+KEYWORDS: github git commit change history
 #+HUGO_TAGS: 
@@ -74,7 +74,7 @@ The map is defined in a variable named *framer-mode-map*. The actual keymap crea
 At this point we are ready to define our mode. As many other packages, we'll actually define two modes:
 - one global that will take effect in the whole "Emacs process"
 - and one that will only affect the current buffer.
-The actual definition is pretty ease and is done through the macro *define-minor-mode*. The definitions of out two modes:
+The actual definition is pretty easy and is done through the macro *define-minor-mode*. The definitions of out two modes:
 #+BEGIN_SRC emacs-lisp
 (define-minor-mode framer-mode
   "Mode that enables manual control over emacs frames' sizes."
@@ -207,9 +207,8 @@ We perform the checks in a simple *cond* block and with that we have:
    )
   )
 #+END_SRC
-
 \\
-And there you have it, reinventing the wheel in timely wasteful manner. _Awesome_, aqmirite!
+And there you have it, reinventing the wheel in a timely wasteful manner. _Awesome_, amirite!
 * References
 - [[https://nullprogram.com/blog/2013/02/06/][How to Make an Emacs Minor Mode]] - good starting point if you want to extend your Emacs with some custom minor modes.
 
