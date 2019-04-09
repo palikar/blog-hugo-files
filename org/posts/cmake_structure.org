@@ -1,0 +1,44 @@
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK")
+#+OPTIONS: date:t e:t email:nil f:t inline:t num:t p:nil pri:nil
+#+OPTIONS: prop:nil stat:t tags:t tasks:t tex:t timestamp:t title:t
+#+OPTIONS: toc:t todo:t |:t
+
+#+TITLE:C++ Template Specialization
+#+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
+#+AUTHOR: Stanislav Arnaudov
+#+DATE: <2019-04-10 Thu>
+#+EMAIL: stanislav_ts@abv.bg
+#+CREATOR: Emacs 26.1 (Org mode 9.2.1 + ox-hugo)
+#+HUGO_FRONT_MATTER_FORMAT: toml
+#+HUGO_LEVEL_OFFSET: 1
+#+HUGO_PRESERVE_FILLING:
+#+HUGO_SECTION: posts
+#+HUGO_BASE_DIR: ~/code/blog-hugo-files/
+#+HUGO_PREFER_HYPHEN_IN_TAGS: t 
+#+HUGO_ALLOW_SPACES_IN_TAGS: nil
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
+#+DESCRIPTION: Description of the project structure I intend to use in the future for my c++ projects.
+#+HUGO_DRAFT: true
+#+KEYWORDS: c++ cmake projects structure
+#+HUGO_TAGS: 
+#+HUGO_CATEGORIES: c++
+#+HUGO_WEIGHT: 100
+
+
+* Abstract
+
+* The horrible past experience
+
+
+* References
+<ref:refs>
+
+- [1] https://github.com/lefticus/cpp_box[CPP_BOX] is a project by Jason Turner.
+- [2] https://vicrucann.github.io/tutorials/quick-cmake-doxygen/[Victoria Rudakova's Post]
+- [3] https://www.youtube.com/watch?v=bsXLMQ6WgIk[Effective CMake] Talk by Daniel Pfeifer
+- [4] https://www.youtube.com/watch?v=DHOlsEd0eDE[Applied Best Practices] Talk by Jason Turner
+
+* Conclusion
+So those are my two cents about CMake and project structure. I don't claim to have a lot of experience but I've done a lot of research in the past year and a half. I've looked into different projects, read the best practices, read a lot of vague tutorial on the internet and watched the relevant talks. I have though this several time, but _this_ time I really think I've nailed it. I hope that I've created (mostly stolen) something scalable that will server me well in my future small to mid size projects. Whether of not  scalability should actually be of my concern is a completely separate matter 🙂. 

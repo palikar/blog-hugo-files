@@ -1,5 +1,5 @@
 languageCode = "en-us"
-title = "SA Dev"
+title = "SA"
 baseurl = "https://palikar.github.io/"
 
 
@@ -15,6 +15,9 @@ pygmentsstyle = ""
 pygmentsUseClassic=false
 
 
+relatedPosts = true
+postNavigation = true
+
 ## Site Settings
 [params]
     author = "Stanislav Arnaudov"
@@ -24,13 +27,15 @@ pygmentsUseClassic=false
     highlightjs = true
     highlightjsstyle = "github"
     customCSS = ["./static/css/new_custom.css"]
-    # please choose either GraphComment or Disqus
-    # GraphCommentId = "your-graph-comment-id" 
+
+	toc = "tocbot"
+	
+	
 
 ## Social Accounts
 [params.social]
     github = "palikar"
-    linkedin = ""
+    linkedin = "stanislav-arnaudov-37b475164"
     twitter = "palikar22"
     facebook = "stanislav.ts"
     email = "stanislav_ts@abv.bg"
