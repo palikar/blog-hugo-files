@@ -19,7 +19,7 @@
 #+HUGO_ALLOW_SPACES_IN_TAGS: nil
 #+HUGO_AUTO_SET_LASTMOD: t
 #+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
-#+DESCRIPTION: Post about some template specialization of a member function in C++.
+#+DESCRIPTION: On template specialization of a member function in C++.
 #+HUGO_DRAFT: false
 #+KEYWORDS: c++ cpp templates programming
 #+HUGO_TAGS: 
@@ -28,9 +28,9 @@
 
 
 * Abstract
-  C++ is awesome! I am starting strong here but it really is. When experienced (and crazy) enough one can implement everything and the same one can do it incredibly efficient at run time (cuz who cares how much work does the compiler do for us). I can rant about how c++ is the best and all of the great features of the language but for this article I would constraint myself to one particular (but rather big) - template meta-programming! Even more concretely, I would like to show you a trick that I discovered myself that helped me solve one nasty problem. Yes, I admit, I am +probably+ certainty not the first one who discovers this trick *BUT* I promise you, I discovered it by myself and the whole process of discovering it was immensely satisfying. I mean....templates *are* magic sometimes and I can only imagine how the people who understand them feel.
+  C++ is awesome! I am starting strong here but it really is. When experienced (and crazy) enough one can implement everything and the at the same can do it incredibly efficient at run time (cuz who cares how much work does the compiler do for us). I can rant about how c++ is the best and all of its great features but for this post I will constraint myself to one particular part of C++ - template meta-programming! Even more concretely, I would like to show you a trick that I discovered myself that helped me solve one nasty problem. Yes, I admit, I am +probably+ certainty not the first one who discovers this trick *BUT* I promise you, I discovered it by myself and the whole process of discovering it was immensely satisfying. I mean... templates *are* magic and I can only imagine how the people who understand them feel.
 * The problem
-  Say you have a templated class that implements some kind of functionality and uses the type given by it's template argument as some soft of data. This probably sound a little bit vague. A more concrete example of what I am talking about - imagine you have some class that sends some data to a server /somewhere/. The data can be std::string or int or double or some other random structure of yours. Of course the natural thing to come with that is a method /send(data)/ that takes some data object of the templates type and does the /internal magic/ (we don't care about that thou). In code everything will look something like:
+  Say you have a templated class that implements some kind of functionality and uses the type given by it's template argument as some soft of data. This probably sound a little bit vague. A more concrete example of what I am talking about - imagine you have some class that sends some data to a server /somewhere/. The data can be ~std::string~ or ~int~ or ~double~ or some other random structure of yours. Of course the natural thing to come with that is a method ~send(data)~ that takes some data object of the templates type and does the /internal magic/ (we don't care about that though). In code everything will look something like:
 #+BEGIN_SRC C++
   templete<DataType>
   class Sender
@@ -41,8 +41,10 @@
 
   };
 #+END_SRC
-  Pretty simple, pretty st right forward. To expand our hypothetical situation, imagine now that this is not your class but someone else's and other people are using it in it's current form. So you don't think about it all that much and go on to use the class yourself.
-After some while you find out that internaly the /send/ function uses a field named /header/ of the type you've passed to the template of the class. For example you have something like this:
+Pretty simple, pretty straight forward. To expand our hypothetical situation, imagine now that this is not your class but someone else's and other people are using it in it's current form. So you don't think about it all that much and go on to use the class yourself.
+\\
+\\
+After some while you find out that internally the ~send~ function uses a field named /header/ of the type you've passed to the template of the class. For example you have something like this:
 #+BEGIN_SRC c++
 template<DataType>
 void Sender<DataType>::send(DataType data)
@@ -52,15 +54,19 @@ data.header = currentTime();
 ...
 }
 #+END_SRC
-This automatically locks you to sending only structures that have a field named header(probalby also with time /unsigned int/). Not the biggest problem but again, let's make the situation complicated and say you have a project where you *have* to send a plain /std::string/ to the server through this class (don't think about the situation too much, just roll with it and accept that I had very similar problem which I just couldn't avoid).
+This automatically locks you to sending only structures that have a field named header (probably also with time ~unsigned int~). Not the biggest problem but again, let's make the situation complicated and say you have a project where you *have* to send a plain ~std::string~ to the server through this class (don't think about the situation too much, just roll with it and accept that I had very similar problem which I just couldn't avoid).
+\\
+\\
 So what do we have so far:
 - someone else's templates class - we are not the designers
 - people are using it - no change of API is preferable
 - the template argument of the class expects a field /header/
 - we *have* to send something without this /header/ field
+\\
+\\
 And this is pretty much where I found myself that one time. The following explanations are the way how I solved the problem.
 * Tackling it probably in the most terrible way
-  So, the way I did it was to add another template argument to the class - a bool and that specifies whether a /header/ is used or not and then I hoped that a cn just specialize the /send/ function with this new template argument set to /false/ with a implementation without use of /header/. Of course the default value of the new template argument would be true for preserving backward compatibility. The way I though it's gonna work as something like:
+So, the way I tried to do it was to add another template argument to the class - a ~bool~ - that specifies whether a /header/ is used or not. Then I hoped that I could just specialize the ~send~ function with this new template argument set to /false/ with an implementation without the use of /header/. Of course the default value of the new template argument would be true for preserving backward compatibility. The way I though it's gonna work as something like:
 #+BEGIN_SRC c++
 template<DataType, bool header = true>
 class Sender{...}
@@ -82,8 +88,10 @@ data.header = currentTime();
 ...
 }
 #+END_SRC
-Seemed logical at the time but couple of problems with that. By the implementation of the function the /template<...>/ is for the /Sender/ class not for the function. This means that that all of the template arguments in the original declarations of the class have to be present there. Also when you think about it, there is no template function there to specialize, there is a templates class and the function is part of this class. After some more googling I found out that indeed, one cannot specialize member function of a templates class on some values of the template arguments. "Okay, so I have to specialize the entire class" I told myself. But then I would have to essentially have the class twice with one little difference in this one function - one version with using /header/ and one without. That's kind of dumb. Having almost the same code twice is dumb. This is why we have abstraction after all. Abstraction! Inheritance! 
-So, how about that. I create a new class with two templeted arguments, I inherit the old class and pass the /DataType/ argument to it and based on the second template I implement /send/. Again, make the /bool/ default to /true/ and name the new class the /Sender/ so that the existing code base doesn't get broken. I would have something like this:
+Seemed logical at the time but couple of problems with that. By the implementation of the function the /template<...>/ is for the /Sender/ class not for the function. This means that that all of the template arguments in the original declarations of the class have to be present there. Also when you think about it, there is no template function there to specialize. There is a templates class and the function is part of this class. After some more googling I found out that indeed, one cannot specialize member function of a templated class on some values of the template arguments. "Okay, so I have to specialize the entire class" I told myself. But then I would have to essentially have the class twice with one little difference in this one function - one version with using /header/ and one without. That's kind of dumb. Having almost the same code twice is dumb. This is why we have abstraction after all. Abstraction! Inheritance! 
+\\
+\\
+So, how about that. I create a new class with two templated arguments, I inherit the old class and pass the /DataType/ argument to it and based on the second template I implement ~send~. Again, make the /bool/ default to /true/ and name the new class the /Sender/ so that the existing code base doesn't get broken. I would have something like this:
 #+BEGIN_SRC c++
     templete<DataType>
     class SenderBase
@@ -128,9 +136,13 @@ the second templated arguments defaults to true and the second versions gets ins
 #+BEGIN_SRC c++
 Sender<std::string, false> obj; 
 #+END_SRC
-the compiler generates the version without the use of the /header/ field and does not complaint because there is no such field in /std::string/. Perfect!
-One thing that bite me on the ass some time after I thought I 'fixed' the class. Think about what would happen if the class uses internally /send/ for something. What happens if the client code is not the one who calls the /send/ directly but the function call is made by other method that just passes the data to be send. This will be of course implemented in the base class /SenderBase/ and this class sees only the empty implementation of the /send/ function. The fix is very simple if you know your language. We just make the /send/ function virtual and allow the program to dispatch the right function call in runtime based of the type of the calling object.
-The final solution becomes: 
+the compiler generates the version without the use of the /header/ field and does not complaint because there is no such field in ~std::string~. Perfect!
+\\
+\\
+There was, however, something wrong with this approach. Think about what would happen if the class uses internally ~send~ for something. What happens if the client code is not the one who calls the ~send~ directly but the function call is made by other method that just passes the data to be ~send~. This will be of course implemented in the base class ~SenderBase~ and this class sees only the empty implementation of the ~send~ function. The fix is very simple if you know your language. We just make the ~send~ function virtual and allow the program to dispatch the right function call at runtime based of the type of the calling object.
+\\
+\\
+The "final" solution becomes: 
 #+BEGIN_SRC c++
  templete<DataType>
     class SenderBase
@@ -156,10 +168,11 @@ The final solution becomes:
     }
 
 #+END_SRC
-There! Now we have it. Now we've (kinda) specialized a function of a templated class based on a value of a template argument without writing the whole class two times *AND* no previous user will notice this new feature of the class. It's not exactly a stright forward solution but I found it very elegant workaround.
+There! Now we have it. Now we've (kinda) specialized a function of a templated class based on a value of a template argument without writing the whole class two times *AND* no previous user will notice this new feature of the class. It's not exactly a straight forward solution but I found it very elegant workaround.
 
 * Tackling it in a better way
-  But of course, a simpler, more straight forward solution exists. Enter /enable_if/ and class templates with added caveat. I mentioned - there is no template function so no use of [[https://en.wikipedia.org/wiki/Substitution_failure_is_not_an_error][SFINAE]] on deciding which function to pick. The thing is, template classes can have template functions as members. So, there is no reason we can't do something like
+
+But of course, a simpler, more straight forward solution exists. Enter ~enable_if~ and class templates with added caveat. I mentioned - there is no template function so no use of [[https://en.wikipedia.org/wiki/Substitution_failure_is_not_an_error][SFINAE]] on deciding which function to pick. The thing is, template classes can have template functions as members. So, there is no reason we can't do something like
 #+BEGIN_SRC c++
 template<class DataType, bool Header = true>
 class Sender
@@ -176,7 +189,8 @@ class Sender
     };
 };
 #+END_SRC
-We again add the extra /header/ template and based on it we pick one of two template functions /send/.  It's important that they are in fact template functions and not plain member functions of a templated class. Now when we instantiate the class with, one of those tow template functions is picked and compiler sees only it. Here you can even drop the /header/ template parameter and work only with /enable_if/ and some other template programming voodoo to detect whether DataType has field /header/ or not. I'll leave that to you thou. Important note - this check has to be done though the /Q/ template parameter of the functions because SFINAE applies only on it. 
+We again add the extra /header/ template and based on it we pick one of two template functions ~send~. It's important that they are in fact template functions and not plain member functions of a templated class. Now when we instantiate the class one of those two template functions is picked and compiler sees only it. Here you can even drop the /Header/ template parameter and work only with ~enable_if~ and some other template programming voodoo to detect whether DataType has field /header/ or not. I'll leave that to you though. 
+/Note:/ The check for the /header/ field has to be done though the /Q/ template parameter of the functions because /SFINAE/ applies only on it. 
 
 
 

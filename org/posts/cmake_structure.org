@@ -28,8 +28,11 @@
 
 
 * Abstract
+sadf
+
 
 * The horrible past experience
+asd
 
 
 * References
@@ -39,6 +42,7 @@
 - [2] https://vicrucann.github.io/tutorials/quick-cmake-doxygen/[Victoria Rudakova's Post]
 - [3] https://www.youtube.com/watch?v=bsXLMQ6WgIk[Effective CMake] Talk by Daniel Pfeifer
 - [4] https://www.youtube.com/watch?v=DHOlsEd0eDE[Applied Best Practices] Talk by Jason Turner
+
 
 * Conclusion
 So those are my two cents about CMake and project structure. I don't claim to have a lot of experience but I've done a lot of research in the past year and a half. I've looked into different projects, read the best practices, read a lot of vague tutorial on the internet and watched the relevant talks. I have though this several time, but _this_ time I really think I've nailed it. I hope that I've created (mostly stolen) something scalable that will server me well in my future small to mid size projects. Whether of not  scalability should actually be of my concern is a completely separate matter 🙂. 
