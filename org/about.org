@@ -85,6 +85,7 @@ As previously implied, the delusion I've chosen to believe in is that I'll do CS
 - Working as a research assistant at [[https://www.fraunhofer.de/en.html][Fraunhofer IOSB]]. I deal mainly with "intelligent systems".
 - Right now I am taking part in a research-oriented practical course at my University. The goal is to write a research paper and publish it in the span of two semesters. My work is dealing with the application of neural networks in the context of numerical simulations. 
 
+
 * Previous work
 
 - My Bachelor thesis had to do with Machine Learning, stochastic probability models (Bayesian Neural Networks and Mixture of Gaussian Process Experts) and data from pollution sensors. One of my supervisors currently working in [[https://www.h-its.org/en/][HITS]].

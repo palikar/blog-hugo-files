@@ -4,7 +4,7 @@
 #+OPTIONS: prop:nil stat:t tags:t tasks:t tex:t timestamp:t title:t
 #+OPTIONS: toc:t todo:t |:t
 
-#+TITLE:C++ Template Specialization
+#+TITLE: A good CMake template project structure
 #+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
 #+AUTHOR: Stanislav Arnaudov
 #+DATE: <2019-04-10 Thu>
@@ -28,21 +28,73 @@
 
 
 * Abstract
-sadf
+I am sure that every C++ programmer has at one point stuggled with [[https://cmake.org/][CMake]]. There have been mulitple times where when I have to start work on some C++ project, I've spend a good couple of hours in think how should my project structure look like with respect to CMake. It's just such a huge hassle to think about all of your CMakeList.txt files and possible libraries and diferent modules and... the things that may go wrong with your build system. I've been meaning to find a good template of CMake project for a long time and now I think I've found\created my long wanted gem. In this post, I first want to give a brief overview of my past experience with CMake and the present the template project that I have finally settled with.
 
 
 * The horrible past experience
-asd
+I have bad memories in my erly days of dealing with CMake. At the start I had the impression that a build system should make everything as easy as possible but it seems that often this is not the case. Don't get me wrong. I know that build systems do not solve an easy problem, but still. I quickly noticed how there are a lot of people on the internet talking about their way of doing CMake projects. It didn't seem that there wasn't *the* way of doing it. This is generally a good thing. Freedom and doing things /your/ way! But everything comes with a cost. The cost of CMake -- you have no idea what you are supose to do at the beginning.
+
+\\
+
+My first experience with a big CMake project was at my work. There we had a structure similar to the one of [[https://github.com/opencv/openc][OpenCV]]. 
+
+
+
+A big CMakeList.txt file at the top lever with general project settings, a separate file with all of the libraries needed for the project and then a src directory with different modules.  
+
+
+The structure of a moudle: src, include, test, and data directory; a CMakeList.txt file a the root of the module to define all executables and libraries. I actually still like the structure of the individual modules. The strange thing with the module-system was the way it did dependeny resolution. Everything was done "manually". It essentially was a big CMake framework that first collected info about every module, looked at the dependencies between them and the needed libraries and then build targets manually for a module by linking explicitly everything that module needed. The whole thing was implemented in a collection of complicated macros. There maps and lists and algorithms and directory treversals and everything you can imagine. The whole thing written in CMake of course.  Legacy code for the win!
+
+\\
+
+I was actually thinking of building a similar system myself for my personal projects. Needless to say, that didn't take off. I wanted to make if clearer but I was not exactly sucessful.
+
+\\
+
+I browsed some more CMake projects, I watched some talks (see [3]) and I also tried setting up some thins myself. Nothing really clicked with me. CMake was still getting in the way of my C++ programming and it was making it even more painful than it already is. This went on for some while.
+
+
+* The bright new world
+Finally, a very forunate thing happened. I watched [4] and decided to check out the [[https://github.com/lefticus/cpp_box][repository]]. The project is created with the idea of being a demonstation of "doing things properly" in C++. I can agree with this sentiment 100%! I still did some adjustements but I am still gratefull that I found this project. Here I will go over the elements of the structure of the template project that I created.
+
+** Conan
+
+** Top level CMakeList.txt
+
+*** Targets 
+
+*** Options
+
+*** Flags
+
+*** Libraries
+
+*** Documentation
+
+*** Configurable header
+
+*** Build overview 
+
+** Modules
+
+*** Root CMakeList.txt for a module
+
+*** CMakeList.txt for the tests of a module
+
+** Keeping track of avaialble targets
+
+
+* Conclusion
+So those are my two cents about CMake and project structure. I don't claim to have a lot of experience but I've done a lot of research in the past year and a half. I've looked into different projects, read the best practices, read a lot of vague tutorial on the internet and watched the relevant talks. I have though this several time, but _this_ time I really think I've nailed it. I hope that I've created (mostly stolen) something scalable that will server me well in my future small to mid size projects. Whether of not scalability should actually be of my concern is a completely separate matter 🙂. 
 
 
 * References
 <ref:refs>
 
-- [1] https://github.com/lefticus/cpp_box[CPP_BOX] is a project by Jason Turner.
-- [2] https://vicrucann.github.io/tutorials/quick-cmake-doxygen/[Victoria Rudakova's Post]
-- [3] https://www.youtube.com/watch?v=bsXLMQ6WgIk[Effective CMake] Talk by Daniel Pfeifer
-- [4] https://www.youtube.com/watch?v=DHOlsEd0eDE[Applied Best Practices] Talk by Jason Turner
+- [1] [[https://github.com/lefticus/cpp_box][CPP_BOX]] is a project by [[https://github.com/lefticus][Jason Turner]].
+- [2] [[https://vicrucann.github.io/tutorials/quick-cmake-doxygen/][Victoria Rudakova's Post]]
+- [3] [[https://www.youtube.com/watch?v=bsXLMQ6WgIk][Effective CMake]] Talk by Daniel Pfeifer
+- [4] [[https://www.youtube.com/watch?v=DHOlsEd0eDE][Applied Best Practices]] Talk by [[https://github.com/lefticus][Jason Turner]]
 
 
-* Conclusion
-So those are my two cents about CMake and project structure. I don't claim to have a lot of experience but I've done a lot of research in the past year and a half. I've looked into different projects, read the best practices, read a lot of vague tutorial on the internet and watched the relevant talks. I have though this several time, but _this_ time I really think I've nailed it. I hope that I've created (mostly stolen) something scalable that will server me well in my future small to mid size projects. Whether of not  scalability should actually be of my concern is a completely separate matter 🙂. 
+
