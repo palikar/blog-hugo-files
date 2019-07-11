@@ -35,7 +35,9 @@ C++ is hard! C++ is even harder when you want to write a good code. There are a 
 
 #+TOC: headlines 2
 
+
 * The cool new things
+
 ** Rvalue, lvalue and move semantics
 <<sec:move-semantics>>
 "Move semantics" is a thing that we have in C++ now (since C++11 actually). It makes a ton of sense once you get it but it may be a little hard to wrap your head around it. At lest in the beginning, of course. First off - why do we need move semantics? For code efficiency! If you now what you are doing, your code can run faster, with fewer object copies and fewer objects created. Second, and perhaps more importantly, what are move semantics? The way I like to think about it - the ability to distinguish between object that won't be needed after the evaluation of an expression and the ability to do a different thing, if you are dealing with such object.\\
@@ -48,12 +50,15 @@ Lets say that the part ~obj1 + obj2~ creates a new object. This new object then 
 - Lvalue - an object that can be used on left hand side of an expression; an object with identifiable address;
 - Rvalue - an object that won't persist after the evaluation of a given expression; no identifiable address
 /Note:/ Every value is either an lvalue or an rvalue!
+
+
 ** Auto
 Type deduction for variables. Almost the same rules as the template arguments type deduction with one small caveat. Also, in a lot of cases it allows you to write more efficient code. Example to get you going:
 #+BEGIN_SRC c++
 std::unordered_map<std::string, std::string> map;
 for(auto it : map){...} //just look how simple that is!!!
 #+END_SRC
+
 
 ** Smart pointers
 <<sec:smart-pointers>>
@@ -95,8 +100,9 @@ int main(int argc, char *argv[])
 \\
 Creating factory methods is also relatively straightforward. Just return them by value! There is however one things to remember about ~unique_ptr~ - if the return type does not match the thing you are returning, you ought to use ~std::move~. This holds true even, if the return of the function type is a base class and you are returning derived class (explained [[https://stackoverflow.com/questions/39478956/how-does-returning-stdmake-uniquesubclass-work/39479117][here]]).
 
+
 ** Some random abbreviations
-It is well knows fact that C++ programmers love their abbreviations. And you know what, it actually makes a lot sense to know those. The abbreviations in the C++ world reveal some really cool, useful and right out elegant concepts that everyone should know about. Also, just to be prepared, C++ programmers are also really bad at naming things.
+It is a well-known fact that C++ programmers love their abbreviations. And you know what, it actually makes a lot of sense to know those. The abbreviations in the C++ world reveal some really cool, useful and right out elegant concepts that everyone should know about. Also, just to be prepared, C++ programmers are also really bad at naming things.
 
 |---------------+----------------------------------------|
 | Abbreviations | Expansion                              |
@@ -115,6 +121,8 @@ It is well knows fact that C++ programmers love their abbreviations. And you kno
 | RVO           | Return value optimization              |
 |---------------+----------------------------------------|
 |---------------+----------------------------------------|
+
+
 * Tips
 ** Knowing your template type deduction is a bless.
 So every C++ programmer knows how you can define generic "templetized" functions and then you can call them with different types of arguments. The calling itself will cause the compiler to instantiate the function by replacing the generic type with the deduced type. The thing you should know in this process - how the type is being deduced when it's not given explicitly (i. e.the function is called without the <>-brackets).
@@ -127,7 +135,7 @@ void f(ParamType arg);
 f(expr);
 #+END_SRC
 
-Several cases to look at:
+There are Several cases to look at.
 *** ParamType is a reference or a pointer
   #+BEGIN_SRC c++
   template<T>
@@ -190,8 +198,8 @@ void f(T arg);
 #+END_SRC
 By instantiation we ignore everything except the "pure type" (i.e. /reference/, /const/ and/or /volatile/ part are ignored)
 *** Bonus
-Array arguments decay to pointers so when passing arrays to template function the ~T~ will be deduced with the rules for pointers.\\
-One can, however, define e reference to an array so, with this "trick" you can force your ~T~ to be deduced to array type.
+Array arguments decay to pointers so when passing arrays to a template function, the ~T~ will be deduced with the rules for pointers.\\
+One can, however, define e reference to an array so with this "trick" you can force your ~T~ to be deduced to an array type.
 #+BEGIN_SRC c++
 template<T>
 void f(T& arg);
@@ -208,9 +216,9 @@ constexpr std::size_t arraySize(T (&)[N]) noexcept
   return N;
 }
 #+END_SRC
-And... with that knowledge, you can now punish people who claim they "know C++"...ugh, plebs!
+And... with that knowledge, you can now punish people who claim they "know C++".
 ** auto type deduction is also something to thinks about
-The deduction of auto while used as "type" of a local variable behaves almost exactly as deduction of template types. This means you already know the most of the rules.
+The deduction of auto while used as a "type" of a local variable behaves almost exactly as deduction of template types. This means you already know the most of the rules.
 #+BEGIN_SRC c++
 int x = 5;
 const int cx = x;
@@ -406,7 +414,7 @@ private:
 }
 #+END_SRC
 Do yourself a favor, use ~using~!
-*** Type transformations that come in handy
+** Type transformations that come in handy
 Sometimes you want to "cook" yourself some type from some already given template types. For those purposes the standard library offers some predefined type transformations:
 #+BEGIN_SRC c++
 std::remove_const<T>::type;
@@ -454,9 +462,9 @@ Refresher again. Which functions are to be considered virtual.
 - The base and derived function names must be _identical_.
 - Parameter types of the baser and derived function must be _identical_.
 - The /constness/ of the base and derived functions must be _identical_.
-- The return typers and exeption specifications of the base and derived functions must be _compatible_
+- The return types and exception specifications of the base and derived functions must be _compatible_
 
-Inevitably you will forget those rules and you will think that you are overriding something in a "virtual" way  but you really won' bew doing that. So, the advice goes , use ~override~ to be explicit. Then you'll have compiler tell you've done something wrong.
+Inevitably you will forget those rules and you will think that you are overriding something in a "virtual" way but you really won't be doing that. So, the advice goes, use ~override~ to be explicit. Then you'll have compiler tell you've done something wrong.
 
 #+BEGIN_SRC c++
 class Base
@@ -471,14 +479,14 @@ private:
 class Derived : public Base
 {
 private:
-  virtual void mf1() override;         // won't compile
+  virtual void mf1() override;               // won't compile
   virtual void mf2(unsigned int x) override; // won't compile
   virtual void mf3() && override;            // won't compile
   virtual void mf4() const override;         // won't compile
 }
 #+END_SRC
 *** Overloading on rvalue and lvalue
-This did you know you could overload a function bases on weather the =*this= object is r- or lvalue....me neither!
+You can also overload a function based on weather the =*this= object is a r- or lvalue:
 #+BEGIN_SRC c++
 class Widget
 {
@@ -503,7 +511,7 @@ Not that much to say. C++ can optimize the code much better if it deals with /co
 #+BEGIN_SRC c++
 for(const auto& e : container){}
 #+END_SRC
-Also, when you use function that take iterators to perform something that does not modify the container, use ~std::cbegin()~ and ~std::cend()~ which are the const versions of ~std::begin()~ and ~std::end()~
+Also, when you use a function that takes iterators to perform something that does not modify the container, use ~std::cbegin()~ and ~std::cend()~ which are the const versions of ~std::begin()~ and ~std::end()~
 
 #+BEGIN_SRC c++
 auto it = std::find(values.cbegin(), values.cend(), 1986);
@@ -511,7 +519,7 @@ auto it = std::find(std::cbegin(values), std::cend(values), 1986);
 #+END_SRC
 This brings the next point.
 *** Want generic code, use std::begin(), std::end(),... etc
-Sometimes you know that your incoming object is a container but you don' have the guarantee that the ~containe::begin()~ and ~container::end()~ methods are provided. This is the reasons to get in the habit of using ~std::begin()~ and ~std::end()~. This makes the things a lot more generic. With them you can do this:
+Sometimes you know that your incoming object is a container but you don't have the guarantee that the ~container::begin()~ and ~container::end()~ methods are provided. This is the reasons to get in the habit of using ~std::begin()~ and ~std::end()~. This makes the things a lot more generic. With them you can do this:
 
 #+BEGIN_SRC c++
 template<typename C, typename V>
@@ -738,7 +746,7 @@ auto del_base = [](Base *object){
 std::unique_ptr<Base, decltype(del_base)> ptr(new Base(), del_base);
 #+END_SRC
 
-** std::shared_ptr is for... shared ownership!
+** std::shared_ptr is for shared ownership!
 Not having garbage collection in C++ is a curse and a bless at the same time. The knowledge of when exactly your objects are being destroyed and memory released  gives you quite the freedom to write high performing code. On the other hand this freedom comes with a lot of pitfalls and potential problems that you can introduce into your program. ~shared_ptr~ aims to provide you with "garbage collection"-like solution while staying true to the C++ "optimize everything" principles. 
 \\
  ~shared_ptr~ implements a reference counting system. Several different ~shared_ptr~ objects can hold a pointer to the same underlying resource. The resource will be destroyed only then when all ~shared_ptr~ have exited their respective scopes (i.e. are destroyed). There is a little bit of overhead once you bring the whole /reference/-spiel. The important things to keep in mind:
@@ -895,7 +903,7 @@ void logAndProcess(T&& param)
 ** Universal references and rvalue references
 First things first - "universal reference" is a lie. There is no such thing in the official C++ specification. There there is "forwarding reference". "Forwarding reference" is absolutely the same thing as what Scott Meyers means with "universal reference" in his book. Here I will also use universal reference. OK? OK. Good that now this is out of the way.
 \\
-So we know that we can define functions that take rvalue references like
+We know that we can define functions that take rvalue references like:
 #+BEGIN_SRC c++
 void f(Widget&& param);
 #+END_SRC
@@ -975,9 +983,9 @@ To summarize (taken from an answer from [[https://stackoverflow.com/questions/75
 |--------------------+----------------------------|
 |                    |                            |
 ** Return value optimization(RVO) - don't return std:::move of local variable
-With your awesome new knowledge about move semantics you can now write highly optimized, high performing code that will go \*whoosh\* past those pesky languages running on virtual machines. You will however be tempted to make some "optimizations" at places where you really shouldn't mess with the compiler. Please always repeat to yourself  "The compiler is smarter than me!".
+With your awesome new knowledge about move semantics you can now write highly optimized, high performent code that will go \*whoosh\* past those pesky languages running on virtual machines. You will, however, be tempted to make some "optimizations" at places where you really shouldn't mess with the compiler. Please always repeat to yourself  "The compiler is smarter than me!".
 \\
-Consider the following stub snippet:
+Consider the following snippet:
 #+BEGIN_SRC c++
 Widget makeWIdget()
 {
@@ -986,7 +994,7 @@ Widget makeWIdget()
   return w;
 }
 #+END_SRC
-We are creating a local variable in a function and we are returning it by value. We think about what is happening. The object is created - construction, the object is returned by value - we _copy_ out new object and return the copy because the local object will be destroyed once the scope of the function ends. Copy! We know what /rvlaues/ are. We don't need no copy. We can move! We rewrite the code like:
+We are creating a local variable in a function and we are returning it by value. We think about what is happening. The object is created - construction, the object is returned by value - we _copy_ our new object and return the copy because the local object will be destroyed once the scope of the function ends. Copy! We know what /rvlaues/ are. We don't need no copy. We can move! We rewrite the code like:
 #+BEGIN_SRC c++
 Widget makeWIdget()
 {
@@ -997,7 +1005,7 @@ Widget makeWIdget()
 #+END_SRC
 Awesome, we saved ourselves one copy! *Wrong!!!*
 \\
-Introducing /Return Value Optimization/. At some situations(most of them) the compiler will notice that you are returning local variable by value. If certain conditions are met, the compiler will construct this local object in the exact place in memory where the return value of the function will reside after the function is invoked. In such cases, with the return statement won't produce copy _nor_ will move construction would be necessary. This is good! The conditions that should be met for RVO to occur:
+Introducing /Return Value Optimization/. At some situations(most of them) the compiler will notice that you are returning a local variable by value. If certain conditions are met, the compiler will construct this local object in the exact place in memory where the return value of the function will reside after the function is invoked. In such cases, with the return statement won't produce copy _nor_ will move construction would be necessary. This is good! The conditions that should be met for RVO to occur:
 1. The type of the local object must be the same as the return value.
 2. The local object is being returned.
 3. The type is move constructable.
@@ -1032,20 +1040,23 @@ int doAsyncWork();
 
 auto fut = std::async(doAsyncWork); // fut is a future
 #+END_SRC
-Further reason why ~std::async~ is better is because with it, we can get result from the function that we are calling asynchronously through the future's /get/ method. There isn't really a straight forward  way of extracting result from separate thread constructed with ~std::thread~.
+A further reason why ~std::async~ is better is because with it we can get the result from the function that we are calling asynchronously through the future's /get/ method. There isn't really a straight forward way of extracting a result from a separate thread constructed with ~std::thread~.
 \\
-If you opt to use thread base programming you'll have to deal with thread exhaustion, over-subscription, load balancing, abd adaptation to new platforms. And you know...all of these are suuuper fun to deal with. You may have to do it sometimes thou. As stated, threads are lower level concurrency API. Threads may allow you to write more efficient code suited to your specific needs. Cases where threads may be necessary
-- You want to mess directly with the concurrency API provided by the OS. Given this would be pretty hard, it could potentially lead to tremendous speed when done write. Essentially you would have to define the way how your program communicates with the OS as "real" threads are managed by it.
-- You know exactly what your needs are and you want to deal with threads and build the whole mutli-threading and asynchronous code/system yourself. This is pretty doable and could be nice learning experience. You probably will implement something that already exists but hey, that's how you learn new things and I would actually encourage this.
-- If you are implementing some concurrency technology that is not offered by C++, yeah you bet you'll need to use threads and deal with them.
+If you opt to use thread-based programming you'll have to deal with thread exhaustion, over-subscription, load balancing, and adaptation to new platforms. And you know...all of these are super fun to deal with. You may have to do it sometimes thou. As stated, threads are lower level concurrency API. Threads may allow you to write more efficient code suited to your specific needs. Cases where threads may be necessary
+- You want to mess directly with the concurrency API provided by the OS. Given this would be pretty hard, it could potentially lead to tremendous speed when done right. Essentially you would have to define the way how your program communicates with the OS as "real" threads are managed by it.
+- You know exactly what your needs are and you want to deal with threads and build the whole multi-threading and asynchronous code/system yourself. This is pretty doable and could be a nice learning experience. You probably will implement something that already exists but hey, that's how you learn new things and I would actually encourage this.
+- If you are implementing some concurrency technology that is not offered by C++, yeah, you bet you'll need to use threads and deal with them.
+
 
 * Conclusion
-I just want to say one thing. Never, never ever say that you "know C++" and be deeply sceptical of people who use the said expression. C++ is complex and you can do everything in a lot of different ways and probably things are going to work no matter what. HOWEVER, some solutions in C++ are very clearly better than others and a lot of times it is not clear what is the "optimal" way of achieving your goal. Do not be mislead by your own knowledge! C++ offers you an ever expanding world of good\bad solutions and knowing everything that there is to know is most likely infeasible. And you know what, that's actually OK. Because let's face it, software engineering is all about learning something new everyday in the process of horribly breaking your code.
+I just want to say one thing. Never, never ever say that you "know C++" and be deeply skeptical of people who use the said expression. C++ is complex and you can do everything in a lot of different ways and probably things are going to work no matter what. However, some solutions in C++ are very clearly better than others and a lot of times it is not clear what is the "optimal" way of achieving your goal. Do not be mislead by your own knowledge! C++ offers you an ever-expanding world of good\bad solutions and knowing everything that there is to know is most likely infeasible. And you know what, that's actually OK. Because let's face it, software engineering is all about learning something new every day in the process of horribly breaking your code.
+
+
 * References
 I'm very thankfully to these sources:
 - [[https://www.amazon.de/Effective-Modern-Specific-Ways-Improve/dp/1491903996][Effective modern C++]] - the book am talking about in this post
 - [[https://www.chromium.org/developers/smart-pointer-guidelines][Smart pointers guidelines]] - a very useful guide on how to be smart with your smart pointers
-- [[https://www.internalpointers.com/post/understanding-meaning-lvalues-and-rvalues-c][Understanding the meaning of lvalue or rvalues]] - a good blog post that will walk you through the usages and meaning of move semantics and how are they implemented through /rvalue/ and /lvalue/. 
+- [[https://www.internalpointers.com/post/understanding-meaning-lvalues-and-rvalues-c][Understanding the meaning of lvalue or rvalues]] - a good blog post that will walk you through the usages and the meaning of move semantics and how are they implemented through /rvalue/ and /lvalue/. 
 Check them out if you want to be a better C++ programmer.
 
 
