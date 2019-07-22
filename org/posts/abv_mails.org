@@ -41,10 +41,10 @@ The email provider in question is [[https://www.abv.bg/][ABV]]. It's a Bulgarian
 All of this makes working with /ABV/ incredibly annoying. I want to make a switch, but my emails for the past 10 years are there and I can't have them elsewhere.
 \\
 \\
-Needless to say, I had to do some "hacking" in order to solve my problem.
+Needless to say, I had to do some "hacking" in order to solve my problem. So let me take you on a journey.
 \\
 \\
-/Note:/ I am using GNU\Linux and the post assumes you are at least a little bit familiar with working on the terminal (in Bourne shell) under Unix like systems.z
+/Note:/ I am using GNU\Linux and the post assumes you are at least a little bit familiar with working on the terminal (in Bourne shell) in Unix like systems.
 
 
 * Abusing the Firefox's network analysis tools
@@ -59,7 +59,7 @@ https://nm40.abv.bg/email/msgdownload?mid=15493841873&fid=10
 Interesting! I assumed that the ~mid~ parameter is probably the message id and the ~fid~ is "folder id" (maybe?). So OK, it turns out that /ABV/ has an exposed API for downloading emails. If I somehow get the ids of all my emails, maybe I would be able to abuse the endpoint in some automatic way.
 \\
 \\
-A thing to note is that the downloaded file is in /.eml/ format. I wasn't familiar with the format but a [[https://fileinfo.com/extension/eml][quick google search]] told me that this is standard for emails and the whole information about the email is there. Attachments included! This is quite convenient as if I had all of my emails in /.eml/ format, I would essentially have all of the information about the emails that is currently on the /ABV/ servers.
+A thing to note is that the downloaded file is in /.eml/ format. I wasn't familiar with the format but a [[https://fileinfo.com/extension/eml][quick google search]] told me that this is standard for emails and the whole information about the email is there. Attachments included! This is quite xconvenient as if I had all of my emails in /.eml/ format, I would essentially have all of the information about the emails that is currently on the /ABV/ servers.
 
 
 ** Getting the information 
@@ -132,7 +132,7 @@ Cool! Getting really close now. /How do I get every id out?/ With [[https://www.
 grep "moveMessages.*" requests.har -o
 #+END_SRC
 
-I will filter a lot of the information down. In [[https://en.wikipedia.org/wiki/Regular_expression][regex]] land "moveMessages.*" means "First match ~moveMessages~ and then anything till the end of the line" The ~-o~ is there so that /grep/ prints only the matching part of the lines that match. A problem I had then was that there was inconsistent amount of junk between ~moveMessages~ and the numbers that I needed. At the end I used this:
+This will filter a lot of the information down. In [[https://en.wikipedia.org/wiki/Regular_expression][regex]] land "moveMessages.*" means "First match ~moveMessages~ and then anything till the end of the line" The ~-o~ is there so that /grep/ prints only the matching part of the lines that match. A problem I had then was that there was inconsistent amount of junk between ~moveMessages~ and the numbers that I needed. At the end I used this:
 
 #+BEGIN_SRC sh
 grep "moveMessages.*" requests.har -o | grep "|[0-9]{5,}|" -E -o
