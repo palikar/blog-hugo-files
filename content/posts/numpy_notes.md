@@ -1,10 +1,10 @@
 +++
 title = "Notes on learning Numpy"
 author = ["Stanislav Arnaudov"]
-description = "My notes on numpy when I started looking at the library"
+description = "My notes on numpy when I started looking into the library"
 date = 2018-07-20T00:00:00+02:00
 keywords = ["machine-learning", "python", "numpy"]
-lastmod = 2019-04-07T00:51:10+02:00
+lastmod = 2019-04-22T13:07:51+02:00
 categories = ["machine-learning"]
 draft = false
 weight = 100
@@ -77,12 +77,12 @@ The most important object defined in _NumPy_ is an N-dimensional array type call
 numpy.array(object, dtype = None, copy = True, order = None, subok = False, ndmin = 0)
 ```
 
--   **object** - Any object exposing the array interface method returns an array, or any (nested) sequence.
--   **dtype** - Desired data type of array, optional
--   **copy** - Optional. By default (true), the object is copied
--   **order** - C (row major) or F (column major) or A (any) (default)
--   **subok** - By default, returned array forced to be a base class array. If true, sub-classes passed through
--   **ndmin** - Specifies minimum dimensions of resultant array
+-   `object` - Any object exposing the array interface method returns an array, or any (nested) sequence.
+-   `dtype` - Desired data type of array, optional
+-   `copy` - Optional. By default (true), the object is copied
+-   `order` - C (row major) or F (column major) or A (any) (default)
+-   `subok` - By default, returned array forced to be a base class array. If true, sub-classes passed through
+-   `ndmin` - Specifies minimum dimensions of resultant array
 
 ```python
 import numpy as np
@@ -108,13 +108,13 @@ print(a)
 
 There are a lot of possible data types that are supported by _numpy_. Some of the scalar types include:
 
--   bool\_, int\_, intc, intp, int8, int16, int32, uint8. uint16, uint32
+-   bool\_, int\_, intc, intp, int8, int16, int32, uint8, uint16, uint32
 -   float\_, float16, float32, flaot64
 -   complex, complex64, complex128
 
-The types can be encapsulated in _Data Type Object_.
+<br /> <br /> The types can be encapsulated in _Data Type Object_.
 
-```text
+```python
 numpy.dtype(object, align, copy)
 ```
 
@@ -122,7 +122,7 @@ numpy.dtype(object, align, copy)
 -   **Align** − If true, adds padding to the field to make it similar to C-struct
 -   **Copy** − Makes a new copy of dtype object. If false, the result is reference to builtin data type object
 
-The object can be later used when a given function or a constructor takes _dtype_ argument. Those object can also create struct-like types for structured data. Think of it like defining custom struct in C++ and then creating a vector with elements of this struct.
+<br /> <br /> The object can be later used when a given function or a constructor takes _dtype_ argument. Those object can also create struct-like types for structured data. Think of it like defining custom struct in C++ and then creating a vector with elements of this struct.
 
 ```python
 import numpy as np
@@ -144,7 +144,7 @@ Which yields:
 [30 30 30]
 ```
 
-This way we can define map-like structure that contains a bunch of different arrays, each addressable with a key. The following code defines a 'human' data type with _string_ field _name_, _int_ field age, and _float_ field social class.
+<br /> <br /> This way we can define map-like structure that contains a bunch of different arrays, each addressable with a key. The following code defines a 'human' data type with _string_ field _name_, _int_ field age, and _float_ field social class.
 
 ```python
 import numpy as np
@@ -162,17 +162,17 @@ print(a)
 
 This shows another important point. Each time can be specified with a single character.
 
--   **'b'** − boolean
--   **'i'** − (signed) integer
--   **'u'** − unsigned integer
--   **'f'** − floating-point
--   **'c'** − complex-floating point
--   **'m'** − timedelta
--   **'M'** − datetime
--   **'O'** − (Python) objects
--   **'S'**, 'a' − (byte-)string
--   **'U'** − Unicode
--   **'V'** − raw data (void)
+-   `'b'` − boolean
+-   `'i'` − (signed) integer
+-   `'u'` − unsigned integer
+-   `'f'` − floating-point
+-   `'c'` − complex-floating point
+-   `'m'` − timedelta
+-   `'M'` − datetime
+-   `'O'` − (Python) objects
+-   `'S'`, 'a' − (byte-)string
+-   `'U'` − Unicode
+-   `'V'` − raw data (void)
 
 
 ## Array Attributes {#array-attributes}
@@ -200,13 +200,13 @@ print(a.shape)
 (2, 4)
 ```
 
-<br /> _Ndim_ of an _numpy_ array on the other hand is the number of dimensions. I. e. `[1,2]` has _ndim_ equal to 1, and `[[1,3],[1.3]]` has _ndim_ 2
+<br /> <br /> _Ndim_ of an _numpy_ array on the other hand is the number of dimensions. I. e. `[1,2]` has _ndim_ equal to 1, and `[[1,3],[1.3]]` has _ndim_ 2
 
 ```python
 import numpy as np
 import numpy as np
 a = np.arange(24)
-print (a.ndim)
+print(a.ndim)
 
 a = np.array([[1,2,3,4],[1,2,3,4]])
 print(a.ndim)
@@ -229,16 +229,16 @@ print(a.ndim)
 
 # now reshape it
 b = a.reshape(2,4,3)
-print (b)
+print(b)
 
 ```
 
-The elements stay the same and occupy the same memory location but the access to them is happening in different way.\*\* 'Size' of an array **numpy.itemsize** - this array attribute returns the length of each element of array in bytes.
+The elements stay the same and occupy the same memory location but the access to them is happening in different way.\*\* 'Size' of an array `numpy.itemsize` - this array attribute returns the length of each element of array in bytes.
 
 ```python
 import numpy as np
 x = np.array([1,2,3,4,5], dtype = np.int8)
-print (x.itemsize)
+print(x.itemsize)
 ```
 
 ```text
@@ -248,13 +248,13 @@ print (x.itemsize)
 
 ### Num elements {#num-elements}
 
-The attribute that everyone has been waiting for... **numpy.size**
+The attribute that everyone has been waiting for... `numpy.size`
 
 ```python
 import numpy as np
 
 a = np.arange(24)
-print (a.size)
+print(a.size)
 ```
 
 ```text
@@ -267,7 +267,7 @@ print (a.size)
 
 ### Basic slicing {#basic-slicing}
 
-Basic slicing is an extension of Python's basic concept of slicing to **n** dimensions. A Python slice object is constructed by giving start, stop, and step parameters to the built-in slice function. This slice object is passed to the array to extract a part of array.
+Basic slicing is an extension of Python's basic concept of slicing to _n_ dimensions. A Python slice object is constructed by giving start, stop, and step parameters to the built-in slice function. This slice object is passed to the array to extract a part of array.
 
 ```python
 import numpy as np
@@ -285,23 +285,23 @@ print(a[2:])
 
 ### Advanced {#advanced}
 
-This mechanism helps in selecting any arbitrary item in an array based on its Ndimensional index. Each integer array represents the number of indexes into that dimension. When the index consists of as many integer arrays as the dimensions of the target ndarray, it becomes straightforward.
+This mechanism helps in selecting any arbitrary item in an array based on its _Ndimensional_ index. Each integer array represents the number of indexes into that dimension. When the index consists of as many integer arrays as the dimensions of the target ndarray, it becomes straightforward.
 
 ```python
 import numpy as np
 
 x = np.array([[ 0,  1,  2],[ 3,  4,  5],[ 6,  7,  8],[ 9, 10, 11]])
 
-print ('Our array is:')
-print (x)
-print ('\n')
+print('Our array is:')
+print(x)
+print('\n')
 
 rows = np.array([[0,0],[3,3]])
 cols = np.array([[0,2],[0,2]])
 y = x[rows,cols]
 
-print ('The corner elements of this array are:' )
-print (y)
+print('The corner elements of this array are:' )
+print(y)
 ```
 
 ```text
@@ -310,9 +310,11 @@ Our array is:
  [ 3  4  5]
  [ 6  7  8]
  [ 9 10 11]]
-
+```
 
 The corner elements of this array are:
+
+```text
 [[ 0  2]
  [ 9 11]]
 ```
@@ -326,7 +328,7 @@ This type of advanced indexing is used when the resultant object is meant to be 
 import numpy as np
 
 x = np.arange(0,20)
-print (x[x>5])
+print(x[x>5])
 ```
 
 ```text
@@ -354,7 +356,7 @@ print(c)
 
 ## Iterating {#iterating}
 
-**numpy.nditer()** is your best friend. It returns an iterable (for loop) object that can be further used to go through an array. It can also be constructed with two arrays to go through the both of them simultaneously. The array must be _broadcastable_. Constructing an iterator that can modify the values of an array happens through a flag in the constructor.
+`numpy.nditer()` is your best friend. It returns an iterable (for loop) object that can be further used to go through an array. It can also be constructed with two arrays to go through the both of them simultaneously. The array must be _broadcastable_. Constructing an iterator that can modify the values of an array happens through a flag in the constructor.
 
 ```python
 import numpy as np
@@ -413,32 +415,32 @@ print(a)
 
 ### Changing shape {#changing-shape}
 
-| Method      | Description                          |
-|-------------|--------------------------------------|
-| **reshape** | Change shape                         |
-| **flat**    | 1D Iterator                          |
-| **flatten** | Returns a new array                  |
-| **revel**   | Returns a contiguous flattened array |
+| Method    | Description                          |
+|-----------|--------------------------------------|
+| `reshape` | Change shape                         |
+| `flat`    | 1D Iterator                          |
+| `flatten` | Returns a new array                  |
+| `revel`   | Returns a contiguous flattened array |
 
 
 ### Transpose {#transpose}
 
-| Method        | Description                           |
-|---------------|---------------------------------------|
-| **transpose** | Permutes the dimensions of an array   |
-| **ndarray.T** | Same as self.transpose()              |
-| **rollaxis**  | Rolls the specified axis backwards    |
-| **swapaxes**  | Interchanges the two axes of an array |
+| Method      | Description                           |
+|-------------|---------------------------------------|
+| `transpose` | Permutes the dimensions of an array   |
+| `ndarray.T` | Same as self.transpose()              |
+| `rollaxis`  | Rolls the specified axis backwards    |
+| `swapaxes`  | Interchanges the two axes of an array |
 
 
 ### Joining Arrays {#joining-arrays}
 
-| Method      | Desc                                        |
-|-------------|---------------------------------------------|
-| concatenate | Joins several arrays along an existing axes |
-| stack       | Joins several arrays along a new axes       |
-| hstack      | Stacks arrays in sequence horizontally      |
-| vstack      | Stacks arrays in sequence vertically        |
+| Method        | Desc                                        |
+|---------------|---------------------------------------------|
+| `concatenate` | Joins several arrays along an existing axes |
+| `stack`       | Joins several arrays along a new axes       |
+| `hstack`      | Stacks arrays in sequence horizontally      |
+| `vstack`      | Stacks arrays in sequence vertically        |
 
 
 ### Adding and removing elements {#adding-and-removing-elements}
@@ -458,7 +460,7 @@ There are two flavors of saving/loading a _ndarray_ to/from file.
 
 ### _.npy_ files {#dot-npy-files}
 
-This _.npy_ file stores data, shape, dtype and other information required to reconstruct the ndarray in a disk file such that the array is correctly retrieved even if the file is on another machine with different architecture. <br /> The IO is simple and is done through the functions **numpy.save()** and **numpy.load()**
+This _.npy_ file stores data, shape, _dtype_ and other information required to reconstruct the _ndarray_ in a disk file such that the array is correctly retrieved even if the file is on another machine with different architecture. <br /> <br /> The _IO_ is simple and is done through the functions `numpy.save()` and `numpy.load()`
 
 ```python
 import numpy as np
@@ -470,7 +472,7 @@ b = np.load('outfile.npy')
 
 ### _.txt_ files {#dot-txt-files}
 
-This is just a simple, cheap and dirty way to save an array to a file "symbolically". The function that come into play are **numpy.savetxt()** and **numpy.loadtxt()**
+This is just a simple, cheap and dirty way to save an array to a file "symbolically". The function that come into play are `numpy.savetxt()` and `numpy.loadtxt()`
 
 ```python
 import numpy as np

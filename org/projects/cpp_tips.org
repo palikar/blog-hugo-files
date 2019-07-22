@@ -33,8 +33,6 @@
 * Abstract
 C++ is hard! C++ is even harder when you want to write a good code. There are a lot of things to think about when your write code and if you don't think about them, you are probable going to mess things up. Recently I've found that one good book (see references) that gives 42 (hehe!) concrete tips on how to be a better c++ programmer. This is my summary of sorts about the contents of said book.
 
-#+TOC: headlines 2
-
 * The cool new things
 ** Rvalue, lvalue and move semantics
 <<sec:move-semantics>>

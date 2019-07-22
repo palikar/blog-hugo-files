@@ -1,10 +1,10 @@
 +++
 title = "Github commits' emails change"
 author = ["Stanislav Arnaudov"]
-description = "A short description of a solution to a github related problem with the email addresses associated with a commit historys"
+description = "A short description of a solution to a Github related problem with the email addresses associated with a commit history"
 date = 2018-06-22T00:00:00+02:00
 keywords = ["github", "git", "commit", "change", "history"]
-lastmod = 2019-04-22T00:02:09+02:00
+lastmod = 2019-04-22T00:06:41+02:00
 categories = ["github"]
 draft = false
 weight = 100
@@ -106,4 +106,4 @@ in a `.sh` file, adjust the `<user_name>` and `<user email>` fields with your na
 3.  Push the change repo on Github (eventually you will be asked to give your username and password)
 4.  Deletes the newly created folder.
 
-At the end everything is as it was but all of the commits in the repo will have the email that was in the script. <br /> <br /> <span class="underline">Note:</span> This will create a file in your home directory with name .git-credentials and it will contain your Github username and password. I do this so I can use `git config --global credential.helper cache` which removes the necessity of typing out your name and password on every commit. (Yes, I know, I should set up the [ssh thing](https://help.github.com/en/articles/connecting-to-github-with-ssh), shut up) <br /> <br /> **Caution:** My script changes the committer's emails and names of <span class="underline">**ALL**</span> commits. If you run the script on a repository with several developers, you could potentially and most likely will cause some people to be angry with you... and rightfully so! I mean, you just ruined someone's _Contributions_ panel... how would you like that if done to you. <br /> <br /> And there you have it. With your newly acquired knowledge you could transform your _Contributions_ panel form this: ![](/ox-hugo/panel_bad.png) to this. ![](/ox-hugo/pane_good.png) And you know, the ultimate bragging rights are yours!
+At the end everything is as it was but all of the commits in the repo will have the email that was in the script. <br /> <br /> <span class="underline">Note:</span> This will create a file in your home directory with name .git-credentials and it will contain your Github username and password. I do this so I can use `git config --global credential.helper cache` which removes the necessity of typing out your name and password on every commit. (Yes, I know, I should set up the [ssh thing](https://help.github.com/en/articles/connecting-to-github-with-ssh), shut up) <br /> <br /> **Caution:** My script changes the commiter's emails and names of <span class="underline">**ALL**</span> commits. If you run the script on a repository with several developers, you could potentially and most likely will cause some people to be angry with you... and rightfully so! I mean, you just ruined someone's _Contributions_ panel... how would you like that if done to you. <br /> <br /> And there you have it. With your newly acquired knowledge you could transform your _Contributions_ panel form this: ![](/ox-hugo/panel_bad.png) to this. ![](/ox-hugo/pane_good.png) And you know, the ultimate bragging rights are yours!

@@ -4,7 +4,7 @@ author = ["Stanislav Arnaudov"]
 description = "Several tips that I've explained to myself after I read Effective Modern C++"
 date = 2018-07-27T00:00:00+02:00
 keywords = ["c++", "programming", "code", "type-deduction", "rvalue", "lvalue", "template"]
-lastmod = 2019-04-07T00:45:21+02:00
+lastmod = 2019-04-22T00:29:23+02:00
 categories = ["c++"]
 draft = false
 weight = 100
@@ -14,51 +14,13 @@ weight = 100
 
 C++ is hard! C++ is even harder when you want to write a good code. There are a lot of things to think about when your write code and if you don't think about them, you are probable going to mess things up. Recently I've found that one good book (see references) that gives 42 (hehe!) concrete tips on how to be a better c++ programmer. This is my summary of sorts about the contents of said book.
 
-<div class="ox-hugo-toc toc">
-<div></div>
-
-<div class="heading">Table of Contents</div>
-
-- [Abstract](#abstract)
-- [The cool new things](#the-cool-new-things)
-    - [Rvalue, lvalue and move semantics](#rvalue-lvalue-and-move-semantics)
-    - [Auto](#auto)
-    - [Smart pointers](#smart-pointers)
-    - [Some random abbreviations](#some-random-abbreviations)
-- [Tips](#tips)
-    - [Knowing your template type deduction is a bless.](#knowing-your-template-type-deduction-is-a-bless-dot)
-    - [auto type deduction is also something to thinks about](#auto-type-deduction-is-also-something-to-thinks-about)
-    - [decltype is cool little thing](#decltype-is-cool-little-thing)
-    - [Prefer auto to explicit type declarations](#prefer-auto-to-explicit-type-declarations)
-    - [nullptr is a pointer to nothing, 0 and NULL are not that](#nullptr-is-a-pointer-to-nothing-0-and-null-are-not-that)
-    - [Alias declarations are better than typedef](#alias-declarations-are-better-than-typedef)
-    - [Deleted functions are to be used instead of private ones](#deleted-functions-are-to-be-used-instead-of-private-ones)
-    - [Use override](#use-override)
-    - [Think when you need const\_iterator and when iterator](#think-when-you-need-const-iterator-and-when-iterator)
-    - [noexcept is good and it is to be used carefully](#noexcept-is-good-and-it-is-to-be-used-carefully)
-    - [constexpr is the new hot thing!](#constexpr-is-the-new-hot-thing)
-    - [The mutable keyword exists and you should know about it!](#the-mutable-keyword-exists-and-you-should-know-about-it)
-    - [std::unique\_ptr is for exclusive ownership!](#std-unique-ptr-is-for-exclusive-ownership)
-    - [std::shared\_ptr is for... shared ownership!](#std-shared-ptr-is-for-dot-dot-dot-shared-ownership)
-    - [Pimpl and the proper way to use it.](#pimpl-and-the-proper-way-to-use-it-dot)
-    - [std::forward and std::move are quite interesting.](#std-forward-and-std-move-are-quite-interesting-dot)
-    - [Universal references and rvalue references](#universal-references-and-rvalue-references)
-    - [_Pass by value_ is not what your first C++ book would have you believe](#pass-by-value-is-not-what-your-first-c-book-would-have-you-believe)
-    - [Return value optimization(RVO) - don't return std:::move of local variable](#return-value-optimization--rvo--don-t-return-std-move-of-local-variable)
-    - [std::async is something that exists and it's generally to be preferred over std::thread.](#std-async-is-something-that-exists-and-it-s-generally-to-be-preferred-over-std-thread-dot)
-- [Conclusion](#conclusion)
-- [References](#references)
-
-</div>
-<!--endtoc-->
-
 
 ## The cool new things {#the-cool-new-things}
 
 
 ### Rvalue, lvalue and move semantics {#rvalue-lvalue-and-move-semantics}
 
-<a id="orgacb9fa7"></a> "Move semantics" is a thing that we have in C++ now (since C++11 actually). It makes a ton of sense once you get it but it may be a little hard to wrap your head around it. At lest in the beginning, of course. First off - why do we need move semantics? For code efficiency! If you now what you are doing, your code can run faster, with fewer object copies and fewer objects created. Second, and perhaps more importantly, what are move semantics? The way I like to think about it - the ability to distinguish between object that won't be needed after the evaluation of an expression and the ability to do a different thing, if you are dealing with such object.<br /> Take a look at the following code:
+<a id="org1e7a6d4"></a> "Move semantics" is a thing that we have in C++ now (since C++11 actually). It makes a ton of sense once you get it but it may be a little hard to wrap your head around it. At lest in the beginning, of course. First off - why do we need move semantics? For code efficiency! If you now what you are doing, your code can run faster, with fewer object copies and fewer objects created. Second, and perhaps more importantly, what are move semantics? The way I like to think about it - the ability to distinguish between object that won't be needed after the evaluation of an expression and the ability to do a different thing, if you are dealing with such object.<br /> Take a look at the following code:
 
 ```c++
 MyObject obj1, obj2;
@@ -85,7 +47,7 @@ for(auto it : map){...} //just look how simple that is!!!
 
 ### Smart pointers {#smart-pointers}
 
-<a id="org5a1d292"></a> For an year now, I only hear how the C++ gurus scream how raw pointers are dangerous and will probably cause memory leaks when used so... smart pointers! For the price of a tiny bit of overhead, you will make harder (but not impossible!) for yourself to do something stupid with your code. Your new two best friends are `shared_ptr<>` and `unique_ptrt<>`:
+<a id="org486b7b6"></a> For an year now, I only hear how the C++ gurus scream how raw pointers are dangerous and will probably cause memory leaks when used so... smart pointers! For the price of a tiny bit of overhead, you will make harder (but not impossible!) for yourself to do something stupid with your code. Your new two best friends are `shared_ptr<>` and `unique_ptrt<>`:
 
 ```c++
 std::shared_ptr<int> int_ptr = std::maked_shared<int>(2);
@@ -860,7 +822,7 @@ You ship it. Everyone is happy. The code is clean. You can live in peace with th
 Generally when you want to use pointer in the new modern C++ world, your first thought should be "Can I use `unique_ptr` here?". And yes, this is the preferred way of using "pointers" these days. `unique_ptr` can be viewed to as small as raw pointer and for most operations they behave exactly the same way as raw pointers. <br /> There are few things to keep in mind while using `unique_ptr`.
 
 -   `unique_ptr` embodies exclusive ownership. Every `unique_ptr` that is not empty "owns" the resource it's holding and you have guarantee (generally) that this is the only object holding pointer to the underlying object. The `unique_ptr` cannot be copy as this would create another holder of the resource so `unique_ptr`-s are only movable
--   You can know <span class="underline">exactly</span> when an `unique_ptr` object would be destroyed and with that the resource released. It is said that one of the greatest features of C++ is the closing brackets `}`. In order words, the fact that you know exact moment at which an object will be destroyed and the destructor of the class will be ran for this object. The ramifications for `unique_ptr` is that the object will be destroyed when the enclosing scopes comes to an end. Of course you could move the `unique_ptr` before that and transfer its ownership to some other part of the program. The moving was talked about in the [beginning](#org5a1d292).
+-   You can know <span class="underline">exactly</span> when an `unique_ptr` object would be destroyed and with that the resource released. It is said that one of the greatest features of C++ is the closing brackets `}`. In order words, the fact that you know exact moment at which an object will be destroyed and the destructor of the class will be ran for this object. The ramifications for `unique_ptr` is that the object will be destroyed when the enclosing scopes comes to an end. Of course you could move the `unique_ptr` before that and transfer its ownership to some other part of the program. The moving was talked about in the [beginning](#org486b7b6).
 
 <br /> Typical use of `unique_ptr` are the factory methods. The factory function could even return different type(from some hierarchy of course) of object depending on the inputs input parameters.
 
@@ -1020,7 +982,7 @@ _Note:_ Use your header for only for declaration when possible. Also `= defualt`
 
 ### std::forward and std::move are quite interesting. {#std-forward-and-std-move-are-quite-interesting-dot}
 
-<a id="org3c1977d"></a> Ok, hopefully by now you at least have heard of **move semantics**. Inevitably you've also probably seen `std::move()` and `std::forward<T>()` used in some weird way and wondered "What the hell is happening here?". First thing to understand about hose functions - they are functions that don't do much in run-time. They don't generate code. The don't "move". At their core, those functions are casts. They cast _rvalue_ object to _lvalue_ ones. Refer to one of the [intro sections](#orgacb9fa7) for more information about what are those. The difference between `std::move()` and `std::forward<T>()` is that they perform the cast under different conditions. `std::move()` performs it always with no conditions. `std::forward<T>()` casts to revalue only if a certain conditions is met - if the argument is bind to rvalue. <br /> Yes, it is well known and by this point accepted fact that `std::move()` has confusing AF name but... just roll with it and it will grow on you. `std::move()` doesn't actually move anything. `std::move()` merely makes an object eligible for moving. This is no guarnatee however that an object will be moved from. Consider this:
+<a id="org97fed95"></a> Ok, hopefully by now you at least have heard of **move semantics**. Inevitably you've also probably seen `std::move()` and `std::forward<T>()` used in some weird way and wondered "What the hell is happening here?". First thing to understand about hose functions - they are functions that don't do much in run-time. They don't generate code. The don't "move". At their core, those functions are casts. They cast _rvalue_ object to _lvalue_ ones. Refer to one of the [intro sections](#org1e7a6d4) for more information about what are those. The difference between `std::move()` and `std::forward<T>()` is that they perform the cast under different conditions. `std::move()` performs it always with no conditions. `std::forward<T>()` casts to revalue only if a certain conditions is met - if the argument is bind to rvalue. <br /> Yes, it is well known and by this point accepted fact that `std::move()` has confusing AF name but... just roll with it and it will grow on you. `std::move()` doesn't actually move anything. `std::move()` merely makes an object eligible for moving. This is no guarnatee however that an object will be moved from. Consider this:
 
 ```c++
 class Anotation
@@ -1070,7 +1032,7 @@ Here param can bind to _rvalues_ <span class="underline">and</span> to _lvalues_
 1.  Type deduction must occur
 2.  The reference must have exactly the form "T&&". No `const`, no nothing. Just "T&&".
 
-If the `const` qualifier is used for the function parameter, it(the parameter) will "collapse" _rvalue const reference_ which pretty useless on itself as we say in the [previous tip](#org3c1977d). <br /> As stated if universal reference is bound to rvalue, it is an rvalue reference and lvalue reference if it's bound to lvalue. This means that universal references are exactly thing to be used with `std::forward<T>()`.
+If the `const` qualifier is used for the function parameter, it(the parameter) will "collapse" _rvalue const reference_ which pretty useless on itself as we say in the [previous tip](#org97fed95). <br /> As stated if universal reference is bound to rvalue, it is an rvalue reference and lvalue reference if it's bound to lvalue. This means that universal references are exactly thing to be used with `std::forward<T>()`.
 
 
 ### _Pass by value_ is not what your first C++ book would have you believe {#pass-by-value-is-not-what-your-first-c-book-would-have-you-believe}

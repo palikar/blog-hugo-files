@@ -19,7 +19,7 @@
 #+HUGO_ALLOW_SPACES_IN_TAGS: nil
 #+HUGO_AUTO_SET_LASTMOD: t
 #+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
-#+DESCRIPTION: My notes on pandas when I started looking at the library
+#+DESCRIPTION: My notes on pandas when I started looking into the library
 #+HUGO_DRAFT: false
 #+KEYWORDS: machine-learning python pandas
 #+HUGO_TAGS: 
@@ -35,9 +35,11 @@ For transparency sake - those are my notes while learning about /pandas/ from [[
 ** Basic
 *pandas* is a Python package providing fast, flexible, and expressive data structures designed to make working with "relational Heterogeneous data" or "labeled" data both easy and intuitive. It aims to be the fundamental high-level building block for doing practical, *real world* data analysis in Python. Additionally, it has the broader goal of becoming the most powerful and flexible open source data analysis / manipulation tool available in any language. It is already well on its way toward this goal.
 \\
+\\
 It's like a data-base-like objects to deal with your data.
 - data could be loaded form /.csv/ files and be written again
 - some basic statistical analysis is possible
+
 ** Features
 A short list of features as advertised on the official site of /pandas/.
 - Fast and efficient DataFrame object with default and customized indexing.
@@ -49,11 +51,11 @@ A short list of features as advertised on the official site of /pandas/.
 - Group by data for aggregation and transformations.
 - High performance merging and joining of data.
 - Time Series functionality.
+
 ** Tl;DR
 Managing data in structures and easily manipulating the data.
 
-* Contents 
-#+TOC: headlines 2
+
 * Basic Structures
 ** DataFrame
 It's like a table in RDB.
@@ -62,16 +64,20 @@ It's like a table in RDB.
 - Indices are the labels for each row
 This is the most common object when dealing with data and using /pandas/. The data in the object is heterogeneous, the shape and the size are mutable. The last part means that the models you build in one object that contains data can easily(ish) be transformed into another model(by model I mean the way your data is structured- names and count of columns(attributes), indexing of the rows, type of the data inside).
 \\
+\\
 Basic construction of DataFrame object is as follows:
-#+BEGIN_EXAMPLE
+
+#+BEGIN_SRC python
 pandas.DataFrame( data, index, columns, dtype, copy)
-#+END_EXAMPLE
-- *data* - ndarray, series, map, lists, dict, constants..etc. The raw data that will be stored in the DataFame. This could be for example a list of lists. In this case the 'inner' lists will become the columns and the column-names will be given through *columns*. The number of the columns must be the same as the number of inner lists
-- *index* - the 'names' of the rows. Usually just an index (0,1,2,3....). The size of this must be the count of the entries in the dataset
-- *columns* - the names of the columns
+#+END_SRC
+
+- ~data~ - ndarray, series, map, lists, dict, constants..etc. The raw data that will be stored in the DataFame. This could be for example a list of lists. In this case the 'inner' lists will become the columns and the column-names will be given through *columns*. The number of the columns must be the same as the number of inner lists
+- ~index~ - the 'names' of the rows. Usually just an index (0,1,2,3....). The size of this must be the count of the entries in the dataset
+- ~columns~ - the names of the columns
 - ... - the other ones are none of our concern
 
 Some of the constructions:
+
 #+BEGIN_SRC python 
 import panda as pd
 import numpy as np
@@ -101,7 +107,9 @@ d = {'one' : pd.Series([1, 2, 3], index=['a', 'b', 'c']),
       'two' : pd.Series([1, 2, 3, 4], index=['a', 'b', 'c', 'd'])}
 df = pd.DataFrame(d)
 #+END_SRC
+
 All of the constructions are pretty intuitive and easy to understand. The thing to remember - all of the possible way that you can construct /DataFrame/.
+\\
 \\
 The column selections is just as easy:
 #+BEGIN_SRC python
@@ -133,9 +141,9 @@ df = df.append(df2)
 ** Series
 Series is a one-dimensional labeled array capable of holding data of any type (integer, string, float, python objects, etc.). The axis labels are collectively called index.
 Construction:
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC python
 pandas.Series( data, index, dtype, copy)
-#+END_EXAMPLE
+#+END_SRC
 The same thing as the  /DataFrame/!
 Some examples:
 #+BEGIN_SRC python
@@ -157,30 +165,30 @@ From what I understand, this is not widely used and I don't think I need it for 
 * Basic usage
 ** DataFrame basic function
 The most useful functions of the DataFrame-class
-- T     :   Transposes rows and columns.
-- axes  :   returns a list with the row axis labels and column axis labels as the only members.
-- dtypes:	Returns the dtypes in this object.
-- empty :   True if NDFrame is entirely empty [no items]; if any of the axes are of length 0.
-- ndim  :   umber of axes / array dimensions. This is just two
-- shape :   Returns a tuple representing the dimensionality of the DataFrame. The first element is the number of rows, the second - the number of attributes
-- size  :   umber of elements in the NDFrame.
-- values:	Numpy representation of NDFrame.
-- head():	Returns the first n rows. Could be used as =df.head(n)/df.tail(n)= to get the first/last *n* elements.
-- tail():	Returns last n rows.
+- ~T~     :   Transposes rows and columns.
+- ~axes~  :   returns a list with the row axis labels and column axis labels as the only members.
+- ~dtypes~:	Returns the dtypes in this object.
+- ~empty~ :   True if NDFrame is entirely empty [no items]; if any of the axes are of length 0.
+- ~ndim~  :   umber of axes / array dimensions. This is just two
+- ~shape~ :   Returns a tuple representing the dimensionality of the DataFrame. The first element is the number of rows, the second - the number of attributes
+- ~size~  :   umber of elements in the NDFrame.
+- ~values~:	Numpy representation of NDFrame.
+- ~head()~:	Returns the first n rows. Could be used as =df.head(n)/df.tail(n)= to get the first/last *n* elements.
+- ~tail()~:	Returns last n rows.
 ** Basic statistics
-A bunch of simple 'statistical' functions can be applied on the colums of a DataFrame object. Those include:
-- count()   : Number of non-null observations
-- sum()     : Sum of values
-- mean()    : Mean of Values
-- median()  : Median of Values
-- mode()    : Mode of values
-- std()     : Standard Deviation of the Values
-- min()     : Minimum Value
-- max()     : Maximum Value
-- abs()     : Absolute Value
-- prod()    : Product of Values
-- cumsum()  : Cumulative Sum
-- cumprod() : Cumulative Product
+A bunch of simple 'statistical' functions can be applied on the columns of a DataFrame object. Those include:
+- ~count()~   : Number of non-null observations
+- ~sum()~     : Sum of values
+- ~mean()~    : Mean of Values
+- ~median()~  : Median of Values
+- ~mode()~    : Mode of values
+- ~std()~     : Standard Deviation of the Values
+- ~min()~     : Minimum Value
+- ~max()~     : Maximum Value
+- ~abs()~     : Absolute Value
+- ~prod()~    : Product of Values
+- ~cumsum()~  : Cumulative Sum
+- ~cumprod()~ : Cumulative Product
 An example that demonstrates some of these:
 #+BEGIN_SRC python
 import pandas as pd
@@ -200,10 +208,10 @@ print df['Age'].min()
 print df['Age'].max()
 print df['Age'].std()
 #+END_SRC
-There exists also a =describe= function that shows summarized information about the data in the /DataFrame/. This includes *mean*, *std* and *IQR* values. The function excludes the textual columns and looks only at the numeric columns. *include* is the argument which is used to pass necessary information regarding what columns need to be considered for summarizing. It can be:
-    - *object* − Summarizes String columns
-    - *number* − Summarizes Numeric columns
-    - *all* − Summarizes all columns together
+There exists also a =describe= function that shows summarized information about the data in the /DataFrame/. This includes ~mean~, ~std~ and *IQR* values. The function excludes the textual columns and looks only at the numeric columns. *include* is the argument which is used to pass necessary information regarding what columns need to be considered for summarizing. It can be:
+    - ~object~ − Summarizes String columns
+    - ~number~ − Summarizes Numeric columns
+    - ~all~ − Summarizes all columns together
 
 #+BEGIN_SRC python
 import pandas as pd
@@ -233,16 +241,16 @@ This gives us:
 OK, kinda. The table is from me and I am kinda showing off.
 * Applying Functions on data in /DataFrame/
 There are a few way that we can transform a /DataFrame/ into another one by applying a map-like functions on the data. Depending on our needs we have the following options:
-- *pipe()* - Table wise Function Application: 
-- *apply()* - Row or Column Wise Function Application
-- *applymap()* - Element wise Function Application
+- ~pipe()~ - Table wise Function Application: 
+- ~apply()~ - Row or Column Wise Function Application
+- ~applymap()~ - Element wise Function Application
 ** Piping
 From the official documentation:
 #+BEGIN_QUOTE
-Use .pipe when chaining together functions that expect Series, DataFrames or GroupBy objects
+Use .pipe when chaining together functions that expect Series, /DataFrames/ or /GroupBy/ objects
 
 #+END_QUOTE
-From what I understand - One would used that when applying a bunch of functions on all elements of /DataFrame/(or whatever) while still having the possability that the applied functions takes more than just one argument. For example, let's add two to every elemnt in DataFrame through a adder functions that just adds its two arguments.
+From what I understand - One would used that when applying a bunch of functions on all elements of /DataFrame/ (or whatever) while still having the possibility that the applied functions takes more than just one argument. For example, let's add two to every element in /DataFrame/ through a adder functions that just adds its two arguments.
 #+BEGIN_SRC python
 import pandas as pd
 import numpy as np
@@ -263,7 +271,7 @@ pipe(foo_fun3, arg3=3)
 #+END_SRC
 This applies the three functions one after the other while the second argument of those functions is 1, 2 and 3.
 ** Applying
-The *apply* function of /DataFrame/ applies function on whole columns(or rows). The given function to be applied must take one argument - Series - and return again a Series. Think of it like that - they give you a whole array of numbers, you make something with it and give back a different (or not different) array of the same size. An illustrative example:
+The ~apply~ function of /DataFrame/ applies function on whole columns(or rows). The given function to be applied must take one argument - Series - and return again a Series. Think of it like that - they give you a whole array of numbers, you make something with it and give back a different (or not different) array of the same size. An illustrative example:
 #+BEGIN_SRC python :exports both
 import pandas as pd
 import numpy as np
@@ -280,7 +288,7 @@ Which gives us:
 : dtype: float64
 Note how the *np.mean* return a single number so in the final result there is only one row - the mean of each column.
 ** ApplyMap
-Not all functions can be vectorized (neither the Numpy arrays which return another array nor any value), the methods applymap() on DataFrame and analogously map() on Series accept any Python function taking a single value and returning a single value. This is similar to the *pipe* but it's less flexible. It just treats the whole /DataFrame/ as on big list and performs a mapping function on it.
+Not all functions can be vectorized (neither the Numpy arrays which return another array nor any value), the methods ~applymap()~ on DataFrame and analogously map() on Series accept any Python function taking a single value and returning a single value. This is similar to the *pipe* but it's less flexible. It just treats the whole /DataFrame/ as on big list and performs a mapping function on it.
 Example:
 #+BEGIN_SRC python
 import pandas as pd
@@ -326,18 +334,20 @@ This just prints A, B, C,...,etc.
 : D
 : x
 : y
+\\
+\\
 Iterating over the date in the /DataFrame/ can be done in several ways:
-- *iteritems()* − to iterate over the (key,value) pairs. Key here again is the 'index'-name-thing that is configurable through the *index* in the constructor.
-- *iterrows()* − iterate over the rows as (index,series) pairs. Here the index is just a number.
-- *itertuples()* − iterate over the rows as named tuples
-The most useful of the above is probably *iterrows()*.
+- ~iteritems()~ − to iterate over the (key,value) pairs. Key here again is the 'index'-name-thing that is configurable through the *index* in the constructor.
+- ~iterrows()~ − iterate over the rows as (index,series) pairs. Here the index is just a number.
+- ~itertuples()~ − iterate over the rows as named tuples
+The most useful of the above is probably ~iterrows()~.
 #+BEGIN_SRC python :results output
 import pandas as pd
 import numpy as np
 
 df = pd.DataFrame(np.random.randn(4,3),columns = ['col1','col2','col3'])
 for row_index,row in df.iterrows():
-   print (str(row_index) + "\n" + str(row))
+   print(str(row_index) + "\n" + str(row))
 #+END_SRC
 
  
@@ -371,10 +381,12 @@ row.col2
 There are two possibilities for sorting:
 1. By lable - i. e. by index
 2. By value of some column
-The first one is useful when the data is saved out of order. By appropriately creating the index in the construction and then sorting by lable, you can load the data in memory in the right order.\\
+The first one is useful when the data is saved out of order. By appropriately creating the index in the construction and then sorting by lable, you can load the data in memory in the right order.
+\\
+\\
 The two functions are:
-- *sort_index([ascending=True/False])*
-- *sort_values(by=col_name,[ascending=True/False])*
+- ~sort_index([ascending=True/False])~
+- ~sort_values(by=col_name,[ascending=True/False])~
 By default /ascending/ is set to /True/.
 Example:
 #+BEGIN_SRC python :results output
@@ -443,8 +455,9 @@ There are some useful statistical functions already in /pandas/ that help with  
    print(s.pct_change())
    print("-----")
    df = pd.DataFrame(np.random.randn(5, 2))
-   print (df.pct_change())
+   print(df.pct_change())
    #+END_SRC
+
 Gives us:
     
    #+begin_example
@@ -471,7 +484,7 @@ import pandas as pd
 import numpy as np
 s1 = pd.Series(np.random.randn(10))
 s2 = pd.Series(np.random.randn(10))
-print (s1.cov(s2))
+print(s1.cov(s2))
 #+END_SRC
 Output:
  
@@ -509,7 +522,7 @@ df = pd.DataFrame(
     index = pd.date_range('1/1/2000', periods=10),
     columns = ['A', 'B', 'C', 'D']
 )
-print (df.rolling(window=3).mean())
+print(df.rolling(window=3).mean())
 #+END_SRC
  
 #+begin_example
@@ -568,7 +581,9 @@ In many situations the following 'pipeline' occurs:
 3. Combine the result into a new object
 The second step could have some variations. Maybe we can want to transform or filter the data but the general idea stays. Pandas offers some great functions to achieve all of this.
 \\
+\\
 Firstly, in order to create the groups we can use the *groupby()* function. It can take the name of single column or multiple ones. In the latter case, the appropriate combinations between the keys of the columns are generated. Each combinations is it's own group. Once the grouping object is created, the groups can be examined with ~gr.groups~. The groups can also be easly iterated over. Selecting a group is also easy by specifying its key.
+\\
 \\
 Summarizing example:
 #+BEGIN_SRC python :results output
@@ -581,13 +596,13 @@ ipl_data = {'Team': ['Riders', 'Riders', 'Devils', 'Devils', 'Kings',
 df = pd.DataFrame(ipl_data)
 gr = df.groupby(['Team','Year'])
 
-print (gr.groups)
+print(gr.groups)
 print("------")
 for name,group in gr:
-    print (name)
-    print (group)
+    print(name)
+    print(group)
 print("-----")
-print (gr.get_group(('Riders', 2014)))
+print(gr.get_group(('Riders', 2014)))
 
 #+END_SRC
 
@@ -636,7 +651,7 @@ print (gr.get_group(('Riders', 2014)))
 0     876     1  Riders  2014
 #+end_example
 
- Now comes the fun part. The *agg()* function eturns a single aggregated value for each group. It takes a function on its own that does the actual work. Many of the /numpy/ functions are supported. Multiple aggregations per *agg()* call are also possible. To note is that *agg()* is usually applied to single column
+ Now comes the fun part. The *agg()* function returns a single aggregated value for each group. It takes a function on its own that does the actual work. Many of the /numpy/ functions are supported. Multiple aggregations per *agg()* call are also possible. To note is that *agg()* is usually applied to single column
 
 
   #+BEGIN_SRC python :results output 
@@ -652,9 +667,9 @@ print (gr.get_group(('Riders', 2014)))
 
   grouped = df.groupby('Year')
 
-  print (grouped['Points'].agg(np.mean))
+  print(grouped['Points'].agg(np.mean))
   print("----")
-  print (grouped['Points'].agg([np.sum, np.mean, np.std]))
+  print(grouped['Points'].agg([np.sum, np.mean, np.std]))
   #+END_SRC
 
    
@@ -700,7 +715,7 @@ When working with a little bin more complex data like in /pandas/ the concatenat
 #+BEGIN_EXAMPLE
 pd.concat(objs,axis=0,join='outer',join_axes=None,ignore_index=False)
 #+END_EXAMPLE
-The /axis/ parameter controls how the concatenation is done - either by columns or by rows(dy default).
+The /axis/ parameter controls how the concatenation is done - either by columns or by rows (row default).
 
 #+BEGIN_SRC python :results output
 import pandas as pd
@@ -714,9 +729,9 @@ two = pd.DataFrame({
     'subject_id':['sub2','sub4','sub3','sub6','sub5'],
     'Marks_scored':[89,80,79,97,88]},
                    index=[1,2,3,4,5])
-print (pd.concat([one,two]))
+print(pd.concat([one,two]))
 print("-------")
-print (pd.concat([one,two],axis=1))
+print(pd.concat([one,two],axis=1))
 #+END_SRC
 
 - by row
@@ -759,7 +774,7 @@ two = pd.DataFrame({
     'subject_id':['sub2','sub4','sub3','sub6','sub5'],
     'Marks_scored':[89,80,79,97,88]},
                    index=[1,2,3,4,5])
-print (pd.concat([one,two],keys=['x','y'],ignore_index=False))
+print(pd.concat([one,two],keys=['x','y'],ignore_index=False))
 #+END_SRC
 
 #+begin_example
@@ -777,12 +792,14 @@ y 1            89   Billy       sub2
 #+end_example
 Later those new keys can be used in order to distinguish from which set the row came from.
 \\
+\\
 Appending is also possible and it takes simple form:
 #+BEGIN_EXAMPLE
 one.append(two)
 #+END_EXAMPLE
 * Categories
 A lot of times some string-fields in the data aren't just some random text but a repetitive and an element of some predefined set of possible values. Those are the categorical types of data. Something like [big, medium, small]. Categorical variables can take on only a limited, and usually fixed number of possible values. Besides the fixed length, categorical data might have an order but cannot perform numerical operation. Categorical are a /Pandas/ data type.
+\\
 \\
 A simple example to create a /Series/ object that only can contain [a, b, c]
 #+BEGIN_SRC python :results output
@@ -815,17 +832,19 @@ print(cat)
 : [a, b, c, a, b, c, NaN]
 : Categories (3, object): [c < b < a]
 \\
+\\
 *obj.cat.categories* command is used to get the categories of the object.
+\\
 \\
 Removing categories is also something that comes in handy and of course it's possible with /pandas/
 #+BEGIN_SRC python :results output
 import pandas as pd
 
 s = pd.Series(["a","b","c","a"], dtype="category")
-print ("Original object:")
-print (s)
+print("Original object:")
+print(s)
 
-print ("After removal:")
+print("After removal:")
 print( s.cat.remove_categories("a"))
 #+END_SRC
 
@@ -846,7 +865,7 @@ dtype: category
 Categories (2, object): [b, c]
 #+end_example
 * Reading Data from /.csv/-files
-At the beginning probably each applications loads some date from the file system or link or whatever. /pandas/ provides *IO API* for reading data from /.cvs/-files. The two main functions for reading text files are *read_csv()* and *read_table()*. They use simillar procedures to intelligently convert tabular data into a /DataFrame/ object. The general form of the functions:
+At the beginning probably each applications loads some date from the file system or link or whatever. /pandas/ provides *IO API* for reading data from /.cvs/-files. The two main functions for reading text files are *read_csv()* and *read_table()*. They use similar procedures to intelligently convert tabular data into a /DataFrame/ object. The general form of the functions:
 #+BEGIN_EXAMPLE
 pandas.read_csv(filepath_or_buffer, sep=',', delimiter=None, header='infer',
 names=None, index_col=None, usecols=None
@@ -881,7 +900,9 @@ A lot of the data in /.cvs/ files has a special column that specifies the index 
 import pandas as pd
 
 df=pd.read_csv("temp.csv",index_col=['S.No'])
-print (df)
+print(df)
 #+END_SRC
 Skipping rows can be achieved through the /skiprows=n/ argument of *read_cvs()*
 
+
+#  LocalWords:  ndarray dataset

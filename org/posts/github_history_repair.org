@@ -19,7 +19,7 @@
 #+HUGO_ALLOW_SPACES_IN_TAGS: nil
 #+HUGO_AUTO_SET_LASTMOD: t
 #+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
-#+DESCRIPTION: A short description of a solution to a github related problem with the email addresses associated with a commit historys
+#+DESCRIPTION: A short description of a solution to a Github related problem with the email addresses associated with a commit history
 #+HUGO_DRAFT: false
 #+KEYWORDS: github git commit change history
 #+HUGO_TAGS: 
@@ -94,6 +94,7 @@ After some more research I found [[https://help.github.com/articles/changing-aut
 \\
 \\
 BUT... in my repositories I had commits also made from my university's network and the emails of those were completely other beasts. Therefore I change the script a little bit and wrote an extra supplementary script that does absolutely everything. If you want to automate the whole process, copy this:
+
 #+BEGIN_SRC sh
 #!/bin/bash
 
@@ -116,6 +117,7 @@ cd ..
 echo "Deleting folder..."
 rm -rf new_repo
 #+END_SRC
+
 in a =.sh= file, adjust the =<user_name>= and =<user email>= fields with your name and email and run the script like =./file.sh https://github/<user>/<repo>.git= This will:
 1. Clone the repo in new folder with name new_repo
 2. Run a slight modification of Github's script
@@ -127,7 +129,7 @@ At the end everything is as it was but all of the commits in the repo will have 
 _Note:_ This will create a file in your home directory with name .git-credentials and it will contain your Github username and password. I do this so I can use ~git config --global credential.helper cache~ which removes the necessity of typing out your name and password on every commit. (Yes, I know, I should set up the [[https://help.github.com/en/articles/connecting-to-github-with-ssh][ssh thing]], shut up)
 \\
 \\
-*Caution:* My script changes the committer's emails and names of _*ALL*_ commits. If you run the script on a repository with several developers, you could potentially and most likely will cause some people to be angry with you... and rightfully so! I mean, you just ruined someone's /Contributions/ panel... how would you like that if done to you.
+*Caution:* My script changes the commiter's emails and names of _*ALL*_ commits. If you run the script on a repository with several developers, you could potentially and most likely will cause some people to be angry with you... and rightfully so! I mean, you just ruined someone's /Contributions/ panel... how would you like that if done to you.
 \\
 \\
 And there you have it. With your newly acquired knowledge you could transform your /Contributions/ panel form this:
