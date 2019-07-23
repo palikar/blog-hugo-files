@@ -8,12 +8,14 @@ theme = "hyde-hyde"
 ## Hugo Built-in Features
 disqusShortname = "palikar-github-io"
 # googleAnalytics = "your-google-analytics-id"
-enableRobotsTXT = true
-pygmentsCodeFences = true
-pygmentsuseclasses = false
-pygmentsstyle = ""
-pygmentsUseClassic=false
+# enableRobotsTXT = true
 
+
+
+pygmentsCodeFences = true
+pygmentsUseClasses = false
+pygmentsUseClassic = false
+pygmentsStyle = "dracula"
 
 relatedPosts = true
 postNavigation = true
@@ -24,12 +26,19 @@ postNavigation = true
     description = "Develompent, CS, AI and whatever my little heart desires"
     authorimage = "/img/profile.jpg"
     dateformat = "Jan 2, 2006"
-    highlightjs = true
+
+    highlightjs = false
     highlightjsstyle = "github"
+
+    pygmentsCodeFences = true
+    pygmentsUseClasses = false
+    pygmentsUseClassic = false
+    pygmentsStyle = "dracula"
+
+
     customCSS = ["./static/css/new_custom.css"]
 
-	toc = "tocbot"
-	
+    toc = "tocbot"	
 	
 
 ## Social Accounts

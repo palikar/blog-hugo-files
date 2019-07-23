@@ -4,7 +4,7 @@ author = ["Stanislav Arnaudov"]
 description = "A short walkthrough of a Emacs package for windows resizing that I recently wrote."
 date = 2018-06-29T00:00:00+02:00
 keywords = ["emacs", "framwes", "windows", "resizing", "buffers"]
-lastmod = 2019-04-21T23:17:41+02:00
+lastmod = 2019-07-23T00:43:54+02:00
 categories = ["emacs"]
 draft = false
 weight = 100
@@ -34,13 +34,13 @@ So, if you are interested in Emacs programming, you can have this section as a g
 
 We start of with defining couple of things that we will need for our new minor mode whose definition comes in right after. Each mode deserves its own [group](https://www.gnu.org/software/emacs/manual/html%5Fnode/elisp/Group-Definitions.html). You know, the name of you give while you call `customize-group` when you want to configure some new package that you've downloaded. Our group will be used to house the one [custom](https://www.gnu.org/software/emacs/manual/html%5Fnode/emacs/Easy-Customization.html) that we have. Group definition is really easy with the macro `defgroup`. It's basically a one liner:
 
-```elisp
+```lisp
 (defgroup framer nil "Custom variables for framer-mode")
 ```
 
 "framer" is the name, the second argument is a list of the customs that are in the group but it's more convenient to define them later by specifying the group that each custom belongs to. The third argument is a string that will be displayed near the top while customizing the package's customs. <br /> <br /> _Note:_ Customs are the configurable options of a given package in Emacs. Emacs makes it really easy to write such customizable variables that later can be configured by the user of your package. <br /> <br /> After the group we need a [keymap](https://www.gnu.org/software/emacs/manual/html%5Fnode/elisp/Keymap-Basics.html#Keymap-Basics) for our mode. In it we'll define all the keybindings that will be activated when the mode is active. Definition is again relatively straight forward:
 
-```elisp
+```lisp
 (defconst framer-mode-map
   (let
       (
@@ -78,7 +78,7 @@ The actual definition is pretty easy and is done through the macro `define-minor
 
 Here we use the already defined group and keymap and we pass them to the appropriate key-word attributes - `group` and `keymap` respectively. What is pass to `:lighter` is the thing that will be displayed in the modeline while the mode is active. Be sure to have that leading space or the text of your mode will be "glued" to the text of the previous mode in the modeline. `:global` indicates of the mode is global or not (yes, I bet you needed that explanation). <br /> <br /> For more information on how to write modes for Emacs, check out [this](https://www.gnu.org/software/emacs/manual/html%5Fnode/elisp/Defining-Minor-Modes.html) page from the official documentation. <br /> <br /> Ok, one last thing before we actually define our functions for resizing - we'll create one custom that will indicate how big is the resizing gap with which we'll be changing the size of the windows. The name of it will be appropriately `resizing-step`, it'll have default value of 50 and it will be integer.
 
-```elisp
+```lisp
 (defcustom resizing-step 50
   "The amount with which the dimmension of the current windows will be decreased/increased."
   :type 'integer

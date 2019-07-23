@@ -1,0 +1,153 @@
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK")
+#+OPTIONS: date:t e:t email:nil f:t inline:t num:t p:nil pri:nil
+#+OPTIONS: prop:nil stat:t tags:t tasks:t tex:t timestamp:t title:t
+#+OPTIONS: toc:t todo:t |:t
+
+#+TITLE: Compile time pipeline in C++
+#+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
+#+AUTHOR: Stanislav Arnaudov
+#+DATE: <2019-04-10 Thu>
+#+EMAIL: stanislav_ts@abv.bg
+#+CREATOR: Emacs 26.1 (Org mode 9.2.1 + ox-hugo)
+#+HUGO_FRONT_MATTER_FORMAT: toml
+#+HUGO_LEVEL_OFFSET: 1
+#+HUGO_PRESERVE_FILLING:
+#+HUGO_SECTION: posts
+#+HUGO_BASE_DIR: ~/code/blog-hugo-files/
+#+HUGO_PREFER_HYPHEN_IN_TAGS: t 
+#+HUGO_ALLOW_SPACES_IN_TAGS: nil
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
+#+DESCRIPTION: A simple but powerful idiom in C++ for pipelining functions
+#+HUGO_DRAFT: true
+#+KEYWORDS: c++ templates idioms
+#+HUGO_TAGS: 
+#+HUGO_CATEGORIES: c++
+#+HUGO_WEIGHT: 100
+
+ 
+* Abstract
+Recently I've been looking into the code of ChaiScript -- a script language written by Jason Turner that integrates seamlessly with C++. It's a grate project and you can learn a ton on parsing, general script language design and over all c++ from it. In its code I've found several gems and idioms  that I didn't know before. Here I want to very briefly present a certain pattern that particularly caught my. The pattern addresses the problem of piping functions one after another. We cat assume that each functions does its own thing independent of the others. The beauty, in my opinion, lies within the fact that there is almost no run time overhead and the whole thing is "configured" at compile time. The ability to extend or alter the pipeline is, however, still there and a change can be easily made (after recompilation, of course).
+
+* Pipelining methods 
+
+** The "first thing in google" way
+
+I was interested in this pattern so I tried searching for it. With a quick google search I found this [[https://helloacm.com/how-to-pipeline-the-functions-in-c/][this]]. The blog post describes a way of generating a pipeline of functions that will be executed one after another. To note is, however, that in this case everything is done at run time. The post describes a function similar to:
+#+BEGIN_SRC c++
+template<class T>
+std::function<T (void)> make_pipeline(const std::vector<std::function<T (void)>>& funcs)
+{
+    return [&funcs] (const T& arg)
+           {
+               T v = arg;
+               for (const auto &f: funcs) { v = f(v); }
+               return v;
+           };
+}
+#+END_SRC
+This is just a function that returns a lambda that  will execute every function in the ~funcs~ vector. If you are not familiar with template programming, I believe this is the most intuitive way of achieving your pipeline-goal. ~make_pipeline~ can then be used as:
+
+#+BEGIN_SRC c++
+std::vector<std::function<int (void)>> functions;
+functions.push_back([](int x){ return api.do_work_1(x); });
+functions.push_back([](int x){ return api.do_work_2(x); });
+functions.push_back([](int x){ return api.do_work_3(x); });
+
+std::function<int (void)> func = makePipeline(functions);
+
+func(10);
+#+END_SRC
+
+Now, again at run time, the process has to create a vector, add the three lambdas to it, then construct the final function ~func~ with the ~makePipeline~ method and finally call the function. The whole thing introduces a lot of run time overhead. Before performing the actual call to the pipeline, we must configure it. It really doesn't need to be this way and in the next section we'll how we can address this problem.
+
+
+** The ChaiScript way
+
+Let's now look the ChaiScript's "compile time" approach to pipeline. A little bit of background - we'll look at the optimizer of ChaiScript. This is class with a single method ~optimize~ that takes a object of type ~AST_Node_Impl_Ptr<Tracer>~, does it magic and return a new, optimized object. What exactly ~AST_Node_Impl_Ptr<Tracer>~ is not the point here. The main thing is - call ~optimize~, perform a bunch of optimizations, return the object. The tricky thing is that we want a whole bunch of optimizer to  be available. Then, when we call ~optimize~ on our main, container-like, optimizer, every inner is run.
+
+\\
+
+The main Optimizer class looks like this:
+#+BEGIN_SRC c++
+template<typename ... T>
+struct Optimizer : T...
+{
+    Optimizer() = default;
+    explicit Optimizer(T ... t)
+        : T(std::move(t))...
+    {
+    }
+
+    template<typename Tracer>
+        auto optimize(eval::AST_Node_Impl_Ptr<Tracer> p) {
+        ((p=static_cast<T&>(*this).optimize(std::move(p))), ... );
+        return p;
+    }
+};
+#+END_SRC
+A class templetized by a variadic template. As per the [[https://www.fluentcpp.com/2017/05/12/curiously-recurring-template-pattern/][The Curiously Recurring Template Pattern (CRTP)]], the class inherits from every one of the passed template types. This means that the ~Optimizer~ class will have every public method of its template parameters. In the ~optimized~ method, the ~...~ operator is used. This is variadic template expansions and can be used to perform operation on every passed template parameter. In this case, cast ~this~ to a reference of the parameter (this is ok as we inherit from it), call  the ~optimize~ method on this object and saves the result in ~p~. All we have to ensure that each template parameter ~T~ has an ~optimize~ method with the same(ish?) signature. For example, we can have two optimizers like:
+#+BEGIN_SRC c++
+struct Optmizer1
+{
+    template<typename T>
+    auto optimize(eval::AST_Node_Impl_Ptr<T> node)
+    {
+        //magic 1
+        return node;
+    }
+};
+
+struct Optmizer2
+{
+    template<typename T>
+    auto optimize(eval::AST_Node_Impl_Ptr<T> node)
+    {
+        //magic 2
+        return node;
+    }
+};
+
+#+END_SRC
+
+At the end, everything comes together in a ~typedef~ for the final optimizer type:
+
+#+BEGIN_SRC c++
+typedef Optimizer<Optimizer1,
+                  Optimizer2> Optimizer_Default;
+#+END_SRC
+
+An we that we have it. Now we can just create new object of type ~Optimizer_Default~ and call ~optimize~ on it. This will call the optimize method on ~Optimize1~ and ~Optimize2~. The pipeline is constructed at compile time and the compiler can optimize everything optimally. 
+
+\\
+
+With this setup, we can change the executed optimizers only at compile time though. This means that every change will need a rebuild of the project. Although we cannot avoid the rebuilding, we can make out lives easier with a little bit of macros. Say, if the project is compiled with defined ~HEAVY_OTPIMIZATION~ macro we construct our optimizer one way, if the macro is not defined, we construct it another way.
+
+#+BEGIN_SRC c++
+#ifdef HEAVY_OTPIMIZATION
+typedef Optimizer<Optimizer1,
+                  Optimizer2> DefaultOptimizer;
+#else
+typedef Optimizer<BigOptimizer1,
+                  BigOptimizer2> DefaultOptimizer;
+#endif
+#+END_SRC
+
+
+
+* Conclusion
+
+This was the first time where I saw a practical use of variadic templates (except for ~std::make_shared~ and ~std::make_unique~, of course). I have to say, that one quote, it really stands true.
+
+#+BEGIN_QUOTE
+Dot dot dot is where fun begins
+\\
+-- Someone, Somewhere
+#+END_QUOTE
+
+
+
+
+
+#  LocalWords:  optimizers
