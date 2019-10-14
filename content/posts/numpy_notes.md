@@ -4,7 +4,7 @@ author = ["Stanislav Arnaudov"]
 description = "My notes on numpy when I started looking into the library"
 date = 2018-07-20T00:00:00+02:00
 keywords = ["machine-learning", "python", "numpy"]
-lastmod = 2019-04-22T13:07:51+02:00
+lastmod = 2019-10-12T10:47:34+02:00
 categories = ["machine-learning"]
 draft = false
 weight = 100
@@ -20,7 +20,7 @@ My notes while reading [this](https://www.tutorialspoint.com/numpy/index.htm). M
 
 ## Abstract {#abstract}
 
-NumPy is a Python package. It stands for 'Numerical Python'. It is a library consisting of multidimensional array objects and a collection of routines for processing of array. <br /> From the officials:
+NumPy is a Python package. It stands for 'Numerical Python'. It is a library consisting of multidimensional array classes and a collection of routines for processing of an array. <br /> From the officials:
 
 > NumPy is the fundamental package for scientific computing with Python. It contains among other things:
 >
@@ -31,7 +31,7 @@ NumPy is a Python package. It stands for 'Numerical Python'. It is a library con
 >
 > Besides its obvious scientific uses, NumPy can also be used as an efficient multi-dimensional container of generic data. Arbitrary data-types can be defined. This allows NumPy to seamlessly and speedily integrate with a wide variety of databases.
 
-In layman's terms (according to me) - better python-arrays with native C-code under the hood so that everything is blazingly fast. Easy array generation, generation of ranges, intervals and distributions of random numbers in some interval. Conveniently iterating over ranges and the generated arrays. _Numpy_ also provides some basic/advanced statistical functions. Linear Algebra is also something that is already built in.
+In layman's terms (according to me) - better python-arrays with native C-code under the hood so that everything is blazingly fast. Easy array generation, generation of ranges, intervals and distributions of random numbers in some interval. Conveniently iterating over ranges and the generated arrays. _Numpy_ also provides some basic/advanced statistical functions. Linear Algebra is also something that is already built-in.
 
 Installation:
 
@@ -39,50 +39,21 @@ Installation:
 pip3 install numpy
 ```
 
-<div class="ox-hugo-toc toc">
-<div></div>
-
-<div class="heading">Table of Contents</div>
-
-- [Abstract](#abstract)
-- [Ndarray](#ndarray)
-- [Data Types](#data-types)
-- [Array Attributes](#array-attributes)
-    - [Shape and dimension](#shape-and-dimension)
-    - [Reshaping](#reshaping)
-    - [Num elements](#num-elements)
-- [Slicing](#slicing)
-    - [Basic slicing](#basic-slicing)
-    - [Advanced](#advanced)
-- [Broadcasting](#broadcasting)
-- [Iterating](#iterating)
-- [Manipulating](#manipulating)
-    - [Changing shape](#changing-shape)
-    - [Transpose](#transpose)
-    - [Joining Arrays](#joining-arrays)
-    - [Adding and removing elements](#adding-and-removing-elements)
-- [I/O](#i-o)
-    - [_.npy_ files](#dot-npy-files)
-    - [_.txt_ files](#dot-txt-files)
-
-</div>
-<!--endtoc-->
-
 
 ## Ndarray {#ndarray}
 
 The most important object defined in _NumPy_ is an N-dimensional array type called _ndarray_. This is the main workhorse of the package. It describes the collection of items of the same type. Items in the collection can be accessed using a zero-based index. It's much better than the standard python arrays and lists. Basic construction:
 
-```text
+```python
 numpy.array(object, dtype = None, copy = True, order = None, subok = False, ndmin = 0)
 ```
 
 -   `object` - Any object exposing the array interface method returns an array, or any (nested) sequence.
--   `dtype` - Desired data type of array, optional
+-   `dtype` - the desired data type of array, optional
 -   `copy` - Optional. By default (true), the object is copied
--   `order` - C (row major) or F (column major) or A (any) (default)
--   `subok` - By default, returned array forced to be a base class array. If true, sub-classes passed through
--   `ndmin` - Specifies minimum dimensions of resultant array
+-   `order` - C (row-major) or F (column-major) or A (any) (default)
+-   `subok` - By default, the returned array forced to be a base class array. If true, sub-classes passed through
+-   `ndmin` - Specifies minimum dimensions of the resultant array
 
 ```python
 import numpy as np
@@ -120,9 +91,9 @@ numpy.dtype(object, align, copy)
 
 -   **Object** − To be converted to data type object
 -   **Align** − If true, adds padding to the field to make it similar to C-struct
--   **Copy** − Makes a new copy of dtype object. If false, the result is reference to builtin data type object
+-   **Copy** − Makes a new copy of dtype object. If false, the result is a reference to builtin data type object
 
-<br /> <br /> The object can be later used when a given function or a constructor takes _dtype_ argument. Those object can also create struct-like types for structured data. Think of it like defining custom struct in C++ and then creating a vector with elements of this struct.
+<br /> <br /> The object can be later used when a given function or a constructor takes _dtype_ argument. Those objects can also create struct-like types for structured data. Think of it like defining a custom struct in C++ and then creating a vector with elements of this struct.
 
 ```python
 import numpy as np
@@ -144,7 +115,7 @@ Which yields:
 [30 30 30]
 ```
 
-<br /> <br /> This way we can define map-like structure that contains a bunch of different arrays, each addressable with a key. The following code defines a 'human' data type with _string_ field _name_, _int_ field age, and _float_ field social class.
+<br /> <br /> This way we can define a map-like structure that contains a bunch of different arrays, each addressable with a key. The following code defines a 'human' data type with _string_ field _name_, _int_ field age, and _float_ field social class.
 
 ```python
 import numpy as np
@@ -167,8 +138,8 @@ This shows another important point. Each time can be specified with a single cha
 -   `'u'` − unsigned integer
 -   `'f'` − floating-point
 -   `'c'` − complex-floating point
--   `'m'` − timedelta
--   `'M'` − datetime
+-   `'m'` − time delta
+-   `'M'` − DateTime
 -   `'O'` − (Python) objects
 -   `'S'`, 'a' − (byte-)string
 -   `'U'` − Unicode

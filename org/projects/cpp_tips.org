@@ -31,26 +31,26 @@
 
 
 * Abstract
-C++ is hard! C++ is even harder when you want to write a good code. There are a lot of things to think about when your write code and if you don't think about them, you are probable going to mess things up. Recently I've found that one good book (see references) that gives 42 (hehe!) concrete tips on how to be a better c++ programmer. This is my summary of sorts about the contents of said book.
+C++ is hard! C++ is even harder when you want to write good code. There are a lot of things to think about when you write code and if you don't think about them, you are probably going to mess things up. Recently I've found that one good book (see references) that gives 42 (hehe!) concrete tips on how to be a better c++ programmer. This is my summary of sorts about the contents of said book.
 
-#+TOC: headlines 2
+# #+TOC: headlines 2
 
 
 * The cool new things
 ** Rvalue, lvalue and move semantics
 <<sec:move-semantics>>
-"Move semantics" is a thing that we have in C++ now (since C++11 actually). It makes a ton of sense once you get it but it may be a little hard to wrap your head around it. At lest in the beginning, of course. First off - why do we need move semantics? For code efficiency! If you now what you are doing, your code can run faster, with fewer object copies and fewer objects created. Second, and perhaps more importantly, what are move semantics? The way I like to think about it - the ability to distinguish between object that won't be needed after the evaluation of an expression and the ability to do a different thing, if you are dealing with such object.\\
+"Move semantics" is a thing that we have in C++ now (since C++11 actually). It makes a ton of sense once you get it but it may be a little hard to wrap your head around it. At least in the beginning, of course. First off - why do we need move-semantics? For code efficiency! If you know what you are doing, your code can run faster, with fewer object copies and fewer objects created. Second, and perhaps more importantly, what are move semantics? The way I like to think about it - the ability to distinguish between an object that won't be needed after the evaluation of an expression and the ability to do a different thing, if you are dealing with such object.\\
 Take a look at the following code:
 #+BEGIN_SRC c++
 MyObject obj1, obj2;
 MyObject new_obj = obj1 + obj2;
 #+END_SRC
-Lets say that the part ~obj1 + obj2~ creates a new object. This new object then gets copied through the copy assignment operator of the class ~MyObject~. This creates another object that is stored in the ~new_object~ variable. All in all, two object were created in this situation. The object that was originally created by ~obj1 + obj2~ is... well, gone. We just copied it and threw it away. Shame on us! Wouldn't it have been nice, if we could have just used that object and just "moved" it in ~new_obj~. Yes, yes it would! And yes, it is possible. Through move semantics. Those kind of object that won't continue to live after the expression evaluation are called *rvalue* object. All other objects are *lvalue*. In the class ~MyObject~ we can define a special kind of constructor (move constructor) that "creates" object from rvalues, i. e. "moves" the data from the given object in **this*. So,
-- Lvalue - an object that can be used on left hand side of an expression; an object with identifiable address;
+Let's say that the part ~obj1 + obj2~ creates a new object. This new object then gets copied through the copy assignment operator of the class ~MyObject~. This creates another object that is stored in the ~new_object~ variable. All in all, two objects were created in this situation. The object that was originally created by ~obj1 + obj2~ is... well, gone. We just copied it and threw it away. Shame on us! Wouldn't it have been nice, if we could have just used that object and just "moved" it in ~new_obj~. Yes, yes it would! And yes, it is possible. Through move semantics. That kind of object that won't continue to live after the expression evaluation is called *rvalue* object. All other objects are *lvalue*. In the class ~MyObject~ we can define a special kind of constructor (move constructor) that "creates" object from rvalues, i. e. "moves" the data from the given object in **this*. So,
+- Lvalue - an object that can be used on the left-hand side of expression; an object with identifiable address;
 - Rvalue - an object that won't persist after the evaluation of a given expression; no identifiable address
 /Note:/ Every value is either an lvalue or an rvalue!
 ** Auto
-Type deduction for variables. Almost the same rules as the template arguments type deduction with one small caveat. Also, in a lot of cases it allows you to write more efficient code. Example to get you going:
+Type deduction for variables. Almost the same rules as the template argument type deduction with one small caveat. Also, in a lot of cases, it allows you to write more efficient code. Example to get you going:
 #+BEGIN_SRC c++
 std::unordered_map<std::string, std::string> map;
 for(auto it : map){...} //just look how simple that is!!!
@@ -74,7 +74,7 @@ std::unique_ptr<int[]> int_arr_ptr = std::make_unique<int[]>(10);
 take_ownership(std::move(int_arr_ptr));
 #+END_SRC
 
-~shared_ptr~, on the other hand, can share their ownership. Again, it's good to know how is this done because you can messed it up.
+~shared_ptr~, on the other hand, can share their ownership. Again, it's good to know how is this done because you can mess it up.
 #+BEGIN_SRC c++
 class PtrHolder {
 public:
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 Creating factory methods is also relatively straightforward. Just return them by value! There is however one things to remember about ~unique_ptr~ - if the return type does not match the thing you are returning, you ought to use ~std::move~. This holds true even, if the return of the function type is a base class and you are returning derived class (explained [[https://stackoverflow.com/questions/39478956/how-does-returning-stdmake-uniquesubclass-work/39479117][here]]).
 
 ** Some random abbreviations
-It is a well-known fact that C++ programmers love their abbreviations. And you know what, it actually makes a lot of sense to know those. The abbreviations in the C++ world reveal some really cool, useful and right out elegant concepts that everyone should know about. Also, just to be prepared, C++ programmers are also really bad at naming things.
+It is a well-known fact that C++ programmers love their abbreviations. And you know what, it actually makes a lot of sense to know those. The abbreviations in the C++ world reveal some cool, useful and right out elegant concepts that everyone should know about. Also, just to be prepared, C++ programmers are really bad at naming things.
 
 |---------------+----------------------------------------|
 | Abbreviations | Expansion                              |
@@ -116,9 +116,11 @@ It is a well-known fact that C++ programmers love their abbreviations. And you k
 | RVO           | Return value optimization              |
 |---------------+----------------------------------------|
 |---------------+----------------------------------------|
+
+
 * Tips
-** Knowing your template type deduction is a bless.
-So every C++ programmer knows how you can define generic "templetized" functions and then you can call them with different types of arguments. The calling itself will cause the compiler to instantiate the function by replacing the generic type with the deduced type. The thing you should know in this process - how the type is being deduced when it's not given explicitly (i. e.the function is called without the <>-brackets).
+** Knowing your template type deduction is a blessing.
+So every C++ programmer knows how you can define generic "templated" functions and then you can call them with different types of arguments. The calling itself will cause the compiler to instantiate the function by replacing the generic type with the deduced type. The thing you should know in this process - how the type is being deduced when it's not given explicitly (i. e.the function is called without the <>-brackets).
 \\
 So, based on ~T~, ~ParamType~ and ~expr~ you have to know what type would be deduced in
 #+BEGIN_SRC c++
@@ -128,7 +130,7 @@ void f(ParamType arg);
 f(expr);
 #+END_SRC
 
-There are Several cases to look at.
+There are several cases to look at.
 *** ParamType is a reference or a pointer
   #+BEGIN_SRC c++
   template<T>
@@ -211,7 +213,7 @@ constexpr std::size_t arraySize(T (&)[N]) noexcept
 #+END_SRC
 And... with that knowledge, you can now punish people who claim they "know C++".
 ** auto type deduction is also something to thinks about
-The deduction of auto while used as a "type" of a local variable behaves almost exactly as deduction of template types. This means you already know the most of the rules.
+The deduction of auto while used as a "type" of a local variable behaves almost exactly as the deduction of template types. This means you already know most of the rules.
 #+BEGIN_SRC c++
 int x = 5;
 const int cx = x;
@@ -239,27 +241,27 @@ auto&& x_rvalue = 27; // the auto is int
 .
 .
 #+END_SRC
-So yeah, not much new things here. Just think about what is becoming with the /auto/ in the declaration of the variable. The final type may not be the same as the thing deduced for /auto/. For that you'll have to replace the deduced type for the /auto/ in the declaration.
+So yeah, not much new things here. Just think about what is becoming with the /auto/ in the declaration of the variable. The final type may not be the same as the thing deduced for /auto/. For that, you'll have to replace the deduced type for the /auto/ in the declaration.
 \\
 There is however one caveat with /auto/ type deduction. Consider the snippet:
 #+BEGIN_SRC c++
 auto x1(27);
 auto x2{27};
 #+END_SRC
-This compiles but the types of the variables are probably not what you expect. Both statements look the the same and while the *x1* is "well behaved" and to be expected (it is an int...surprise!), the type of x2 is ~std::initializer_list<int>~. Yes, /auto/ treats bracketed expressions differently and the general deduced type for them is ~std::initializer_list<T>~. This means that the following code won't compile
+This compiles but the types of the variables are probably not what you expect. Both statements look the same and while the *x1* is "well behaved" and to be expected (it is an int...surprise!), the type of x2 is ~std::initializer_list<int>~. Yes, /auto/ treats bracketed expressions differently and the general deduced type for them is ~std::initializer_list<T>~. This means that the following code won't compile
 #+BEGIN_SRC c++
 auto x{12, "random string"};
 #+END_SRC
-If you try using bracketed expression with templated function on the other side, it just won't compile even if the objects in the brackets are all of the same type. Template type deduction just cannot handle bracketed expressions.
+If you try using the bracketed expression with a templated function on the other side, it just won't compile even if the objects in the brackets are all of the same types. Template type deduction just cannot handle bracketed expressions.
 ** decltype is cool little thing
-At its core ~decltype~ has a simple concept. It takes a single argument and it "returns" its type. The quotation marks are there because the thing returned thing can be used further as a part of the code. For example, you can declare new variable with given deduced from ~decltype~ type. This is possible:
+At its core ~decltype~ has a simple concept. It takes a single argument and it "returns" its type. The quotation marks are there because the thing returned thing can be used further as a part of the code. For example, you can declare a new variable with given deduced from ~decltype~ type. This is possible:
 #+BEGIN_SRC c++
 int x = 5;
 decltype(x) xx = 23; // xx now has the type of x.... just plain int
 #+END_SRC
-This means however, that ~decltype~ introduces whole new set of rules for deducing a type from an expression. Thankfully, those rules are pretty simple and are what you expect...mostly as I understand it, ~decltype~ gives you exactly the type that was used when declaring the argument. It returns all the refereny and consty parts. Everything!
+This means, however, that ~decltype~ introduces a whole new set of rules for deducing a type from an expression. Thankfully, those rules are pretty simple and are what you expect...mostly as I understand it, ~decltype~ gives you exactly the type that was used when declaring the argument. It returns all the "reference-y" and "const-y" parts. Everything!
 \\
-The primary use of ~decltype~ is for specifying a return type of a function that depends on the type of the incoming arguments. Imagine we want to write a generic functions that accesses a given index of given container and returns the object at the index while before that...it does "something". In this situation you can't know the type of the object at the index(its constness, its referenceness...). ~decltype~ to the rescue. Check this out:
+The primary use of ~decltype~ is for specifying a return type of a function that depends on the type of the incoming arguments. Imagine we want to write a generic function that accesses a given index of a given container and returns the object at the index while before that...it does "something". In this situation, you can't know the type of the object at the index(its constness, its referenceness...). ~decltype~ to the rescue. Check this out:
 
 #+BEGIN_SRC c++
 template <typename Container, typename Index>
@@ -271,7 +273,7 @@ auto doSomethingAndAcess(Container& c, Index i) -> decltype(c[i])
 #+END_SRC
 The *auto* at the beginning has nothing to do with auto type deduction. It just delegates the specification of the return type of the function to the end where we have access to the parameters. I believe the whole concept is called /trailing return type/. 
 \\
-This is however the C++11 way of doing it. C++14 offers a sprinkle of syntactic sugar to "turn on" ~decltype~-deduction rules for auto. Namely:
+This is, however, the C++11 way of doing it. C++14 offers a sprinkle of syntactic sugar to "turn on" ~decltype~-deduction rules for auto. Namely:
 #+BEGIN_SRC c++
 template <typename Container, typename Index>
 decltype(auto) doSomethingAndAcess(Container& c, Index i)
@@ -283,7 +285,7 @@ decltype(auto) doSomethingAndAcess(Container& c, Index i)
 This way the type of the return statement will be used as a return type and it will be done in a ~decltype~-y kind of way.
 ** Prefer auto to explicit type declarations
 *** General advantages of ~auto~
-+ The first and obvious advantage of ~auto~ is the that it spares a lot of typing. This, by extension, allows you to even not remember the types of certain things. Like,,, at this point who even knows what are the complete types of certain iterators! So, things like
++ The first and obvious advantage of ~auto~ is that it spares a lot of typing. This, by extension, allows you to even not remember the types of certain things. Like... at this point who even knows what are the complete types of certain iterators! So, things like
    #+BEGIN_SRC c++
    template<typename It>
    void dwim(It b, It e)
@@ -329,14 +331,14 @@ for (const auto& e : m )
 }
 #+END_SRC
 *** Explicitly typed initializer idiom
-Sometimes ~auto~ won't give you the type you desire. In those situations it's preferable to cast the thing you are assigning to a variable to the desired type and continue with the use of auto.
+Sometimes ~auto~ won't give you the type you desire. In those situations, it's preferable to cast the thing you are assigning to a variable to the desired type and continue with the use of auto.
 #+BEGIN_SRC c++
 auto ep = static_cast<float>(calcEpsilon()); // explicitly reducing double to float... good!
 #+END_SRC
 ** nullptr is a pointer to nothing, 0 and NULL are not that
-~O~ and ~NULL~ sound so logical but they are not what you probably think they are. ~0~ is a an /int/. If the compiler sees ~0~ in the context of pointer it will be interpreted as the null-pointer. There are, however, many situations where the context is not that clear. In those case, ~0~ will be treated as a simple int. 
+~O~ and ~NULL~ sound so logical but they are not what you probably think they are. ~0~ is an /int/. If the compiler sees ~0~ in the context of a pointer it will be interpreted as the null-pointer. There are, however, many situations where the context is not that clear. In a lot of cases, ~0~ will be treated as a simple int.
 \\
-The same story with ~NULL~. Depending on the implementation it is usually some integral type and it will be treated as number in situations where you don't expect it to behave like this.
+The same story with ~NULL~. Depending on the implementation it is usually some integral type and it will be treated as a number in situations where you don't expect it to behave like this.
 \\
 All problems can be solved, if you just forget about the existence of ~NULL~ and ~0~ and start using ~nullptr~. ~nullptr~ is designed to be a pointer to nothing and pointer is the only way it can be interpreted. The following snippet demonstrates everything:
 #+BEGIN_SRC c++
@@ -524,34 +526,34 @@ void findAndInsert(C& container, const V& target, const V& insert)
 #+END_SRC
 
 ** noexcept is good and it is to be used carefully
-Today the C++ compilers are quite the smart little things. Much smarter than before. Therefore they can optimize a lot of things and produce more efficient binary. ~noexcept~ is one of the conditions that must be met in order for a function to be "most optimizable". It means that the function _cannot_ and _won't_ emit exception at runtime,
+Today the C++ compilers are quite the smart little things. Much smarter than before. Therefore they can optimize a lot of things and produce a more efficient binary. ~noexcept~ is one of the conditions that must be met for a function to be "most optimizable". It means that the function _cannot_ and _won't_ emit exception at runtime,
 #+BEGIN_SRC c++
 void fun(int x) noexcept;
 #+END_SRC
 \\
-Right off the start we need to say that ~noexcept~ is a part of a function's interface. Callers may examine if a function is ~noexcept~ and their behavior may depend on it. ~noexcept~ is almost as important as ~const~. Think about ~noexcept~ in each functions definition. To not declare a function ~noexcept~ is a missed opportunity to tell the compiler and everyone else that your function meets certain conditions. However, be careful, as said before ~noexcept~ is part of the interface. Whatever your choice might be, it must not be changed in the long term. Removing ~noexcept~ (or adding for that matter) to a function definition may break binary compatibility with other parts of the program that use said function. 
+Right off the start, we need to say that ~noexcept~ is a part of a function's interface. Callers may examine if a function is ~noexcept~ and their behavior may depend on it. ~noexcept~ is almost as important as ~const~. Think about ~noexcept~ in the definition of each function. To not declare a function ~noexcept~ is a missed opportunity to tell the compiler and everyone else that your function meets certain conditions. However, be careful, as said before ~noexcept~ is part of the interface. Whatever your choice might be, it must not be changed in the long term. Removing ~noexcept~ (or adding for that matter) to a function definition may break binary compatibility with other parts of the program that use said function. 
 \\
-If a exception is emitted from a ~noexcept~ function at the runtime, the program will simply terminate. So again, be careful with defining functions ~noexcept~. If your function is ~noexcept~ but in the body usage of no-~noexcept~ function is present, you might be in trouble.
+If an exception is emitted from a ~noexcept~ function at the runtime, the program will simply terminate. So again, be careful with defining functions ~noexcept~. If your function is ~noexcept~ but in the body usage of no-~noexcept~ function is present, you might be in trouble.
 \\
 A function may conditionally be ~noexcept~. 
 #+BEGIN_SRC c++
 template<class T, size_t N>
 void swap(T (&a)[N], T (&b)[N]) noexcept(noexcept(swap_el(*a,*b)));
 #+END_SRC
-This function is noexcept only if the condition in the ~noexcept~ block is true. In this case, only if the function swap_el applied on two elements of of the arrays a and b is ~noexcept~.
+This function is noexcept only if the condition in the ~noexcept~ block is true. In this case, only if the function swap_el applied on two elements of the arrays a and b is ~noexcept~.
 
 ** constexpr is the new hot thing!
-~constexpr~ indicates a value(when used for variable definition) that is known during compilation. This is quite different from simply being /const/. Function parameters can be /const/ but are are not known during compilation. This:
+~constexpr~ indicates a value(when used for variable definition) that is known during compilation. This is quite different from simply being /const/. Function parameters can be /const/ but are not known during compilation. This:
 #+BEGIN_SRC c++
 constexpr int x = 5;
 #+END_SRC
-is on the other hand known during compilation. In this example /x/ is a /compile-time constant/. It can be used in...interesting ways. For example:
+is on the other hand known during compilation. In this example /x/ is a /compile-time constant/. It can be used in interesting ways. For example:
 #+BEGIN_SRC c++
 std::array<int, x> arr; // defines array with 5 int elements
 #+END_SRC
-At this point I'll have to mention that of course all ~constexpr~ object are /const/ extension. Not all /const/ objects are ~constexpr~ however.
+At this point, I'll have to mention that, of course, all ~constexpr~ objects are /const/ by extension. Not all /const/ objects are ~constexpr~ however.
 \\
-Things become a lot more interesting once ~constexpr~ functions are involved. Those create what is called a ~constexpr~ /context/. This means that those function could be parsed and executed during compilation given that the provided arguments are known during compilation(i. e. they are defined as ~constexpr~). When the conditions for compile time executions are not met, the function can also act as a normal function. In C++11 those ~constexpr~ functions were limited to a single statement - the return statement. In c++14 however this limitation is drooped. Simple example:
+Things become a lot more interesting once ~constexpr~ functions are involved. Those create what is called a ~constexpr~ /context/. This means that those functions could be parsed and executed during compilation given that the provided arguments are known during compilation(i. e. they are defined as ~constexpr~). When the conditions for compile-time executions are not met, the function can also act like a normal function. In C++11 those ~constexpr~ functions were limited to a single statement - the return statement. In C++14 however, this limitation is drooped. Simple example:
 #+BEGIN_SRC c++
 constexpr int pow(int base, int exp) noexcept
 {
@@ -612,11 +614,11 @@ constexpr Point reflection(const Point& p) noexcept
 #+END_SRC
 If invoked with a ~constexpr~ variable of type /Point/ the function will be evaluated at compile time. 
 \\
-It's important to keep in mind that ~constexpr~ is a part of a function's interface. Again, as ~noexcept~, users may rely on this interface. Also, if ~constexpr~ is used with ~constexpr~ variables in ~constexpr~ context _*and*_ it has some side effects(as I/O or simply logging something to the standard output) it will cause compile time error. So yeah, be careful. ~constexpr~ is pretty close to the new ~const~ but not quite!
+It's important to keep in mind that ~constexpr~ is a part of a function's interface. Again, as ~noexcept~, users may rely on this interface. Also, if ~constexpr~ is used with ~constexpr~ variables in ~constexpr~ context _*and*_ it has some side effects(as I/O or simply logging something to the standard output) it will cause a compile-time error. So yeah, be careful. ~constexpr~ is pretty close to the new ~const~ but not quite!
 \\
 One final thing. Please do yourself a favor and check out [[https://www.youtube.com/watch?v=PJwd4JLYJJY][this]]! A talk with [[https://articles.emptycrate.com/about.html][Jason Turnen]] and [[https://github.com/elbeno][Ben Deane]] that shows exactly what you can do with ~constexpr~.
 ** The mutable keyword exists and you should know about it!
-So lets say you have the following class that is used not only by you but by someone that is not you and over whom you have to direct control.
+So let's say you have the following class that is used not only by you but by someone that is not you and over whom you have to direct control.
 #+BEGIN_SRC c++
 class ResourceProvider 
 {
@@ -638,9 +640,9 @@ private:
   double x,y;
 }
 #+END_SRC
-Everything is perfect. The /getResource/ function is ~const~ and is has no side effect. This is as good as it gets with C++ functions. It's optimizable AF.
+Everything is perfect. The /getResource/ function is ~const~ and it has no side effect. This is as good as it gets with C++ functions. It's optimizable AF.
 \\
-One they however, one of the clients of the class writes you an email with complaint that the ~getResources~ function is too slow and ~changeState~ gets called relatively seldom so they end up caching the result of ~getResource~. "Wouldn't it be convenient if the class did that on its own automatically." they say. And yes! It certainty would be nice. So you change your class to:
+One they, however, one of the clients of the class writes you an email with the complaint that the ~getResources~ function is too slow and ~changeState~ gets called relatively seldom so they end up caching the result of ~getResource~. "Wouldn't it be convenient if the class did that on its own automatically," they say. And yes! It certainly would be nice. So you change your class to:
 #+BEGIN_SRC c++
 class ResourceProvider 
 {
@@ -706,15 +708,15 @@ private:
   mutable double cached_value;
 }
 #+END_SRC
-You ship it. Everyone is happy. The code is clean. You can live in peace with the new knowledge now!
+You ship it. Everyone is happy. The code is clean. You can live in peace with the new knowledge now! Also, watch [[https://www.youtube.com/watch?v=tTexD26jIN4][this]] talk by [[http://www.gregcons.com/kateblog/][Kate Gregory]]. She goes over the problem presented here in much more engaging fashion.
 ** std::unique_ptr is for exclusive ownership!
-Generally when you want to use pointer in the new modern C++ world, your first thought should be "Can I use ~unique_ptr~ here?". And yes, this is the preferred way of using "pointers" these days. ~unique_ptr~ can be viewed to as small as raw pointer and for most operations they behave exactly the same way as raw pointers.
+Generally, when you want to use a pointer in the new modern C++ world, your first thought should be "Can I use ~unique_ptr~ here?". And yes, this is the preferred way of using "pointers" these days. ~unique_ptr~ can be viewed as small as a raw pointer and for most operations, they behave exactly the same way as raw pointers.
 \\
 There are few things to keep in mind while using ~unique_ptr~.
-- ~unique_ptr~ embodies exclusive ownership. Every ~unique_ptr~ that is not empty "owns" the resource it's holding and you have guarantee (generally) that this is the only object holding pointer to the underlying object. The ~unique_ptr~ cannot be copy as this would create another holder of the resource so ~unique_ptr~-s are only movable
-- You can know _exactly_ when an ~unique_ptr~ object would be destroyed and with that the resource released. It is said that one of the greatest features of C++ is the closing brackets ~}~. In order words, the fact that you know exact moment at which an object will be destroyed and the destructor of the class will be ran for this object. The ramifications for ~unique_ptr~ is that the object will be destroyed when the enclosing scopes comes to an end. Of course you could move the ~unique_ptr~ before that and transfer its ownership to some other part of the program. The moving was talked about in the [[sec:smart-pointers][beginning]].
+- ~unique_ptr~ embodies exclusive ownership. Every ~unique_ptr~ that is not empty "owns" the resource it's holding and you have a guarantee (generally) that this is the only object holding a pointer to the underlying object. The ~unique_ptr~ cannot be copied as this would create another holder of the resource so ~unique_ptr~-s are only movable
+- You can know _exactly_ when an ~unique_ptr~ object would be destroyed and with that the resource released. It is said that one of the greatest features of C++ is the closing brackets ~}~. In order words, the fact that you know the exact moment at which an object will be destroyed and the destructor of the class will be executed for this object. The ramifications for ~unique_ptr~ is that the object will be destroyed when the enclosing scope comes to an end. Of course, you could move the ~unique_ptr~ before that and transfer its ownership to some other part of the program. The moving was talked about in the [[sec:smart-pointers][beginning]].
 \\
-Typical use of ~unique_ptr~ are the factory methods. The factory function could even return different type(from some hierarchy of course) of object depending on the inputs input parameters.
+A typical use of ~unique_ptr~ are the factory methods. The factory function could even return different type (from some hierarchy, of course) of an object depending on the inputs input parameters.
 #+BEGIN_SRC c++
 class Base {}
 class D1 : public Base {}
@@ -740,18 +742,18 @@ std::unique_ptr<Base, decltype(del_base)> ptr(new Base(), del_base);
 #+END_SRC
 
 ** std::shared_ptr is for shared ownership!
-Not having garbage collection in C++ is a curse and a bless at the same time. The knowledge of when exactly your objects are being destroyed and memory released  gives you quite the freedom to write high performing code. On the other hand this freedom comes with a lot of pitfalls and potential problems that you can introduce into your program. ~shared_ptr~ aims to provide you with "garbage collection"-like solution while staying true to the C++ "optimize everything" principles. 
+Not having garbage collection in C++ is a curse and a blessing at the same time. The knowledge of when exactly your objects are being destroyed and memory released gives you quite the freedom to write high performing code. On the other hand, this freedom comes with a lot of pitfalls and potential problems that you can introduce into your program. ~shared_ptr~ aims to provide you with "garbage collection"-like solution while staying true to the C++ "optimize everything" principles. 
 \\
  ~shared_ptr~ implements a reference counting system. Several different ~shared_ptr~ objects can hold a pointer to the same underlying resource. The resource will be destroyed only then when all ~shared_ptr~ have exited their respective scopes (i.e. are destroyed). There is a little bit of overhead once you bring the whole /reference/-spiel. The important things to keep in mind:
 - ~shared_ptr~ are twice the size of a raw pointer
 - memory for the reference count must be dynamically allocated
 - Increments and decrements of the reference count must be atomic
 - Constructing a ~shared_ptr~ usually increments the reference count. Why usually? Because move-construction is also construction but it doesn't actually produce "new object". The pointer of the old object (the one we are moving from) is just set to /null/. and the new object takes its place in the world so no new reference is actually created.
-- Each resource that is managed through ~shared_ptr~ has what is called a /control block/. There the ~shared_ptr~ meta information about he pointer it holds(reference count, custom delete... ). The /control block/ is allocated on the heap
+- Each resource that is managed through ~shared_ptr~ has what is called a /control block/. There the ~shared_ptr~ meta-information about he pointer it holds(reference count, custom delete... ). The /control block/ is allocated on the heap
   + ~std::make_shared~ always creates new /control block/
   + A /control block/ is also created when the ~shared_ptr~ object is constructed from a unique-ownership pointer (~unique_ptr~).
   + A /control block/ is created even when you pass a raw pointer to the constructor of the ~shared_ptr~. If you want a new ~shared_ptr~ that manages the same resource, you should copy-construct it from another ~shared_ptr~
-The last point is kinda important. You have to think about the control blocks that are created of else you could end up with several control blocks for the same resource which is a perfect recipe for undefined behavior. Look the following code
+The last point is kinda important. You have to think about the control blocks that are created or else you could end up with several control blocks for the same resource which is a perfect recipe for undefined behavior. Look the following code
 
 #+BEGIN_SRC c++
 std::vector<std::shared_ptr<Widget>> processed;
@@ -765,7 +767,7 @@ public:
     }
 }
 #+END_SRC
-The part that is wrong is the passing of a raw pointer to a container of ~shared_ptr~-s. This will create a new control block which _could_ be not bad but if there are other ~sahred_ptr~-s in some other part of the program that already have control block got for  the ~*this~ object... *undefined behavior*!! This is however problem that was thought about and solution exists. Introducing ~std::enable_shared_fro_this<T>~. Weird name but it does the trick. If class inherits form this thing, then it is safe to create ~shared_ptr~ from the ~this~ pointer. The safe code look like:
+The part that is wrong is the passing of a raw pointer to a container of ~shared_ptr~-s. This will create a new control block which _could_ be not bad but if there are other ~sahred_ptr~-s in some other part of the program that already have control block for the ~*this~ object... *undefined behavior*!! This is, however, a problem that was thought about and a solution exists. Introducing ~std::enable_shared_from_this<T>~. Weird name but it does the trick. If a class inherits from this thing, then it is safe to create ~shared_ptr~ from the ~this~ pointer. The safe code looks like:
 #+BEGIN_SRC c++
 class Widget : public std::enable_shared_fro_this<Widget>
 {
@@ -778,7 +780,7 @@ public:
 #+END_SRC
 
 ** Pimpl and the proper way to use it. 
-Ever herd of [[http://www.learncpp.com/cpp-tutorial/17-forward-declarations/][forward declaration]]. If not go check it out. The Pimpl idiom kinda solves the same problem. If you don't want to clutter your header files with the header files of the classes that you use, you can "deffer" this "implementation detail" to the ~.cpp~ file. Check this out:
+Ever heard of [[http://www.learncpp.com/cpp-tutorial/17-forward-declarations/][forward declaration]]. If not go check it out. The Pimpl idiom kinda solves the same problem. If you don't want to clutter your header files with the header files of the classes that you use, you can "deffer" this "implementation detail" to the ~.cpp~ file. Check this out:
 #+BEGIN_SRC c++
 //Wifget.hpp
 class Widget
@@ -813,7 +815,7 @@ Widget::~Widget()
   delete impl;
 }
 #+END_SRC
-Notice how in ~Widget.hpp~ we didn't have to include a single header. There is no mention of the headers for the fields in the implementation of the class. The implementation appears only in he ~.cpp~ file. This can potentially speed up compilation times as it reduces the compile-dependencies between the classes.
+Notice how in ~Widget.hpp~ we didn't have to include a single header. There is no mention of the headers for the fields in the implementation of the class. The implementation appears only in the ~.cpp~ file. This can potentially speed up compilation times as it reduces the compile-dependencies between the classes.
 \\
 Now to utilize C++14 we can rewrite the class to use ~uniqe_ptr~ for the implementation and write our necessary constructors.
 #+BEGIN_SRC c++
@@ -857,16 +859,16 @@ Widget& Widget::operator=(const Widget& rhs)
   return *this;
 }
 #+END_SRC
-/Note:/ Use your header for only for declaration when possible. Also ~= defualt~ is _implementation_ so put in the ~.cpp~ file, not in the header. If in this case you did that in the header file, the compiler would not how to generate the move constructor and the move assignment operator as implementation of the calls is _not_ in the header. In the header the ~struct Impl~ is incomplete and ~*impl~ is pointer to incomplete type so the compiler could not deal with that.
+/Note:/ Use your header only for a declaration when possible. Also, ~= defualt~ is _implementation_ so put in the ~.cpp~ file, not in the header. If in this case, you did that in the header file, the compiler would not how to generate the move constructor and the move assignment operator as an implementation of the calls is _not_ in the header. In the header the ~struct Impl~ is incomplete and ~*impl~ is a pointer to incomplete type so the compiler could not deal with that.
 \\
-The compiler happily generates the move constructors for us as the default implementation is exactly the thing we want. Just perform /move/ on the implementation. The default copy constructors however would only perform shallow copy of the object so we have to write them ourselves.
+The compiler happily generates the move constructors for us as the default implementation is exactly the thing we want. Just perform /move/ on the implementation. The default copy constructors, however, would only perform a shallow copy of the object so we have to write them ourselves.
 \\
 The detractor is also the default one because we have no code to put in it. The ~unique_ptr~ automatically deletes its contents once it is destroyed. 
 ** std::forward and std::move are quite interesting.
 <<sec:move-forward>>
-Ok, hopefully by now you at least have heard of *move semantics*. Inevitably you've also probably seen ~std::move()~ and ~std::forward<T>()~ used in some weird way and wondered "What the hell is happening here?". First thing to understand about hose functions - they are functions that don't do much in run-time. They don't generate code. The don't "move". At their core, those functions are casts. They cast /rvalue/ object to /lvalue/ ones. Refer to one of the [[sec:move-semantics][intro sections]] for more information about what are those. The difference between ~std::move()~ and ~std::forward<T>()~ is that they perform the cast under different conditions. ~std::move()~ performs it always with no conditions. ~std::forward<T>()~ casts to revalue only if a certain conditions is met - if the argument is bind to rvalue.
+Ok, hopefully by now you at least have heard of *move semantics*. Inevitably you've also probably seen ~std::move()~ and ~std::forward<T>()~ used in some weird way and wondered "What the hell is happening here?". The first thing to understand about hose functions - they are functions that don't do much in run-time. They don't generate code. They don't "move". At their core, those functions are casts. They cast /rvalue/ object to /lvalue/ ones. Refer to one of the [[sec:move-semantics][intro sections]] for more information about what are those. The difference between ~std::move()~ and ~std::forward<T>()~ is that they perform the cast under different conditions. ~std::move()~ performs it always with no conditions. ~std::forward<T>()~ casts to revalue only if a certain condition is met - if the argument is bind to rvalue.
 \\
-Yes, it is well known and by this point accepted fact that ~std::move()~ has confusing AF name but... just roll with it and it will grow on you. ~std::move()~ doesn't actually move anything. ~std::move()~ merely makes an object eligible for moving. This is no guarnatee however that an object will be moved from. Consider this:
+Yes, it is well known and by this point accepted fact that ~std::move()~ has confusing AF name but... just roll with it and it will grow on you. ~std::move()~ doesn't actually move anything. ~std::move()~ merely makes an object eligible for moving. This is no guarantee however that an object will be moved from. Consider this:
 #+BEGIN_SRC c++
 class Anotation
 {
@@ -878,9 +880,9 @@ public:
 }
 Anotation("ano");
 #+END_SRC
-Think about what is happening here. We are passing a string to the constructor which takes it by value and "moves" its content inside the ~text~ field. But there is also ~const~. This means that the result of the ~std::move(name)~ is /rvalue const std::string/. The constness is still there. This means that the move constructor of ~std::string~ _cannot_ be used as it will change the object that it takes which is /const/. For that reason the ordinary constructor is called and the value is just copied and not moved. The lesson to be learned here - rvalue objects will not be moved sorely on the fact that they are /rvalue/s. They also must be /const/.
+Think about what is happening here. We are passing a string to the constructor which takes it by value and "moves" its content inside the ~text~ field. But there is also ~const~. This means that the result of the ~std::move(name)~ is /rvalue const std::string/. The constness is still there. This means that the move constructor of ~std::string~ _cannot_ be used as it will change the object that it takes which is /const/. For that reason, the ordinary constructor is called and the value is just copied and not moved. The lesson to be learned here - rvalue objects will not be moved sorely on the fact that they are /rvalue/s. They also must be /const/.
 \\
-As already said ~std::forward<T>()~ only casts to rvalue is the argument is bind to rvalue object. ~std::forward<T>()~ is typically used in cases where /perfect forwarding/ is required. That is, a function takes some arguments and those are automatically /lvalue/ in the function body even if the fiction is invoked with /rvalue/s. In the body however, you may want to "forward" the argument to other functions that may need to differentiate between /r-/ and /lvalues/. In this case one would use ~std::forward<T>()~. Example:
+As already said ~std::forward<T>()~ only casts to rvalue if the argument is bound to rvalue object. ~std::forward<T>()~ is typically used in cases where /perfect forwarding/ is required. That is, a function takes some arguments and those are automatically /lvalue/ in the function body even if the fiction is invoked with /rvalue/s. In the body, however, you may want to "forward" the argument to other functions that may need to differentiate between /r-/ and /lvalues/. In this case, one would use ~std::forward<T>()~. Example:
 #+BEGIN_SRC c++
 template<typename T>
 void logAndProcess(T&& param)
@@ -912,7 +914,7 @@ For a reference to be universal one certain condition must be met
 2. The reference must have exactly the form "T&&". No ~const~, no nothing. Just "T&&".
 If the ~const~ qualifier is used for the function parameter, it(the parameter) will "collapse" /rvalue const reference/ which pretty useless on itself as we say in the [[sec:move-forward][previous tip]].
 \\
-As stated if universal reference is bound to rvalue, it is an rvalue reference and lvalue reference if it's bound to lvalue. This means that universal references are exactly thing to be used with ~std::forward<T>()~.
+As stated if universal reference is bound to "rvalue", it is an "rvalue"-reference and "lvalue"-reference if it's bound to an "lvalue". This means that universal references are exactly the things to be used with ~std::forward<T>()~.
 ** /Pass by value/ is not what your first C++ book would have you believe
 Maybe this is exclusive to me but when I was learning C++ I was left with the impression that passing things by value is kinda dumb if you can pass it by reference. I mean, who needs the extra copy, right?! Not quite. Consider the case of a simple setter
 #+BEGIN_SRC c++
@@ -927,7 +929,7 @@ class Widget
 What you actually are doing is:
 - take a string by reference
 - copy it in the field ~name~
-The copy is till there! It's just that _you_ perform the copying and not the compiler. Not this is kinda dumb! The compiler _is_ smarter than you. After the compiler has copied the value from the caller in the function's parameter we can - enter modern C++ - /move/ it in the corresponding field:
+The copy is still there! It's just that _you_ performed the copying and not the compiler. Now, this is kinda sub-optimal. The compiler _is_ smarter than you. After the compiler has copied the value from the caller in the function's parameter we can - enter modern C++ - /move/ it in the corresponding field:
 #+BEGIN_SRC c++
 class Widget
 {
@@ -937,7 +939,7 @@ class Widget
     }
 }
 #+END_SRC
-Now this looks like good modern c++. Copying... is not that bad as might you think. Compilers are pretty good these days. Do not be mislead. A copy of a single string has virtually no overhead.
+This looks like good modern c++. Copying... is not that bad as might you think. Compilers are pretty good these days. Do not be mislead. A copy of a single string has virtually no overhead.
 \\
 Still, there still exists a time and place for passing by /const references/. If you actually don't need a copy of the passed argument, then there is no reason for pass-by-value
 #+BEGIN_SRC c++
@@ -962,21 +964,20 @@ populete(names);
 #+END_SRC
 To summarize (taken from an answer from [[https://stackoverflow.com/questions/7592630/is-pass-by-value-a-reasonable-default-in-c11][this]] StackOverflow question)
 
-|--------------------+----------------------------|
-|--------------------+----------------------------|
-| Signature          | Use                        |
-|--------------------+----------------------------|
-|--------------------+----------------------------|
-| bar(foo f);        | want to obtain a copy of f |
-|--------------------+----------------------------|
-| bar(const foo& f); | want to read f             |
-|--------------------+----------------------------|
-| bar(foo& f);       | want to modify f           |
-|--------------------+----------------------------|
-|--------------------+----------------------------|
-|                    |                            |
+|--------------------+--------------------------|
+|--------------------+--------------------------|
+| Signature          | Use                      |
+|--------------------+--------------------------|
+|--------------------+--------------------------|
+| bar(foo f);        | want to obtain a copy of |
+|--------------------+--------------------------|
+| bar(const foo& f); | want to read f           |
+|--------------------+--------------------------|
+| bar(foo& f);       | want to modify f         |
+|--------------------+--------------------------|
+|--------------------+--------------------------|
 ** Return value optimization(RVO) - don't return std:::move of local variable
-With your awesome new knowledge about move semantics you can now write highly optimized, high performent code that will go \*whoosh\* past those pesky languages running on virtual machines. You will, however, be tempted to make some "optimizations" at places where you really shouldn't mess with the compiler. Please always repeat to yourself  "The compiler is smarter than me!".
+With your awesome new knowledge about move-semantics you can now write highly optimized, highly performant code that will go \*whoosh\* past those pesky languages running on virtual machines. You will, however, be tempted to make some "optimizations" at places where you really shouldn't mess with the compiler. Please always repeat to yourself  "The compiler is smarter than me!".
 \\
 Consider the following snippet:
 #+BEGIN_SRC c++
@@ -987,7 +988,7 @@ Widget makeWIdget()
   return w;
 }
 #+END_SRC
-We are creating a local variable in a function and we are returning it by value. We think about what is happening. The object is created - construction, the object is returned by value - we _copy_ our new object and return the copy because the local object will be destroyed once the scope of the function ends. Copy! We know what /rvlaues/ are. We don't need no copy. We can move! We rewrite the code like:
+We are creating a local variable in a function and we are returning it by value. We think about what is happening. The object is created - construction, the object is returned by value - we _copy_ our new object and return the copy because the local object will be destroyed once the scope of the function ends. Copy! We know what /rvlaues/ are. We don't need any copy. We can move! We rewrite the code like:
 #+BEGIN_SRC c++
 Widget makeWIdget()
 {
@@ -998,13 +999,13 @@ Widget makeWIdget()
 #+END_SRC
 Awesome, we saved ourselves one copy! *Wrong!!!*
 \\
-Introducing /Return Value Optimization/. At some situations(most of them) the compiler will notice that you are returning a local variable by value. If certain conditions are met, the compiler will construct this local object in the exact place in memory where the return value of the function will reside after the function is invoked. In such cases, with the return statement won't produce copy _nor_ will move construction would be necessary. This is good! The conditions that should be met for RVO to occur:
+Introducing /Return Value Optimization/. In some situations(most of them) the compiler will notice that you are returning a local variable by value. If certain conditions are met, the compiler will construct this local object in the exact place in memory where the return value of the function will reside after the function is invoked. In such cases, the return statement won't produce copy _nor_ will move construction would be necessary. This is good! The conditions that should be met for RVO to occur:
 1. The type of the local object must be the same as the return value.
 2. The local object is being returned.
-3. The type is move constructable.
+3. The type is move-constructible.
 What happens when we ~std::move~ the local object - we crate reference to it and RVO can't be performed. So, *don't* return ~std::move~!
 \\
-Ok, but still. RVO is just an optimization. Maybe the compiler won't be able to figure out which local object we want to return and will punish us with copy while returning. No! Again - "The compiler is smarter than me!". Return values are _always_ treated as /rvalues/. So when the your function is:
+Ok, but still. RVO is just an optimization. Maybe the compiler won't be able to figure out which local object we want to return and will punish us with a copy while returning. No! Again - "The compiler is smarter than me!". Return values are _always_ treated as /rvalues/. So when your function is:
 #+BEGIN_SRC c++
 Widget makeWIdget()
 {
@@ -1024,10 +1025,10 @@ Widget makeWIdget()
 #+END_SRC
 So no. You would never need to return with ~std::move~ of local object.
 ** std::async is something that exists and it's generally to be preferred over std::thread.
-A lot times you will want to run something asynchronously in your program. C++ and the standard library make this relatively easy and give you two approaches.
+A lot of times you will want to run something asynchronously in your program. C++ and the standard library make this relatively easy and give you two approaches.
 - ~std::thread~ - for /thread-based/ strategy
 - ~std::async~ - for /task-based/ strategy
-In general you should prefer ~std::async~. It works on higher level of abstraction than ~std::thread~ and it hides some of the details that you can mess up and delegates them to the implementation. The basic asynchronous call goes like:
+In general, you should prefer ~std::async~. It works on a higher level of abstraction than ~std::thread~ and it hides some of the details that you can mess up and delegates them to the implementation. The basic asynchronous call goes like:
 #+BEGIN_SRC c++
 int doAsyncWork();
 
@@ -1042,11 +1043,11 @@ If you opt to use thread-based programming you'll have to deal with thread exhau
 
 
 * Conclusion
-I just want to say one thing. Never, never ever say that you "know C++" and be deeply skeptical of people who use the said expression. C++ is complex and you can do everything in a lot of different ways and probably things are going to work no matter what. However, some solutions in C++ are very clearly better than others and a lot of times it is not clear what is the "optimal" way of achieving your goal. Do not be mislead by your own knowledge! C++ offers you an ever-expanding world of good\bad solutions and knowing everything that there is to know is most likely infeasible. And you know what, that's actually OK. Because let's face it, software engineering is all about learning something new every day in the process of horribly breaking your code.
+I just want to say one thing. Never, never say that you "know C++" and be deeply skeptical of people who use the said expression. C++ is complex and you can do everything in a lot of different ways and probably things are going to work no matter what. However, some solutions in C++ are very clearly better than others and a lot of times it is not clear what is the "optimal" way of achieving your goal. Do not be mislead by your knowledge! C++ offers you an ever-expanding world of good\bad solutions and knowing everything that there is to know is most likely infeasible. And you know what, that's actually OK. Because let's face it, software engineering is all about learning something new every day in the process of horribly breaking your code.
 
 
 * References
-I'm very thankfully to these sources:
+I'm very thankful to these sources:
 - [[https://www.amazon.de/Effective-Modern-Specific-Ways-Improve/dp/1491903996][Effective modern C++]] - the book am talking about in this post
 - [[https://www.chromium.org/developers/smart-pointer-guidelines][Smart pointers guidelines]] - a very useful guide on how to be smart with your smart pointers
 - [[https://www.internalpointers.com/post/understanding-meaning-lvalues-and-rvalues-c][Understanding the meaning of lvalue or rvalues]] - a good blog post that will walk you through the usages and the meaning of move semantics and how are they implemented through /rvalue/ and /lvalue/. 

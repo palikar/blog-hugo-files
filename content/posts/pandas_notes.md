@@ -1,10 +1,10 @@
 +++
 title = "Notes on learning Pandas"
 author = ["Stanislav Arnaudov"]
-description = "My notes on pandas when I started looking at the library"
+description = "My notes on pandas when I started looking into the library"
 date = 2018-07-13T00:00:00+02:00
 keywords = ["machine-learning", "python", "pandas"]
-lastmod = 2019-04-22T00:29:26+02:00
+lastmod = 2019-10-12T11:27:00+02:00
 categories = ["machine-learning"]
 draft = false
 weight = 100
@@ -13,7 +13,7 @@ weight = 100
 <div class="NOTES">
   <div></div>
 
-For transparency sake - those are my notes while learning about _pandas_ from [this](https://www.tutorialspoint.com/python%5Fpandas/index.htm%20) tutorial. At times this here is just copy paste from it, at other it's my own thoughts and explanations. This is meant to be a condensed version of the tutorial more or less just for me. If you found it useful though, well, good for you, I guess.
+For transparency's sake - those are my notes while learning about _pandas_ from [this](https://www.tutorialspoint.com/python%5Fpandas/index.htm%20) tutorial. At times this here is just copy-paste from it, at others, it's my own thoughts and explanations. This is meant to be a condensed version of the tutorial more or less just for me. If you found it useful though, well, good for you, I guess.
 
 </div>
 
@@ -23,24 +23,24 @@ For transparency sake - those are my notes while learning about _pandas_ from [t
 
 ### Basic {#basic}
 
-**pandas** is a Python package providing fast, flexible, and expressive data structures designed to make working with "relational Heterogeneous data" or "labeled" data both easy and intuitive. It aims to be the fundamental high-level building block for doing practical, **real world** data analysis in Python. Additionally, it has the broader goal of becoming the most powerful and flexible open source data analysis / manipulation tool available in any language. It is already well on its way toward this goal. <br /> <br /> It's like a data-base-like objects to deal with your data.
+**pandas** is a Python package providing fast, flexible, and expressive data structures designed to make working with "relational Heterogeneous data" or "labeled" data both easy and intuitive. It aims to be the fundamental high-level building block for doing practical, **real world** data analysis in Python. Additionally, it has the broader goal of becoming the most powerful and flexible open-source data analysis/manipulation tool available in any language. It is already well on its way toward this goal. <br /> <br /> It's like database-like objects to deal with your data.
 
--   data could be loaded form _.csv_ files and be written again
+-   data could be loaded from _.csv_ files and be written again
 -   some basic statistical analysis is possible
 
 
 ### Features {#features}
 
-A short list of features as advertised on the official site of _pandas_.
+A shortlist of features as advertised on the official site of _pandas_.
 
--   Fast and efficient DataFrame object with default and customized indexing.
+-   Fast and efficient DataFrame object with the default and customized indexing.
 -   Tools for loading data into in-memory data objects from different file formats.
 -   Data alignment and integrated handling of missing data.
--   Reshaping and pivoting of date sets.
--   Label-based slicing, indexing and subsetting of large data sets.
+-   Reshaping and pivoting of data sets.
+-   Label-based slicing, indexing, and subsetting of large data sets.
 -   Columns from a data structure can be deleted or inserted.
 -   Group by data for aggregation and transformations.
--   High performance merging and joining of data.
+-   High-performance merging and joining of data.
 -   Time Series functionality.
 
 
@@ -57,16 +57,16 @@ Managing data in structures and easily manipulating the data.
 It's like a table in RDB.
 
 -   Columns are attributes
--   Rows are the actually data
+-   Rows are the actual data
 -   Indices are the labels for each row
 
-This is the most common object when dealing with data and using _pandas_. The data in the object is heterogeneous, the shape and the size are mutable. The last part means that the models you build in one object that contains data can easily(ish) be transformed into another model(by model I mean the way your data is structured- names and count of columns(attributes), indexing of the rows, type of the data inside). <br /> <br /> Basic construction of DataFrame object is as follows:
+This is the most common object when dealing with data and using _pandas_. The data in the object is heterogeneous, the shape and the size are mutable. The last part means that the models you build in one object that contains data can easily(ish) be transformed into another model(by model I mean the way your data is structured- names and count of columns(attributes), indexing of the rows, type of the data inside). <br /> <br /> The basic construction of the DataFrame object is as follows:
 
 ```python
 pandas.DataFrame( data, index, columns, dtype, copy)
 ```
 
--   `data` - ndarray, series, map, lists, dict, constants..etc. The raw data that will be stored in the DataFame. This could be for example a list of lists. In this case the 'inner' lists will become the columns and the column-names will be given through **columns**. The number of the columns must be the same as the number of inner lists
+-   `data` - ndarray, series, map, lists, dict, constants..etc. The raw data that will be stored in the DataFame. This could be for example a list of lists. In this case, the 'inner' lists will become the columns and the column names will be given through **columns**. The number of the columns must be the same as the number of inner lists
 -   `index` - the 'names' of the rows. Usually just an index (0,1,2,3....). The size of this must be the count of the entries in the dataset
 -   `columns` - the names of the columns
 -   ... - the other ones are none of our concern
@@ -268,7 +268,7 @@ OK, kinda. The table is from me and I am kinda showing off.
 
 ## Applying Functions on data in _DataFrame_ {#applying-functions-on-data-in-dataframe}
 
-There are a few way that we can transform a _DataFrame_ into another one by applying a map-like functions on the data. Depending on our needs we have the following options:
+There are a few ways that we can transform a _DataFrame_ into another one by applying a map-like function on the data. Depending on our needs we have the following options:
 
 -   `pipe()` - Table wise Function Application:
 -   `apply()` - Row or Column Wise Function Application
@@ -281,7 +281,7 @@ From the official documentation:
 
 > Use .pipe when chaining together functions that expect Series, _DataFrames_ or _GroupBy_ objects
 
-From what I understand - One would used that when applying a bunch of functions on all elements of _DataFrame_ (or whatever) while still having the possibility that the applied functions takes more than just one argument. For example, let's add two to every element in _DataFrame_ through a adder functions that just adds its two arguments.
+From what I understand - One would use that when applying a bunch of functions on all elements of _DataFrame_ (or whatever) while still having the possibility that the applied function takes more than just one argument. For example, let's add two to every element in _DataFrame_ through an adder function that just adds its two arguments.
 
 ```python
 import pandas as pd
@@ -332,7 +332,7 @@ Note how the **np.mean** return a single number so in the final result there is 
 
 ### ApplyMap {#applymap}
 
-Not all functions can be vectorized (neither the Numpy arrays which return another array nor any value), the methods `applymap()` on DataFrame and analogously map() on Series accept any Python function taking a single value and returning a single value. This is similar to the **pipe** but it's less flexible. It just treats the whole _DataFrame_ as on big list and performs a mapping function on it. Example:
+Not all functions can be vectorized (neither the Numpy arrays which return another array nor any value), the methods `applymap()` on DataFrame and analogously map() on Series accept any Python function taking a single value and returning a single value. This is similar to the **pipe** but it's less flexible. It just treats the whole _DataFrame_ as on a big list and performs a mapping function on it. Example:
 
 ```python
 import pandas as pd
@@ -497,9 +497,9 @@ Output:
 
 ## Slicing {#slicing}
 
-There are some custom way slicing through data that are optimized and are the recommended way of slicing data when dealing with production code.
+There are several custom ways of slicing through data that are optimized and are the recommended way of slicing data when dealing with production code.
 
-1.  **loc()** - lable based indexing. Used as df.loc[</rows/>,</columns/>]. For _rows_ and _columns_ could be given pretty much everything that makes sense - single char, list of labels, slice object, boolean array..
+1.  **loc()** - label based indexing. Used as df.loc[</rows/>,</columns/>]. For _rows_ and _columns_ could be given pretty much everything that makes sense - single char, list of labels, slice object, boolean array.
 
     ```python
     df.loc[['a','b','f','h'],['A','C']]
@@ -627,9 +627,9 @@ print(df.rolling(window=3).mean())
 2000-01-10 -0.186834 -0.131418 -0.530804 -0.624335
 ```
 
-The window is big 3-elements and therefore the fist two rows don't have the needed neighbors.
+The window is big 3-elements and therefore the first two rows don't have the needed neighbors.
 
-1.  Expanding - Calculate something for the first element, then for the first and second together, then for the first, second and third together and so on and so forth. This is done with **expanding(min\_periods=n)**. _min\_periods_ shows when the computations begin (the number of rows needed in order the generated row not to be _NaN_).
+1.  Expanding - Calculate something for the first element, then for the first and second together, then for the first, second and third together and so forth. This is done with **expanding(min\_periods=n)**. _min\_periods_ shows when the computations begin (the number of rows needed in order the generated row not to be _NaN_).
 
     ```python
     import pandas as pd
@@ -890,16 +890,16 @@ y 1            89   Billy       sub2
   5            88   Betty       sub5
 ```
 
-Later those new keys can be used in order to distinguish from which set the row came from. <br /> <br /> Appending is also possible and it takes simple form:
+Later those new keys can be used in order to distinguish from which set the row came from. <br /> <br /> Appending is also possible and it takes the simple form:
 
-```text
+```python
 one.append(two)
 ```
 
 
 ## Categories {#categories}
 
-A lot of times some string-fields in the data aren't just some random text but a repetitive and an element of some predefined set of possible values. Those are the categorical types of data. Something like [big, medium, small]. Categorical variables can take on only a limited, and usually fixed number of possible values. Besides the fixed length, categorical data might have an order but cannot perform numerical operation. Categorical are a _Pandas_ data type. <br /> <br /> A simple example to create a _Series_ object that only can contain [a, b, c]
+A lot of times some string-fields in the data aren't just some random text but a repetitive and an element of some predefined set of possible values. Those are the categorical types of data. Something like [big, medium, small]. Categorical variables can take on only a limited, and usually fixed number of possible values. Besides the fixed length, categorical data might have an order but cannot perform the numerical operation. Categorical is a _Pandas_ data type. <br /> <br /> A simple example to create a _Series_ object that only can contain [a, b, c]
 
 ```python
 import pandas as pd

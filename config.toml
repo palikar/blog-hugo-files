@@ -11,11 +11,10 @@ disqusShortname = "palikar-github-io"
 # enableRobotsTXT = true
 
 
-
 pygmentsCodeFences = true
 pygmentsUseClasses = false
 pygmentsUseClassic = false
-pygmentsStyle = "dracula"
+pygmentsStyle = "friendly"
 
 relatedPosts = true
 postNavigation = true
@@ -29,12 +28,6 @@ postNavigation = true
 
     highlightjs = false
     highlightjsstyle = "github"
-
-    pygmentsCodeFences = true
-    pygmentsUseClasses = false
-    pygmentsUseClassic = false
-    pygmentsStyle = "dracula"
-
 
     customCSS = ["./static/css/new_custom.css"]
 

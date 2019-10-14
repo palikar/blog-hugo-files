@@ -29,6 +29,8 @@
 
 * Abstract
   C++ is awesome! I am starting strong here but it really is. When experienced (and crazy) enough one can implement everything and the at the same can do it incredibly efficient at run time (cuz who cares how much work does the compiler do for us). I can rant about how c++ is the best and all of its great features but for this post I will constraint myself to one particular part of C++ - template meta-programming! Even more concretely, I would like to show you a trick that I discovered myself that helped me solve one nasty problem. Yes, I admit, I am +probably+ certainty not the first one who discovers this trick *BUT* I promise you, I discovered it by myself and the whole process of discovering it was immensely satisfying. I mean... templates *are* magic and I can only imagine how the people who understand them feel.
+
+
 * The problem
   Say you have a templated class that implements some kind of functionality and uses the type given by it's template argument as some soft of data. This probably sound a little bit vague. A more concrete example of what I am talking about - imagine you have some class that sends some data to a server /somewhere/. The data can be ~std::string~ or ~int~ or ~double~ or some other random structure of yours. Of course the natural thing to come with that is a method ~send(data)~ that takes some data object of the templates type and does the /internal magic/ (we don't care about that though). In code everything will look something like:
 #+BEGIN_SRC C++
@@ -65,6 +67,8 @@ So what do we have so far:
 \\
 \\
 And this is pretty much where I found myself that one time. The following explanations are the way how I solved the problem.
+
+
 * Tackling it probably in the most terrible way
 So, the way I tried to do it was to add another template argument to the class - a ~bool~ - that specifies whether a /header/ is used or not. Then I hoped that I could just specialize the ~send~ function with this new template argument set to /false/ with an implementation without the use of /header/. Of course the default value of the new template argument would be true for preserving backward compatibility. The way I though it's gonna work as something like:
 #+BEGIN_SRC c++
@@ -169,6 +173,7 @@ The "final" solution becomes:
 
 #+END_SRC
 There! Now we have it. Now we've (kinda) specialized a function of a templated class based on a value of a template argument without writing the whole class two times *AND* no previous user will notice this new feature of the class. It's not exactly a straight forward solution but I found it very elegant workaround.
+
 
 * Tackling it in a better way
 

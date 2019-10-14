@@ -28,28 +28,28 @@
 
 
 #+BEGIN_NOTES
-For transparency sake - those are my notes while learning about /pandas/ from [[https://www.tutorialspoint.com/python_pandas/index.htm%20][this]] tutorial. At times this here is just copy paste from it, at other it's my own thoughts and explanations. This is meant to be a condensed version of the tutorial more or less just for me. If you found it useful though, well, good for you, I guess.
+For transparency's sake - those are my notes while learning about /pandas/ from [[https://www.tutorialspoint.com/python_pandas/index.htm%20][this]] tutorial. At times this here is just copy-paste from it, at others, it's my own thoughts and explanations. This is meant to be a condensed version of the tutorial more or less just for me. If you found it useful though, well, good for you, I guess.
 #+END_NOTES
  
 * Abstract
 ** Basic
-*pandas* is a Python package providing fast, flexible, and expressive data structures designed to make working with "relational Heterogeneous data" or "labeled" data both easy and intuitive. It aims to be the fundamental high-level building block for doing practical, *real world* data analysis in Python. Additionally, it has the broader goal of becoming the most powerful and flexible open source data analysis / manipulation tool available in any language. It is already well on its way toward this goal.
+*pandas* is a Python package providing fast, flexible, and expressive data structures designed to make working with "relational Heterogeneous data" or "labeled" data both easy and intuitive. It aims to be the fundamental high-level building block for doing practical, *real world* data analysis in Python. Additionally, it has the broader goal of becoming the most powerful and flexible open-source data analysis/manipulation tool available in any language. It is already well on its way toward this goal.
 \\
 \\
-It's like a data-base-like objects to deal with your data.
-- data could be loaded form /.csv/ files and be written again
+It's like database-like objects to deal with your data.
+- data could be loaded from /.csv/ files and be written again
 - some basic statistical analysis is possible
 
 ** Features
-A short list of features as advertised on the official site of /pandas/.
-- Fast and efficient DataFrame object with default and customized indexing.
+A shortlist of features as advertised on the official site of /pandas/.
+- Fast and efficient DataFrame object with the default and customized indexing.
 - Tools for loading data into in-memory data objects from different file formats.
 - Data alignment and integrated handling of missing data.
-- Reshaping and pivoting of date sets.
-- Label-based slicing, indexing and subsetting of large data sets. 
+- Reshaping and pivoting of data sets.
+- Label-based slicing, indexing, and subsetting of large data sets. 
 - Columns from a data structure can be deleted or inserted.
 - Group by data for aggregation and transformations.
-- High performance merging and joining of data.
+- High-performance merging and joining of data.
 - Time Series functionality.
 
 ** Tl;DR
@@ -60,18 +60,18 @@ Managing data in structures and easily manipulating the data.
 ** DataFrame
 It's like a table in RDB.
 - Columns are attributes
-- Rows are the actually data
+- Rows are the actual data
 - Indices are the labels for each row
 This is the most common object when dealing with data and using /pandas/. The data in the object is heterogeneous, the shape and the size are mutable. The last part means that the models you build in one object that contains data can easily(ish) be transformed into another model(by model I mean the way your data is structured- names and count of columns(attributes), indexing of the rows, type of the data inside).
 \\
 \\
-Basic construction of DataFrame object is as follows:
+The basic construction of the DataFrame object is as follows:
 
 #+BEGIN_SRC python
 pandas.DataFrame( data, index, columns, dtype, copy)
 #+END_SRC
 
-- ~data~ - ndarray, series, map, lists, dict, constants..etc. The raw data that will be stored in the DataFame. This could be for example a list of lists. In this case the 'inner' lists will become the columns and the column-names will be given through *columns*. The number of the columns must be the same as the number of inner lists
+- ~data~ - ndarray, series, map, lists, dict, constants..etc. The raw data that will be stored in the DataFame. This could be for example a list of lists. In this case, the 'inner' lists will become the columns and the column names will be given through *columns*. The number of the columns must be the same as the number of inner lists
 - ~index~ - the 'names' of the rows. Usually just an index (0,1,2,3....). The size of this must be the count of the entries in the dataset
 - ~columns~ - the names of the columns
 - ... - the other ones are none of our concern
@@ -162,6 +162,8 @@ print s[-3:] # the last three elements
 #+END_SRC
 ** DataPanel
 From what I understand, this is not widely used and I don't think I need it for my project so... nah. _Skip!!!_
+
+
 * Basic usage
 ** DataFrame basic function
 The most useful functions of the DataFrame-class
@@ -239,8 +241,10 @@ This gives us:
 | 75%   | 35.500000 |  4.132500 |
 | max   | 51.000000 |  4.800000 |
 OK, kinda. The table is from me and I am kinda showing off.
+
+
 * Applying Functions on data in /DataFrame/
-There are a few way that we can transform a /DataFrame/ into another one by applying a map-like functions on the data. Depending on our needs we have the following options:
+There are a few ways that we can transform a /DataFrame/ into another one by applying a map-like function on the data. Depending on our needs we have the following options:
 - ~pipe()~ - Table wise Function Application: 
 - ~apply()~ - Row or Column Wise Function Application
 - ~applymap()~ - Element wise Function Application
@@ -250,7 +254,7 @@ From the official documentation:
 Use .pipe when chaining together functions that expect Series, /DataFrames/ or /GroupBy/ objects
 
 #+END_QUOTE
-From what I understand - One would used that when applying a bunch of functions on all elements of /DataFrame/ (or whatever) while still having the possibility that the applied functions takes more than just one argument. For example, let's add two to every element in /DataFrame/ through a adder functions that just adds its two arguments.
+From what I understand - One would use that when applying a bunch of functions on all elements of /DataFrame/ (or whatever) while still having the possibility that the applied function takes more than just one argument. For example, let's add two to every element in /DataFrame/ through an adder function that just adds its two arguments.
 #+BEGIN_SRC python
 import pandas as pd
 import numpy as np
@@ -288,7 +292,7 @@ Which gives us:
 : dtype: float64
 Note how the *np.mean* return a single number so in the final result there is only one row - the mean of each column.
 ** ApplyMap
-Not all functions can be vectorized (neither the Numpy arrays which return another array nor any value), the methods ~applymap()~ on DataFrame and analogously map() on Series accept any Python function taking a single value and returning a single value. This is similar to the *pipe* but it's less flexible. It just treats the whole /DataFrame/ as on big list and performs a mapping function on it.
+Not all functions can be vectorized (neither the Numpy arrays which return another array nor any value), the methods ~applymap()~ on DataFrame and analogously map() on Series accept any Python function taking a single value and returning a single value. This is similar to the *pipe* but it's less flexible. It just treats the whole /DataFrame/ as on a big list and performs a mapping function on it.
 Example:
 #+BEGIN_SRC python
 import pandas as pd
@@ -309,6 +313,8 @@ With result:
 : 2  173.797264  187.089676  -38.871016
 : 3  -94.927338  -60.133882   15.271702
 : 4 -167.875460   83.420648 -179.131762
+
+
 * Iterating and sorting over data in structures
 ** Iterating /DataFrame/
 Using a /DataFrame/ object in a plane /for/-loop iterates over the names of the columns.
@@ -433,9 +439,11 @@ Output:
 7  1.190690  0.027898
 1  1.776865 -0.217141
 #+end_example
+
+
 * Slicing
-There are some custom way slicing through data that are optimized and are the recommended way of slicing data when dealing with production code.
-1. *loc()* - lable based indexing. Used as df.loc[</rows/>,</columns/>]. For /rows/ and /columns/ could be given pretty much everything that makes sense - single char, list of labels, slice object, boolean array..
+There are several custom ways of slicing through data that are optimized and are the recommended way of slicing data when dealing with production code.
+1. *loc()* - label based indexing. Used as df.loc[</rows/>,</columns/>]. For /rows/ and /columns/ could be given pretty much everything that makes sense - single char, list of labels, slice object, boolean array.
    #+BEGIN_SRC python
    df.loc[['a','b','f','h'],['A','C']]
    #+END_SRC
@@ -443,6 +451,8 @@ There are some custom way slicing through data that are optimized and are the re
    #+BEGIN_SRC python
    df.iloc[1:5, 2:4]
    #+END_SRC
+
+
 * Tougher statistics
 ** Some functions
 There are some useful statistical functions already in /pandas/ that help with  the understanding and analyzing the behavior of data
@@ -538,8 +548,8 @@ print(df.rolling(window=3).mean())
 2000-01-09 -0.324298 -0.065450 -0.333431 -1.186115
 2000-01-10 -0.186834 -0.131418 -0.530804 -0.624335
 #+end_example
-The window is big 3-elements and therefore the fist two rows don't have the needed neighbors.
-2. Expanding - Calculate something for the first element, then for the first and second together, then for the first, second and third together and so on and so forth. This is done with *expanding(min_periods=n)*. /min_periods/ shows when the computations begin (the number of rows needed in order the generated row not to be /NaN/).
+The window is big 3-elements and therefore the first two rows don't have the needed neighbors.
+2. Expanding - Calculate something for the first element, then for the first and second together, then for the first, second and third together and so forth. This is done with *expanding(min_periods=n)*. /min_periods/ shows when the computations begin (the number of rows needed in order the generated row not to be /NaN/).
    #+BEGIN_SRC python :results output
    import pandas as pd
    import numpy as np
@@ -710,6 +720,8 @@ print(df.groupby('Team').filter(lambda x: len(x) >= 3))
 : 7      788     1   Kings  2017
 : 8      694     2  Riders  2016
 : 11     690     2  Riders  2017
+
+
 * Concatenating
 When working with a little bin more complex data like in /pandas/ the concatenation can become a tricky thing. /pandas/ offers a special function:
 #+BEGIN_EXAMPLE
@@ -793,12 +805,14 @@ y 1            89   Billy       sub2
 Later those new keys can be used in order to distinguish from which set the row came from.
 \\
 \\
-Appending is also possible and it takes simple form:
-#+BEGIN_EXAMPLE
+Appending is also possible and it takes the simple form:
+#+BEGIN_SRC python
 one.append(two)
-#+END_EXAMPLE
+#+END_SRC
+
+
 * Categories
-A lot of times some string-fields in the data aren't just some random text but a repetitive and an element of some predefined set of possible values. Those are the categorical types of data. Something like [big, medium, small]. Categorical variables can take on only a limited, and usually fixed number of possible values. Besides the fixed length, categorical data might have an order but cannot perform numerical operation. Categorical are a /Pandas/ data type.
+A lot of times some string-fields in the data aren't just some random text but a repetitive and an element of some predefined set of possible values. Those are the categorical types of data. Something like [big, medium, small]. Categorical variables can take on only a limited, and usually fixed number of possible values. Besides the fixed length, categorical data might have an order but cannot perform the numerical operation. Categorical is a /Pandas/ data type.
 \\
 \\
 A simple example to create a /Series/ object that only can contain [a, b, c]
@@ -864,6 +878,8 @@ After removal:
 dtype: category
 Categories (2, object): [b, c]
 #+end_example
+
+
 * Reading Data from /.csv/-files
 At the beginning probably each applications loads some date from the file system or link or whatever. /pandas/ provides *IO API* for reading data from /.cvs/-files. The two main functions for reading text files are *read_csv()* and *read_table()*. They use similar procedures to intelligently convert tabular data into a /DataFrame/ object. The general form of the functions:
 #+BEGIN_EXAMPLE

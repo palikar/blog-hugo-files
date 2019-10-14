@@ -33,7 +33,7 @@ My notes while reading [[https://www.tutorialspoint.com/numpy/index.htm][this]].
 
 
 * Abstract
-NumPy is a Python package. It stands for 'Numerical Python'. It is a library consisting of multidimensional array objects and a collection of routines for processing of array.
+NumPy is a Python package. It stands for 'Numerical Python'. It is a library consisting of multidimensional array classes and a collection of routines for processing of an array.
 \\
 From the officials:
 #+BEGIN_QUOTE
@@ -46,29 +46,27 @@ NumPy is the fundamental package for scientific computing with Python. It contai
 
 Besides its obvious scientific uses, NumPy can also be used as an efficient multi-dimensional container of generic data. Arbitrary data-types can be defined. This allows NumPy to seamlessly and speedily integrate with a wide variety of databases.
 #+END_QUOTE
-In layman's terms (according to me) - better python-arrays with native C-code under the hood so that everything is blazingly fast. Easy array generation, generation of ranges, intervals and distributions of random numbers in some interval. Conveniently iterating over ranges and the generated arrays. /Numpy/ also provides some basic/advanced statistical functions. Linear Algebra is also something that is already built in.
+In layman's terms (according to me) - better python-arrays with native C-code under the hood so that everything is blazingly fast. Easy array generation, generation of ranges, intervals and distributions of random numbers in some interval. Conveniently iterating over ranges and the generated arrays. /Numpy/ also provides some basic/advanced statistical functions. Linear Algebra is also something that is already built-in.
 
 Installation:
 #+BEGIN_EXAMPLE
 pip3 install numpy
 #+END_EXAMPLE
 
-#+TOC: headlines 2
-
 
 * Ndarray
 The most important object defined in /NumPy/ is an N-dimensional array type called /ndarray/. This is the main workhorse of the package. It describes the collection of items of the same type. Items in the collection can be accessed using a zero-based index. It's much better than the standard python arrays and lists.
 Basic construction:
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC python
 numpy.array(object, dtype = None, copy = True, order = None, subok = False, ndmin = 0)
-#+END_EXAMPLE
+#+END_SRC
 
 - ~object~ - Any object exposing the array interface method returns an array, or any (nested) sequence.
-- ~dtype~ - Desired data type of array, optional
+- ~dtype~ - the desired data type of array, optional
 - ~copy~ - Optional. By default (true), the object is copied
-- ~order~ - C (row major) or F (column major) or A (any) (default)
-- ~subok~ - By default, returned array forced to be a base class array. If true, sub-classes passed through
-- ~ndmin~ - Specifies minimum dimensions of resultant array
+- ~order~ - C (row-major) or F (column-major) or A (any) (default)
+- ~subok~ - By default, the returned array forced to be a base class array. If true, sub-classes passed through
+- ~ndmin~ - Specifies minimum dimensions of the resultant array
 
 
 #+BEGIN_SRC python :results output
@@ -103,10 +101,10 @@ numpy.dtype(object, align, copy)
 #+END_SRC
 - *Object* − To be converted to data type object
 - *Align* − If true, adds padding to the field to make it similar to C-struct
-- *Copy* − Makes a new copy of dtype object. If false, the result is reference to builtin data type object
+- *Copy* − Makes a new copy of dtype object. If false, the result is a reference to builtin data type object
 \\
 \\
-The object can be later used when a given function or a constructor takes /dtype/ argument. Those object can also create struct-like types for structured data. Think of it like defining custom struct in C++ and then creating a vector with elements of this struct.
+The object can be later used when a given function or a constructor takes /dtype/ argument. Those objects can also create struct-like types for structured data. Think of it like defining a custom struct in C++ and then creating a vector with elements of this struct.
 #+BEGIN_SRC python :results output 
 import numpy as np 
 
@@ -125,7 +123,7 @@ Which yields:
 : [30 30 30]
 \\
 \\
-This way we can define map-like structure that contains a bunch of different arrays, each addressable with a key.
+This way we can define a map-like structure that contains a bunch of different arrays, each addressable with a key.
 The following code defines a 'human' data type with /string/ field /name/, /int/ field age, and /float/ field social class. 
 #+BEGIN_SRC python :results output
 import numpy as np
@@ -146,18 +144,18 @@ This shows another important point. Each time can be specified with a single cha
 - ~'u'~ − unsigned integer
 - ~'f'~ − floating-point
 - ~'c'~ − complex-floating point
-- ~'m'~ − timedelta
-- ~'M'~ − datetime
+- ~'m'~ − time delta
+- ~'M'~ − DateTime
 - ~'O'~ − (Python) objects
 - ~'S'~, 'a' − (byte-)string
 - ~'U'~ − Unicode
 - ~'V'~ − raw data (void)
 
-
+  
 * Array Attributes 
 Attributes, as the name implies, give us some information about a given object. In the case of /numpy/, the most important thing about an array is its /shape/ and /ndim/
 ** Shape and dimension  
-/Shape/ of an array is its layout in memory. Normally /numpy/ represents the ndarray as a n-dimensional array in memory. This means that that the shapes is nothing more than a tuple that consists of each dimension's size.
+/Shape/ of an array is its layout in memory. Normally /numpy/ represents the ndarray as an n-dimensional array in memory. This means that that the shapes are nothing more than a tuple that consists of each dimension's size.
 For example, the array =[1,2,3]= has shape =(3)=, the array =[[1,2],[1,2]]= has shape =(2,2)= because it consists of two array and each of them contains two elements.
 #+BEGIN_SRC python :results output
 import numpy as np
@@ -189,7 +187,7 @@ print(a.ndim)
 : 1
 : 2
 ** Reshaping
-A lot of times we want to change the basic structure of and array without changing the information in it. In such cases, the /reshape/ method comes to help.
+A lot of times we want to change the basic structure of an array without changing the information in it. In such cases, the /reshape/ method comes to help.
 
 #+BEGIN_SRC python :results output
 import numpy as np 
@@ -225,7 +223,7 @@ print(a.size)
 
 * Slicing
 ** Basic slicing 
-Basic slicing is an extension of Python's basic concept of slicing to /n/ dimensions. A Python slice object is constructed by giving start, stop, and step parameters to the built-in slice function. This slice object is passed to the array to extract a part of array.
+Basic slicing is an extension of Python's basic concept of slicing to /n/ dimensions. A Python slice object is constructed by giving a start, stop, and step parameters to the built-in slice function. This slice object is passed to the array to extract a part of an array.
 
 #+BEGIN_SRC python :results output
 import numpy as np 
@@ -239,7 +237,7 @@ print(a[2:])
 : [2 4 6]
 : [2 3 4 5 6 7 8 9]
 ** Advanced
-This mechanism helps in selecting any arbitrary item in an array based on its /Ndimensional/ index. Each integer array represents the number of indexes into that dimension. When the index consists of as many integer arrays as the dimensions of the target ndarray, it becomes straightforward.
+This mechanism helps in selecting any arbitrary item in an array based on its /Ndimensional/ index. Each integer array represents the number of indexes in that dimension. When the index consists of as many integer arrays as the dimensions of the target ndarray, it becomes straightforward.
 #+BEGIN_SRC python :results output
 import numpy as np
 
@@ -285,7 +283,7 @@ print(x[x>5])
 
 
 * Broadcasting
-This refers to the way arithmetic operations are handled. /Numpy/ is intelligent enough to perform arithmetical operations on arrays element-wise as long as the shapes of the objects are 'compatible'. 
+This refers to the way arithmetic operations are handled. /Numpy/ is intelligent enough to perform arithmetical operations on arrays element-wise as long as the shapes of the objects are 'compatible'.
 
 #+BEGIN_SRC python :results output
 import numpy as np 
@@ -301,7 +299,7 @@ print(c)
 
 
 * Iterating
-~numpy.nditer()~ is your best friend. It returns an iterable (for loop) object that can be further used to go through an array. It can also be constructed with two arrays to go through the both of them simultaneously. The array must be /broadcastable/. Constructing an iterator that can modify the values of an array happens through a flag in the constructor.
+~numpy.nditer()~ is your best friend. It returns an iterable (for loop) object that can be further used to go through an array. It can also be constructed with two arrays to go through both of them simultaneously. The array must be /broadcastable/. Constructing an iterator that can modify the values of an array happens through a flag in the constructor.
 
 #+BEGIN_SRC python :results output
 import numpy as np
@@ -357,6 +355,7 @@ print(a)
 
 
 * Manipulating
+
 ** Changing shape
 
 | Method    | Description                          |
@@ -366,23 +365,29 @@ print(a)
 | ~flatten~ | Returns a new array                  |
 | ~revel~   | Returns a contiguous flattened array |
 |-----------+--------------------------------------|
+
 ** Transpose
+
 | Method      | Description                           |
 |-------------+---------------------------------------|
 | ~transpose~ | Permutes the dimensions of an array   |
 | ~ndarray.T~ | Same as self.transpose()              |
-| ~rollaxis~  | Rolls the specified axis backwards    |
+| ~rollaxis~  | Rolls the specified axis backward     |
 | ~swapaxes~  | Interchanges the two axes of an array |
 |-------------+---------------------------------------|
+
 ** Joining Arrays
+
 | Method        | Desc                                        |
 |---------------+---------------------------------------------|
-| ~concatenate~ | Joins several arrays along an existing axes |
-| ~stack~       | Joins several arrays along a new axes       |
+| ~concatenate~ | Joins several arrays along existing axis |
+| ~stack~       | Joins several arrays along a new axis       |
 | ~hstack~      | Stacks arrays in sequence horizontally      |
 | ~vstack~      | Stacks arrays in sequence vertically        |
 |---------------+---------------------------------------------|
+
 ** Adding and removing elements
+
 | Method | Description                                              |
 |--------+----------------------------------------------------------|
 | append | Pushes new value at the end                              |

@@ -7,4 +7,4 @@ date: '2018-06-21'
 layout: 'portfolio'
 ---
 
-Written over severally months.
+Written over several months.
