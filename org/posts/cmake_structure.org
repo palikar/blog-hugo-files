@@ -305,12 +305,13 @@ if (${FORCE_COLORED_OUTPUT})
 endif ()
 #+END_SRC
 
+
 *** Extra tools
 Other than the compiler flags, there are also several other external tools that can help you in your C++ development. Many of them can be integrated with CMake. In my project template, I have three of them.
 
 \\
 
-[[https://ccache.dev/][CCache]] is a compiler cache that speeds up recompilation. 
+[[https://ccache.dev/][CCache]] is a compiler cache that speeds up recompilation. It is a separate program and you have to have it installed on your system. If this is the case, the following snippet will set up ccache in our build.
 #+BEGIN_SRC cmake
 find_program(CCACHE ccache)
 if(CCACHE)
@@ -318,6 +319,9 @@ if(CCACHE)
 endif()
 #+END_SRC
 
+\\
+
+[[http://cppcheck.sourceforge.net/][Cppcheck]] is a static analysis tool for C++ code. I can help you catch some common mistakes while programming and it even doesn't require you to compile your code. If you have Cppcheck on your system and you've enabled it in your build, you can use it with CMake like this:
 #+BEGIN_SRC cmake
 if(ENABLE_CPPCHECK)
     find_program(CPPCHECK cppcheck)
@@ -333,6 +337,9 @@ if(ENABLE_CPPCHECK)
 endif()
 #+END_SRC
 
+\\
+
+[[https://clang.llvm.org/extra/clang-tidy/][Clang-Tidy]] is yet another tool for static analysis of C++ code. It can catch a different set ot errors than cppcheck. As with the warning , the more things the tools can tell us about our code, the better. The CMake integrations is, again, possible and trivial:
 #+BEGIN_SRC cmake
 if(ENABLE_CLANG_TIDY)
     find_program(CLANGTIDY clang-tidy)
@@ -347,6 +354,58 @@ endif()
 
 
 *** Configurable header
+In some situations, in your C++ code you'll need information that is avavailable only in the CMake build. This may include build information, version of the project, [[https://en.wikipedia.org/wiki/Endianness][endianness]] of the host system, a compile time configuration of some sort, etc. Because of this, I figured out that I may need some sort of a "global" header file where such things are saved by CMake and accesable in the C++ code. My approach is to have the file ~src/include/<project_name>/config.hpp.in~ that will be configured by CMake and every file in the project would be able to include it. On the CMake side of the things, the code looks like this:
+
+#+BEGIN_SRC cmake
+set(PROJECT_VERSION_MAJOR 1)
+set(PROJECT_VERSION_MINOR 0)
+set(PROJECT_VERSION_PATCH 0)
+set(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+...
+configure_file (
+    "${PROJECT_SOURCE_DIR}/src/include/${PROJECT_NAME}/config.hpp.in"
+    "${PROJECT_BINARY_DIR}/src/include/${PROJECT_NAME}/config.hpp")
+
+include_directories("${PROJECT_BINARY_DIR}/src/include")
+#+END_SRC
+Using a CMake function like ~include_directories~ is generally a bad practice but in this case, just for once, in a "global context" I am okay with it. In the ~config.hpp.in~ file we can use all of the variables in the CMake environment to define whatever we want in C++ code. In order to access a CMake variable, we use the ~@<VARIABLE>@~ syntax. For example, the file can looks like something like:
+#+BEGIN_SRC c++
+#pragma once
+
+#define PROJECT_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+#define PROJECT_VERSION_MINOR @PROJECT_VERSION_MINOR@
+#define PROJECT_VERSION_PATCH @PROJECT_VERSION_PATCH@
+
+#define FILE_LOGGING 0
+#define CONSOLE_LOGGING 1
+#define DEBUG_LOGGING 1
+#+END_SRC
+
+
+*** Documentation building
+
+One of my desgin goals for the project structure was to be able to handle building documentaion. I achieve that through a custom target. In CMake we can specify a command to be executed (in the sense on a command on the terminal) and "bind" is to a [[rmail:https://stackoverflow.com/questions/2270643/what-is-a-make-target][make target]] in the final Makefile in the build directory. This means that at the end of the build process, I can execute something like ~make doc~ in the buld directory in order to build the documentaion for the project. Setting up Doxygen in CMake is not complicated. There is a package tha can be included throught ~find_package~. This sets several CMake variables that are relevant to Doxygen. The whole setup can be done like:
+#+BEGIN_SRC cmake
+if(BUILD_DOC)
+    find_package(Doxygen)
+    if (DOXYGEN_FOUND)
+				SET(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/doc/Doxyfile.in)
+				SET(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+				configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+
+				add_custom_target(doc ALL
+						COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+						WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+						COMMENT "Buidling Doxygen documentation"
+						VERBATIM )
+    else (DOXYGEN_FOUND)
+				message("No doxygen binary found on the system.")
+				SET(${BUILD_DOC} OFF)
+    endif ()
+endif()
+#+END_SRC
+
 
 ** Modules
 
