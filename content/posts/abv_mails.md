@@ -2,9 +2,9 @@
 title = "ABV Emails Retrieval"
 author = ["Stanislav Arnaudov"]
 description = "A short walkthrough of how I downloaded all of my emails from an obscure email provider."
-date = 2019-04-19T00:00:00+02:00
+date = 2019-05-11T00:00:00+02:00
 keywords = ["email", "unix-tools"]
-lastmod = 2019-10-12T11:43:00+02:00
+lastmod = 2019-10-20T19:50:07+02:00
 categories = ["other"]
 draft = true
 weight = 100

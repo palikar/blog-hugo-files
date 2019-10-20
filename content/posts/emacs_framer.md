@@ -4,7 +4,7 @@ author = ["Stanislav Arnaudov"]
 description = "A short walkthrough of a Emacs package for windows resizing that I recently wrote."
 date = 2018-06-29T00:00:00+02:00
 keywords = ["emacs", "frames", "windows", "resizing", "buffers"]
-lastmod = 2019-10-12T00:34:32+02:00
+lastmod = 2019-10-20T20:05:38+02:00
 categories = ["emacs"]
 draft = false
 weight = 100
@@ -36,13 +36,13 @@ So, if you are interested in Emacs programming, you can have this section as a g
 
 We start by defining a couple of things that we will need for our new minor mode whose definition comes in right after. Each mode deserves its own [group](https://www.gnu.org/software/emacs/manual/html%5Fnode/elisp/Group-Definitions.html). You know, the name of you give while you call `customize-group` when you want to configure some new package that you've downloaded. Our group will be used to house the one [custom](https://www.gnu.org/software/emacs/manual/html%5Fnode/emacs/Easy-Customization.html) that we have. The group definition is really easy with the macro `defgroup`. It's basically a one liner:
 
-```elisp
+```lisp
 (defgroup framer nil "Custom variables for framer-mode")
 ```
 
 "framer" is the name, the second argument is a list of the customs that are in the group but it's more convenient to define them later by specifying the group that each custom belongs to. The third argument is a string that will be displayed near the top while customizing the package's customs. <br /> <br /> _Note:_ Customs are the configurable options of a given package in Emacs. Emacs makes it easy to write such customizable variables that later can be configured by the user of your package. <br /> <br /> After the group, we need a [keymap](https://www.gnu.org/software/emacs/manual/html%5Fnode/elisp/Keymap-Basics.html#Keymap-Basics) for our mode. In it, we'll define all the keybindings that will be activated when the mode is active. The definition is again relatively straight forward:
 
-```elisp
+```lisp
 (defconst framer-mode-map
   (let
       (
@@ -63,7 +63,7 @@ The map is defined in a variable named `framer-mode-map`. The actual keymap crea
 
 The actual definition is pretty easy and is done through the macro `define-minor-mode`. The definitions of our two modes:
 
-```emacs-lisp
+```lisp
 (define-minor-mode framer-mode
   "Mode that enables manual control over emacs frames' sizes."
   :lighter " Framer"
@@ -80,7 +80,7 @@ The actual definition is pretty easy and is done through the macro `define-minor
 
 Here we use the already defined group and keymap and we pass them to the appropriate key-word attributes - `group` and `keymap` respectively. What is pass to `:lighter` is the thing that will be displayed in the modeline while the mode is active. Be sure to have that leading space or the text of your mode will be "glued" to the text of the previous mode in the modeline. `:global` indicates of the mode is global or not (yes, I bet you needed that explanation). <br /> <br /> For more information on how to write modes for Emacs, check out [this](https://www.gnu.org/software/emacs/manual/html%5Fnode/elisp/Defining-Minor-Modes.html) page from the official documentation. <br /> <br /> Ok, one last thing before we actually define our functions for resizing - we'll create one custom that will indicate how big is the resizing gap with which we'll be changing the size of the windows. The name of it will be appropriate `resizing-step`, it'll have a default value of 50 and it will be an integer.
 
-```elisp
+```lisp
 (defcustom resizing-step 50
   "The amount with which the dimension of the current windows will be decreased/increased."
   :type 'integer
@@ -94,14 +94,14 @@ The docstring, in the beginning, is what will be displayed to the user in the cu
 
 There are a couple of handy functions in Emacs that make the resizing of windows easy. We'll use them and make them a tiny bit smarter. Those functions are `window-resizable` and `window-resize` (documentation [here](https://www.gnu.org/software/emacs/manual/html%5Fnode/elisp/Resizing-Windows.html)). The first one checks if the resizing is possible and the second one does the actual resizing. I figured that it is a good idea always to check if the resizing is allowed before calling `windows-resize`. So, resizing in width will look like:
 
-```elisp
+```lisp
 (if (window-resizable nil resizing-step t nil t)
         (window-resize nil resizing-step t nil t))
 ```
 
 The first argument is the windows to be resized - if `nil`, the current windows will be considered. The second argument is obvious, the third whether the resizing is vertical or horizontal - `t` for horizontal, `nil` for vertical. The last `t` indicates that the given amount is in pixels. <br /> <br /> As said, we want to make the resizing smart and intuitive while doing it with arrow keys. This means that we with the same arrow must either shrink or grow the window depending on whether it is on the top or the bottom of other windows. Put simply - we want the size of the window to change in the direction we are pointing with the pressed arrow. So, the question becomes, how do we figure out where is the selected window. <br /> In a script from [Mathias Dahl](https://www.emacswiki.org/emacs/MathiasDahl) I've found those two nifty convenience functions that can tell you where the current window is located with respect to the other ones. For example, whether the window is on the left, right or in the middle, between two other windows. The functions are:
 
-```elisp
+```lisp
 (defun win-resize-left-or-right ()
   "Figure out if the current window is to the left, right or in the middle."
   (let* ((win-edges (window-edges))
@@ -133,7 +133,7 @@ With `win-resize-left-or-right` the implementations of `framer-decrease-width` a
 
 For `framer-decrease-width` we do the exact opposite thing. There where we were shrinking, we grow and vice-versa. <br /> <br /> We perform the checks in a simple `cond` block and with that we have:
 
-```elisp
+```lisp
 (defun framer-increase-width ()
   "Make the current frame smaller in width."
   (interactive)
@@ -163,7 +163,7 @@ For `framer-decrease-width` we do the exact opposite thing. There where we were 
 
 `framer-increase-height` and `framer-increase-height` are implemented more or less the same way.
 
-```elisp
+```lisp
 
 (defun framer-increase-height ()
   "Make the current frame smaller in width."

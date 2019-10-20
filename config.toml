@@ -2,19 +2,16 @@ languageCode = "en-us"
 title = "SA"
 baseurl = "https://palikar.github.io/"
 
-
 theme = "hyde-hyde"
 
-## Hugo Built-in Features
 disqusShortname = "palikar-github-io"
 # googleAnalytics = "your-google-analytics-id"
 # enableRobotsTXT = true
 
-
-pygmentsCodeFences = true
-pygmentsUseClasses = false
-pygmentsUseClassic = false
-pygmentsStyle = "friendly"
+# pygmentsCodeFences = true
+# pygmentsUseClasses = false
+# pygmentsUseClassic = false
+# pygmentsStyle = "friendly"
 
 relatedPosts = true
 postNavigation = true
@@ -22,18 +19,18 @@ postNavigation = true
 ## Site Settings
 [params]
     author = "Stanislav Arnaudov"
-    description = "Develompent, CS, AI and whatever my little heart desires"
+    description = "Development, CS, AI and whatever my little heart desires"
     authorimage = "/img/profile.jpg"
     dateformat = "Jan 2, 2006"
 
-    highlightjs = false
-    highlightjsstyle = "github"
-
     customCSS = ["./static/css/new_custom.css"]
+
+    highlightjs = true
+    highlightjsstyle = "github"
+    highlightjslanguages = ["cmake", "lisp", "elisp"]
 
     toc = "tocbot"	
 	
-
 ## Social Accounts
 [params.social]
     github = "palikar"
@@ -43,7 +40,6 @@ postNavigation = true
     email = "stanislav_ts@abv.bg"
 
 
-
 ## Main Menu
 [[menu.main]]
     name = "Home"
@@ -51,11 +47,11 @@ postNavigation = true
     weight = 50
     url = "/"
 
-[[menu.main]]
-    name = "Portfolio"
-    identifier = "portfolio"
-    weight = 75
-    url = "/portfolio/"
+# [[menu.main]]
+#     name = "Portfolio"
+#     identifier = "portfolio"
+#     weight = 75
+#     url = "/portfolio/"
 
 [[menu.main]]
     name = "About"
