@@ -4,9 +4,9 @@ author = ["Stanislav Arnaudov"]
 description = "Description of the project structure I intend to use in the future for my c++ projects."
 date = 2019-04-10T00:00:00+02:00
 keywords = ["c++", "cmake", "projects", "structure"]
-lastmod = 2019-10-20T19:50:10+02:00
+lastmod = 2019-10-21T22:18:41+02:00
 categories = ["c++"]
-draft = true
+draft = false
 weight = 100
 +++
 

@@ -4,7 +4,7 @@ author = ["Stanislav Arnaudov"]
 description = "Several tips that I've explained to myself after I read Effective Modern C++"
 date = 2018-07-27T00:00:00+02:00
 keywords = ["c++", "programming", "code", "type-deduction", "rvalue", "lvalue", "template"]
-lastmod = 2019-10-12T14:56:14+02:00
+lastmod = 2019-10-21T22:20:24+02:00
 categories = ["c++"]
 draft = false
 weight = 100
@@ -20,7 +20,7 @@ C++ is hard! C++ is even harder when you want to write good code. There are a lo
 
 ### Rvalue, lvalue and move semantics {#rvalue-lvalue-and-move-semantics}
 
-<a id="orge93e463"></a> "Move semantics" is a thing that we have in C++ now (since C++11 actually). It makes a ton of sense once you get it but it may be a little hard to wrap your head around it. At least in the beginning, of course. First off - why do we need move-semantics? For code efficiency! If you know what you are doing, your code can run faster, with fewer object copies and fewer objects created. Second, and perhaps more importantly, what are move semantics? The way I like to think about it - the ability to distinguish between an object that won't be needed after the evaluation of an expression and the ability to do a different thing, if you are dealing with such object.<br /> Take a look at the following code:
+<a id="org1edb870"></a> "Move semantics" is a thing that we have in C++ now (since C++11 actually). It makes a ton of sense once you get it but it may be a little hard to wrap your head around it. At least in the beginning, of course. First off - why do we need move-semantics? For code efficiency! If you know what you are doing, your code can run faster, with fewer object copies and fewer objects created. Second, and perhaps more importantly, what are move semantics? The way I like to think about it - the ability to distinguish between an object that won't be needed after the evaluation of an expression and the ability to do a different thing, if you are dealing with such object.<br /> Take a look at the following code:
 
 ```c++
 MyObject obj1, obj2;
@@ -47,7 +47,7 @@ for(auto it : map){...} //just look how simple that is!!!
 
 ### Smart pointers {#smart-pointers}
 
-<a id="org8f2772d"></a> For an year now, I only hear how the C++ gurus scream how raw pointers are dangerous and will probably cause memory leaks when used so... smart pointers! For the price of a tiny bit of overhead, you will make harder (but not impossible!) for yourself to do something stupid with your code. Your new two best friends are `shared_ptr<>` and `unique_ptrt<>`:
+<a id="orgdc1a8fb"></a> For an year now, I only hear how the C++ gurus scream how raw pointers are dangerous and will probably cause memory leaks when used so... smart pointers! For the price of a tiny bit of overhead, you will make harder (but not impossible!) for yourself to do something stupid with your code. Your new two best friends are `shared_ptr<>` and `unique_ptrt<>`:
 
 ```c++
 std::shared_ptr<int> int_ptr = std::maked_shared<int>(2);
@@ -92,14 +92,14 @@ int main(int argc, char *argv[])
 
 It is a well-known fact that C++ programmers love their abbreviations. And you know what, it actually makes a lot of sense to know those. The abbreviations in the C++ world reveal some cool, useful and right out elegant concepts that everyone should know about. Also, just to be prepared, C++ programmers are really bad at naming things.
 
-| Abbreviations | Expansion                              |
-|---------------|----------------------------------------|
-| RAII          | Resource acquisition is initialization |
-| SFINAE        | Substitution failure is not an error   |
-| Pimple        | Pointer to implementation              |
-| CRTP          | Curiously recurring template pattern   |
-| IIFE          | Immediately function expression        |
-| RVO           | Return value optimization              |
+| Abbreviations | Expansion                               |
+|---------------|-----------------------------------------|
+| RAII          | Resource acquisition is initialization  |
+| SFINAE        | Substitution failure is not an error    |
+| Pimple        | Pointer to implementation               |
+| CRTP          | Curiously recurring template pattern    |
+| IIFE          | Immediately invoked function expression |
+| RVO           | Return value optimization               |
 
 
 ## Tips {#tips}
@@ -822,7 +822,7 @@ You ship it. Everyone is happy. The code is clean. You can live in peace with th
 Generally, when you want to use a pointer in the new modern C++ world, your first thought should be "Can I use `unique_ptr` here?". And yes, this is the preferred way of using "pointers" these days. `unique_ptr` can be viewed as small as a raw pointer and for most operations, they behave exactly the same way as raw pointers. <br /> There are few things to keep in mind while using `unique_ptr`.
 
 -   `unique_ptr` embodies exclusive ownership. Every `unique_ptr` that is not empty "owns" the resource it's holding and you have a guarantee (generally) that this is the only object holding a pointer to the underlying object. The `unique_ptr` cannot be copied as this would create another holder of the resource so `unique_ptr`-s are only movable
--   You can know <span class="underline">exactly</span> when an `unique_ptr` object would be destroyed and with that the resource released. It is said that one of the greatest features of C++ is the closing brackets `}`. In order words, the fact that you know the exact moment at which an object will be destroyed and the destructor of the class will be executed for this object. The ramifications for `unique_ptr` is that the object will be destroyed when the enclosing scope comes to an end. Of course, you could move the `unique_ptr` before that and transfer its ownership to some other part of the program. The moving was talked about in the [beginning](#org8f2772d).
+-   You can know <span class="underline">exactly</span> when an `unique_ptr` object would be destroyed and with that the resource released. It is said that one of the greatest features of C++ is the closing brackets `}`. In order words, the fact that you know the exact moment at which an object will be destroyed and the destructor of the class will be executed for this object. The ramifications for `unique_ptr` is that the object will be destroyed when the enclosing scope comes to an end. Of course, you could move the `unique_ptr` before that and transfer its ownership to some other part of the program. The moving was talked about in the [beginning](#orgdc1a8fb).
 
 <br /> A typical use of `unique_ptr` are the factory methods. The factory function could even return different type (from some hierarchy, of course) of an object depending on the inputs input parameters.
 
@@ -982,7 +982,7 @@ _Note:_ Use your header only for a declaration when possible. Also, `= defualt` 
 
 ### std::forward and std::move are quite interesting. {#std-forward-and-std-move-are-quite-interesting-dot}
 
-<a id="orgb94e114"></a> Ok, hopefully by now you at least have heard of **move semantics**. Inevitably you've also probably seen `std::move()` and `std::forward<T>()` used in some weird way and wondered "What the hell is happening here?". The first thing to understand about hose functions - they are functions that don't do much in run-time. They don't generate code. They don't "move". At their core, those functions are casts. They cast _rvalue_ object to _lvalue_ ones. Refer to one of the [intro sections](#orge93e463) for more information about what are those. The difference between `std::move()` and `std::forward<T>()` is that they perform the cast under different conditions. `std::move()` performs it always with no conditions. `std::forward<T>()` casts to revalue only if a certain condition is met - if the argument is bind to rvalue. <br /> Yes, it is well known and by this point accepted fact that `std::move()` has confusing AF name but... just roll with it and it will grow on you. `std::move()` doesn't actually move anything. `std::move()` merely makes an object eligible for moving. This is no guarantee however that an object will be moved from. Consider this:
+<a id="org2e5602b"></a> Ok, hopefully by now you at least have heard of **move semantics**. Inevitably you've also probably seen `std::move()` and `std::forward<T>()` used in some weird way and wondered "What the hell is happening here?". The first thing to understand about hose functions - they are functions that don't do much in run-time. They don't generate code. They don't "move". At their core, those functions are casts. They cast _rvalue_ object to _lvalue_ ones. Refer to one of the [intro sections](#org1edb870) for more information about what are those. The difference between `std::move()` and `std::forward<T>()` is that they perform the cast under different conditions. `std::move()` performs it always with no conditions. `std::forward<T>()` casts to revalue only if a certain condition is met - if the argument is bind to rvalue. <br /> Yes, it is well known and by this point accepted fact that `std::move()` has confusing AF name but... just roll with it and it will grow on you. `std::move()` doesn't actually move anything. `std::move()` merely makes an object eligible for moving. This is no guarantee however that an object will be moved from. Consider this:
 
 ```c++
 class Anotation
@@ -1032,7 +1032,7 @@ Here param can bind to _rvalues_ <span class="underline">and</span> to _lvalues_
 1.  Type deduction must occur
 2.  The reference must have exactly the form "T&&". No `const`, no nothing. Just "T&&".
 
-If the `const` qualifier is used for the function parameter, it(the parameter) will "collapse" _rvalue const reference_ which pretty useless on itself as we say in the [previous tip](#orgb94e114). <br /> As stated if universal reference is bound to "rvalue", it is an "rvalue"-reference and "lvalue"-reference if it's bound to an "lvalue". This means that universal references are exactly the things to be used with `std::forward<T>()`.
+If the `const` qualifier is used for the function parameter, it(the parameter) will "collapse" _rvalue const reference_ which pretty useless on itself as we say in the [previous tip](#org2e5602b). <br /> As stated if universal reference is bound to "rvalue", it is an "rvalue"-reference and "lvalue"-reference if it's bound to an "lvalue". This means that universal references are exactly the things to be used with `std::forward<T>()`.
 
 
 ### _Pass by value_ is not what your first C++ book would have you believe {#pass-by-value-is-not-what-your-first-c-book-would-have-you-believe}

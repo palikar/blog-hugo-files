@@ -4,10 +4,10 @@ author = ["Stanislav Arnaudov"]
 description = "A short utility class for loading data into pytorch project"
 date = 2019-10-20T00:00:00+02:00
 keywords = ["c++", "cmake", "projects", "structure"]
-lastmod = 2019-10-20T19:52:27+02:00
+lastmod = 2019-10-21T22:18:31+02:00
 tags = ["machine-learning", "pytorch", "python", "data-loading"]
 categories = ["machine-learning"]
-draft = true
+draft = false
 weight = 100
 +++
 

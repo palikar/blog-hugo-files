@@ -20,7 +20,7 @@
 #+HUGO_AUTO_SET_LASTMOD: t
 #+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
 #+DESCRIPTION: Description of the project structure I intend to use in the future for my c++ projects.
-#+HUGO_DRAFT: true
+#+HUGO_DRAFT: false
 #+KEYWORDS: c++ cmake projects structure
 #+HUGO_TAGS: 
 #+HUGO_CATEGORIES: c++

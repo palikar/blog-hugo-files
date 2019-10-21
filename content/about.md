@@ -3,7 +3,7 @@ title = "About"
 author = ["Stanislav Arnaudov"]
 description = "Simple and basic description of who am I and what the hell I'm all about."
 date = 2018-06-15T00:00:00+02:00
-lastmod = 2019-10-11T23:54:51+02:00
+lastmod = 2019-10-21T22:16:58+02:00
 draft = false
 weight = 90
 +++

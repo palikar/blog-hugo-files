@@ -4,9 +4,9 @@ author = ["Stanislav Arnaudov"]
 description = "A short walkthrough of how I downloaded all of my emails from an obscure email provider."
 date = 2019-05-11T00:00:00+02:00
 keywords = ["email", "unix-tools"]
-lastmod = 2019-10-20T19:50:07+02:00
+lastmod = 2019-10-21T22:18:09+02:00
 categories = ["other"]
-draft = true
+draft = false
 weight = 100
 +++
 

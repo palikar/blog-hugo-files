@@ -21,7 +21,7 @@
 #+HUGO_AUTO_SET_LASTMOD: t
 #+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
 #+DESCRIPTION: A short walkthrough of how I downloaded all of my emails from an obscure email provider.
-#+HUGO_DRAFT: true
+#+HUGO_DRAFT: false
 #+KEYWORDS: email unix-tools 
 #+HUGO_TAGS: 
 #+HUGO_CATEGORIES: other

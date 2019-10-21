@@ -99,23 +99,23 @@ Creating factory methods is also relatively straightforward. Just return them by
 ** Some random abbreviations
 It is a well-known fact that C++ programmers love their abbreviations. And you know what, it actually makes a lot of sense to know those. The abbreviations in the C++ world reveal some cool, useful and right out elegant concepts that everyone should know about. Also, just to be prepared, C++ programmers are really bad at naming things.
 
-|---------------+----------------------------------------|
-| Abbreviations | Expansion                              |
-|---------------+----------------------------------------|
-|---------------+----------------------------------------|
-| RAII          | Resource acquisition is initialization |
-|---------------+----------------------------------------|
-| SFINAE        | Substitution failure is not an error   |
-|---------------+----------------------------------------|
-| Pimple        | Pointer to implementation              |
-|---------------+----------------------------------------|
-| CRTP          | Curiously recurring template pattern   |
-|---------------+----------------------------------------|
-| IIFE          | Immediately function expression        |
-|---------------+----------------------------------------|
-| RVO           | Return value optimization              |
-|---------------+----------------------------------------|
-|---------------+----------------------------------------|
+|---------------+-----------------------------------------|
+| Abbreviations | Expansion                               |
+|---------------+-----------------------------------------|
+|---------------+-----------------------------------------|
+| RAII          | Resource acquisition is initialization  |
+|---------------+-----------------------------------------|
+| SFINAE        | Substitution failure is not an error    |
+|---------------+-----------------------------------------|
+| Pimple        | Pointer to implementation               |
+|---------------+-----------------------------------------|
+| CRTP          | Curiously recurring template pattern    |
+|---------------+-----------------------------------------|
+| IIFE          | Immediately invoked function expression |
+|---------------+-----------------------------------------|
+| RVO           | Return value optimization               |
+|---------------+-----------------------------------------|
+|---------------+-----------------------------------------|
 
 
 * Tips

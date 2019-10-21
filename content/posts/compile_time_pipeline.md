@@ -4,9 +4,9 @@ author = ["Stanislav Arnaudov"]
 description = "A simple but powerful idiom in C++ for pipelining functions"
 date = 2019-04-10T00:00:00+02:00
 keywords = ["c++", "templates", "idioms"]
-lastmod = 2019-10-11T23:46:56+02:00
+lastmod = 2019-10-21T22:17:57+02:00
 categories = ["c++"]
-draft = true
+draft = false
 weight = 100
 +++
 

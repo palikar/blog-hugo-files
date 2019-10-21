@@ -20,7 +20,7 @@
 #+HUGO_AUTO_SET_LASTMOD: t
 #+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
 #+DESCRIPTION: A simple but powerful idiom in C++ for pipelining functions
-#+HUGO_DRAFT: true
+#+HUGO_DRAFT: false
 #+KEYWORDS: c++ templates idioms
 #+HUGO_TAGS: 
 #+HUGO_CATEGORIES: c++
