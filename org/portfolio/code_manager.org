@@ -1,0 +1,28 @@
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK")
+#+OPTIONS: date:t e:t email:nil f:t inline:t num:t p:nil pri:nil
+#+OPTIONS: prop:nil stat:t tags:t tasks:t tex:t timestamp:t title:t
+#+OPTIONS: toc:t todo:t |:t
+
+
+#+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
+#+AUTHOR: Stanislav Arnaudov
+#+DATE: <2019-05-11 Thu>
+#+EMAIL: stanislav_ts@abv.bg
+#+CREATOR: Emacs 26.1 (Org mode 9.2.1 + ox-hugo)
+
+
+
+#+TITLE: Code manager
+#+DESCRIPTION: A short walkthrough of how I downloaded all of my emails from an obscure email provider.
+#+DATE: <2019-05-11 Thu>
+#+HUGO_SECTION: portfolio
+#+HUGO_BASE_DIR: ~/temp/blog-hugo-files/
+#+HUGO_CUSTOM_FRONT_MATTER: :link "https://github.com/palikar/mflower"
+#+HUGO_CUSTOM_FRONT_MATTER: :screenshot "cm_logo.png"
+#+HUGO_CUSTOM_FRONT_MATTER: :layout "portfolio"
+
+
+Written over several months. With a lot of blood, sweat, and tears.
+
+
