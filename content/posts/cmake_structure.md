@@ -4,7 +4,7 @@ author = ["Stanislav Arnaudov"]
 description = "Description of the project structure I intend to use in the future for my c++ projects."
 date = 2019-04-10T00:00:00+02:00
 keywords = ["c++", "cmake", "projects", "structure"]
-lastmod = 2019-10-21T22:18:41+02:00
+lastmod = 2019-10-23T09:26:27+02:00
 categories = ["c++"]
 draft = false
 weight = 100
@@ -453,7 +453,17 @@ add_subdirectory(submodule_1)
 The folder structure of each module is the following:
 
 ```sh
-
+├── CMakeLists.txt
+├── data
+├── include
+│   └── project_name
+│       └── module_name
+│           └── main.hpp
+├── src
+│   └── main.cpp
+└── tests
+    ├── CMakeLists.txt
+    └── test_main.cpp
 ```
 
 The `src/` directory is meant for the source files as well as the private headers of the module. "Private headers" means that those won't be visible outside of the project. The public headers are meant to go in the `include/` directory. There is, however, a small caveat to its subfolder structure. In order to keep everything in my project organize, so that I can keep my sanity, I prefer to include the headers files in the form of:

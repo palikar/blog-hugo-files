@@ -12,17 +12,15 @@
 #+CREATOR: Emacs 26.1 (Org mode 9.2.1 + ox-hugo)
 
 
-
 #+TITLE: Code manager
-#+DESCRIPTION: A short walkthrough of how I downloaded all of my emails from an obscure email provider.
+#+DESCRIPTION: A command line utility that helps me manage my git repositories as well as other programming packages.
 #+DATE: <2019-05-11 Thu>
 #+HUGO_SECTION: portfolio
-#+HUGO_BASE_DIR: ~/temp/blog-hugo-files/
+#+HUGO_BASE_DIR: ~/code/blog-hugo-files/
 #+HUGO_CUSTOM_FRONT_MATTER: :link "https://github.com/palikar/mflower"
 #+HUGO_CUSTOM_FRONT_MATTER: :screenshot "cm_logo.png"
 #+HUGO_CUSTOM_FRONT_MATTER: :layout "portfolio"
 
 
-Written over several months. With a lot of blood, sweat, and tears.
 
 

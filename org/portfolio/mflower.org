@@ -16,8 +16,8 @@
 #+DESCRIPTION: A short walkthrough of how I downloaded all of my emails from an obscure email provider.
 #+DATE: <2019-05-11 Thu>
 #+HUGO_SECTION: portfolio
-#+HUGO_BASE_DIR: ~/temp/blog-hugo-files/
-#+HUGO_CUSTOM_FRONT_MATTER: :screenshot "ml_logo.png"
+#+HUGO_BASE_DIR: ~/code/blog-hugo-files/
+#+HUGO_CUSTOM_FRONT_MATTER: :screenshot "mf_logo.png"
 #+HUGO_CUSTOM_FRONT_MATTER: :link "https://github.com/palikar/mflower"
 #+HUGO_CUSTOM_FRONT_MATTER: :layout "portfolio"
 

@@ -19,7 +19,7 @@
 #+HUGO_ALLOW_SPACES_IN_TAGS: nil
 #+HUGO_AUTO_SET_LASTMOD: t
 #+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
-#+DESCRIPTION: Simple and basic description of who am I and what the hell I'm all about.
+#+DESCRIPTION: Simple and basic description of who I am and what the hell I'm all about.
 #+HUGO_DRAFT: false
 #+KEYWORDS:
 #+HUGO_TAGS:
