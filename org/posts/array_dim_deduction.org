@@ -1,0 +1,133 @@
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK")
+#+OPTIONS: date:t e:t email:nil f:t inline:t num:t p:nil pri:nil
+#+OPTIONS: prop:nil stat:t tags:t tasks:t tex:t timestamp:t title:t
+#+OPTIONS: toc:t todo:t |:t
+
+#+TITLE: Multidimensional Array size deduction in C++
+#+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
+#+AUTHOR: Stanislav Arnaudov
+#+DATE: <2019-04-10 Thu>
+#+EMAIL: stanislav_ts@abv.bg
+#+CREATOR: Emacs 26.1 (Org mode 9.2.1 + ox-hugo)
+#+HUGO_FRONT_MATTER_FORMAT: toml
+#+HUGO_LEVEL_OFFSET: 1
+#+HUGO_PRESERVE_FILLING:
+#+HUGO_SECTION: posts
+#+HUGO_BASE_DIR: ~/code/blog-hugo-files/
+#+HUGO_PREFER_HYPHEN_IN_TAGS: t 
+#+HUGO_ALLOW_SPACES_IN_TAGS: nil
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
+#+DESCRIPTION: A workaround for deducing the dimensions of multidimensional array in C++.
+#+HUGO_DRAFT: false
+#+KEYWORDS: c++ templates array templete-type-deduction c++-17
+#+HUGO_TAGS: 
+#+HUGO_CATEGORIES: c++
+#+HUGO_WEIGHT: 100
+
+ 
+* Abstract
+
+* Problem
+
+#+BEGIN_SRC c++
+template<typename... Args>
+auto value(Args&&... args)
+{
+    return DataBlockHelper::get(std::forward<Args>(args)...);
+}
+#+END_SRC
+
+#+BEGIN_SRC c++
+value({1,3,4,5}); // cant't be deduced
+value({{1,3,4,5},
+			 {1,3,4,5},
+			 {1,3,4,5}}); // cant't be deduced
+#+END_SRC
+
+#+BEGIN_SRC c++
+template<typename T, size_t N>
+auto value(const (&values)[N])
+{
+    return API::get(std::forward<Args>(values)...);
+}
+#+END_SRC
+
+
+
+#+BEGIN_SRC c++
+value({1,3,4,5}); // deduces OK
+value({{1,3,4,5},
+			 {1,3,4,5},
+			 {1,3,4,5}}); // cant't be deduced
+#+END_SRC
+
+
+* Solution
+#+BEGIN_SRC
+
+#+END_SRC
+
+#+BEGIN_SRC c++
+struct API
+{
+	template<typename T, size_t...N>
+	inline static auto get(const T* values)
+    {
+			constexpr size_t SIZE = (N * ... );
+			for (size_t i = 0; i < SIZE; ++i) {
+				values[i]; // doing something with values
+			}
+			return 0;
+    }
+}
+#+END_SRC
+
+#+BEGIN_SRC c++
+#define SIZE_T_S_0 size_t N
+#define SIZE_T_S_1 SIZE_T_S_0 , size_t M
+#define SIZE_T_S_2 SIZE_T_S_1 , size_t L
+#define SIZE_T_S_3 SIZE_T_S_2 , size_t K
+#define SIZE_T_S_4 SIZE_T_S_3 , size_t J
+#define SIZE_T_S_5 SIZE_T_S_4 , size_t I
+#define SIZE_T_S_6 SIZE_T_S_5 , size_t H
+
+#define BRACKETS_S_0 [N]
+#define BRACKETS_S_1 BRACKETS_S_0[M]
+#define BRACKETS_S_2 BRACKETS_S_1[L]
+#define BRACKETS_S_3 BRACKETS_S_2[K]
+#define BRACKETS_S_4 BRACKETS_S_3[J]
+#define BRACKETS_S_5 BRACKETS_S_4[I]
+#define BRACKETS_S_6 BRACKETS_S_5[H]
+
+#define LETTERS_S_0 N
+#define LETTERS_S_1 LETTERS_S_0, M
+#define LETTERS_S_2 LETTERS_S_1, L
+#define LETTERS_S_3 LETTERS_S_2, K
+#define LETTERS_S_4 LETTERS_S_3, J
+#define LETTERS_S_5 LETTERS_S_4, I
+#define LETTERS_S_6 LETTERS_S_4, H
+
+#define VALUE_FUN(dim) template<typename T, SIZE_T_S_##dim>		\
+	inline static auto value(const T(&values) BRACKETS_S_##dim) \
+	{                                                           \
+		const T* s = reinterpret_cast<const T*>(&values);         \
+		return API::get<T, LETTERS_S_##dim>(s);       \
+	}
+
+#+END_SRC
+
+
+The macro can then be used serveral times to generate the functions for arrays of different dimensionality.
+#+BEGIN_SRC c++
+VALUE_FUN(0) // one-dim array
+VALUE_FUN(1) // two-dim array
+VALUE_FUN(2) // three-dim array
+VALUE_FUN(3) // four-dim array
+VALUE_FUN(4) // five-dim array
+VALUE_FUN(5) // six-dim array
+VALUE_FUN(7) // seven-dim array
+#+END_SRC
+There. Now we can handle up to 8-dimensional arrays. This should be enough for know.
+
