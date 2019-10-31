@@ -21,8 +21,8 @@
 #+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
 #+DESCRIPTION: A short utility class for loading data into pytorch project
 #+HUGO_DRAFT: false
-#+KEYWORDS: c++ cmake projects structure
-#+HUGO_TAGS: machine-learning pytorch python data-loading
+#+KEYWORDS: machine-learning pytorch python data-loading
+#+HUGO_TAGS: machine-learning python
 #+HUGO_CATEGORIES: machine-learning
 #+HUGO_WEIGHT: 100
 

@@ -47,11 +47,11 @@ postNavigation = true
     weight = 50
     url = "/"
 
-[[menu.main]]
-    name = "Portfolio"
-    identifier = "portfolio"
-    weight = 75
-    url = "/portfolio/"
+# [[menu.main]]
+#     name = "Portfolio"
+#     identifier = "portfolio"
+#     weight = 75
+#     url = "/portfolio/"
 
 [[menu.main]]
     name = "About"
