@@ -13,7 +13,7 @@
 
 
 #+TITLE: MFlower
-#+DESCRIPTION: A short walkthrough of how I downloaded all of my emails from an obscure email provider.
+#+DESCRIPTION: Automatic differentiation engine written in C++. Meant to be a knock off of Tensorflow.
 #+DATE: <2019-05-11 Thu>
 #+HUGO_SECTION: portfolio
 #+HUGO_BASE_DIR: ~/code/blog-hugo-files/
@@ -22,4 +22,4 @@
 #+HUGO_CUSTOM_FRONT_MATTER: :layout "portfolio"
 
 
-Written over several months. With a lot of blood, sweat, and tears.
+

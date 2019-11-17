@@ -1,0 +1,140 @@
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK")
+#+OPTIONS: date:t e:t email:nil f:t inline:t num:t p:nil pri:nil
+#+OPTIONS: prop:nil stat:t tags:t tasks:t tex:t timestamp:t title:t
+#+OPTIONS: toc:nil todo:t |:t
+
+
+#+TITLE: Compile-Time Graph [PART 1]
+#+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
+#+AUTHOR: Stanislav Arnaudov
+#+DATE: <2019-11-16 Thu>
+#+EMAIL: stanislav_ts@abv.bg
+#+CREATOR: Emacs 25.2.2 (Org mode 9.1.13 + ox-hugo)
+#+HUGO_FRONT_MATTER_FORMAT: toml
+#+HUGO_LEVEL_OFFSET: 1
+#+HUGO_PRESERVE_FILLING:
+#+HUGO_SECTION: projects
+
+#+HUGO_BASE_DIR: ~/code/blog-hugo-files
+#+HUGO_PREFER_HYPHEN_IN_TAGS: t 
+#+HUGO_ALLOW_SPACES_IN_TAGS: nil
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
+#+DESCRIPTION: C++ implementation of a graph that is fully usable at compile time
+#+HUGO_DRAFT: false
+#+KEYWORDS: c++ programming compile-time constexpr
+#+HUGO_TAGS: 
+#+HUGO_CATEGORIES: c++
+#+HUGO_WEIGHT: 100
+
+
+
+* Abstract
+
+CTGraph is a  small C++17 project that implements a graph structure that can be used entirely at compile time. It started as just an experiment. I wanted to see just how much computation I can perform at compile time. I was heavily inspired by part of [[https://github.com/lefticus/cpp_box][=cpp_box=]]. In there [[https://github.com/lefticus][Jason Turner]] has managed to implement a compile-time [[https://github.com/lefticus/cpp_box/blob/master/include/cpp_box/state_machine.hpp][finite state machine]]. I thought that Graphs are not too far off of a finite state machine so I decided to give the idea a try. I spend several days setting up the project and now it is a fully-fledged single header library. I still have not found any practical uses for CTGraph but for now, I am mainly developing it with educational propose. That is, I can discover a ton about C++ by programming smilingly useless things in it.
+
+\\
+
+For more information as well as the source code, check out the [[https://github.com/palikar/ctgraph][GitHub page]] of the project.
+
+
+* Design goals
+The project isn't exactly serious but I've still defined several general guidelines around which I should design everything.
+
+- Header only -- the library mus be usable through the inclusion of a single header
+- C++17 -- once the header file of CTGraph is included, the source file must be compiled with C++17.
+- Usable in constexpr context (mostly) -- if all of the information is available at compile time, the functions of CTGraph should be able to produce their result also at compile-time. This is not that easy to pull off so I would allow myself a little bit of leniency here.
+- Usable in const context (fully) -- once the graph is defined, it should be fully usable through a const qualified reference to the object. This should be possible because the graph can't be changed once defined so there is no reason for any method of the graph to modify the underlying structure.
+
+  
+* Features so far
+
+** Basic graph definition
+
+CTGraph requires the vertices of graph to be defines as a enumeration. For example, we can define the possible vertices like:
+#+BEGIN_SRC c++
+enum class NodeTypes
+{
+    UNKNOWN = 0,
+    NODE_1 = 1,
+    NODE_2 = 2,
+    NODE_3 = 3,
+    NODE_4 = 4,
+    NODE_5 = 5,
+    NODE_6 = 6,
+    NODE_7 = 7
+};
+#+END_SRC
+
+After that the definition of a graph is straight forward:
+#+BEGIN_SRC c++
+using namespace ctgraph;
+static constexpr auto graph = Graph{Node{NodeTypes::NODE_1, NodeTypes::NODE_2, NodeTypes::NODE_3},
+                                    Node{NodeTypes::NODE_2, NodeTypes::NODE_3, NodeTypes::NODE_4},
+                                    Node{NodeTypes::NODE_3, NodeTypes::NODE_4},
+                                    Node{NodeTypes::NODE_4},
+                                    Node{NodeTypes::NODE_5, NodeTypes::NODE_6, NodeTypes::NODE_7}};
+#+END_SRC
+
+A ~Graph~ is defined through several ~Node~ objects. The semantics of the constructor of ~Node~ are ~Node{<vertex>, [<follower>]}~. The first argument is the vertex to be added to the graph and the following vertices are the direct followers of the first one. To be noted is that only the vertices that come as a first argument of the ~Node~ constructor are considered "in" the graph. In the example, the will contain ~NODE_1~, ~NODE_2~, ~NODE_3~, ~NODE_4~ and ~NODE_5~ as vertices but not ~NODE_6~ and ~NODE_7~.
+
+\\
+
+The snippet defines the following graph:
+[[./files/example_graph.png]]
+
+
+
+** Accessing node 
+You can access the /nth/ vertex through the ~get_node<n>~ method
+#+BEGIN_SRC c++
+constexpr auto node_0 = graph.get_node<0>(); // NodeTypes::NODE_1
+#+END_SRC
+
+** Size of the graph
+The number of vertices in the graph:
+#+BEGIN_SRC c++
+constexpr auto size = graph.size(); // 5
+#+END_SRC
+
+** Checking if vertex is in the graph
+The method ~contains~ can be used with any of the nodes define in the original enumeration:
+#+BEGIN_SRC c++
+constexpr bool is_node_4 = graph.contains(NodeTypes::NODE_4) // true
+constexpr bool is_node_7 = graph.contains(NodeTypes::NODE_7) // false
+#+END_SRC
+
+** Checking if two vertices are adjacent
+Two node -- ~n_1~ and ~n_2~ -- are adjacent if and only if there is an edge ~n_1 -> n_2~.
+#+BEGIN_SRC c++
+constexpr bool edge_2_3 = graph.adjacent(NodeTypes::NODE_2, NodeTypes::NODE_3) //true
+constexpr bool edge_1_4 = graph.adjacent(NodeTypes::NODE_1, NodeTypes::NODE_4) //false
+#+END_SRC
+
+** Accessing successors of a vertex
+Accessing the nth successor of vertex can be done with the ~successor<n>(node)~ method:
+#+BEGIN_SRC c++
+constexpr auto node_1_succesor_0 = graph.successor<0>(NodeTypes::NODE_1);
+#+END_SRC
+
+Successors can also be accessed through a pointer ~ptr~ to the first one as well as their count ~c~. It is guaranteed that the next ~c~ elements after ~ptr~ will be the successors of the given node:
+#+BEGIN_SRC c++
+constexpr auto num_succ = graph.count(NodeTypes::NODE_1); // 2
+static constexpr auto ptr_succ = graph.followers(NodeTypes::NODE_1); 
+// *ptr_succ[0] == NodeTypes::NODE_2
+// *ptr_succ[1] == NodeTypes::NODE_3
+// *ptr_succ[3] - undefined behavior
+#+END_SRC
+
+\\
+
+There is also a convince function that return both the count and the pointer:
+#+BEGIN_SRC c++
+const auto[count, ptr] = get_successors(graph, NodeTypes::NODE_1);
+// count == 2
+// *ptr_succ[0] == NodeTypes::NODE_2
+// *ptr_succ[1] == NodeTypes::NODE_3
+// *ptr_succ[3] - undefined behavior
+#+END_SRC
+
