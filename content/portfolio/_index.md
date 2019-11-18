@@ -1,3 +1,3 @@
 ---
-title: Stanislav Arnaudov
+title: Projects
 ---
