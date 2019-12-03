@@ -1,0 +1,264 @@
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK")
+#+OPTIONS: date:t e:t email:nil f:t inline:t num:t p:nil pri:nil
+#+OPTIONS: prop:nil stat:t tags:t tasks:t tex:t timestamp:t title:t
+#+OPTIONS: toc:nil todo:t |:t
+
+
+#+TITLE: Code Manager [PART 1]
+#+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
+#+AUTHOR: Stanislav Arnaudov
+#+DATE: <2019-11-16 Thu>
+#+EMAIL: stanislav_ts@abv.bg
+#+CREATOR: Emacs 25.2.2 (Org mode 9.1.13 + ox-hugo)
+#+HUGO_FRONT_MATTER_FORMAT: toml
+#+HUGO_LEVEL_OFFSET: 1
+#+HUGO_PRESERVE_FILLING:
+#+HUGO_SECTION: projects
+
+#+HUGO_BASE_DIR: ~/code/blog-hugo-files
+#+HUGO_PREFER_HYPHEN_IN_TAGS: t
+#+HUGO_ALLOW_SPACES_IN_TAGS: nil
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
+#+DESCRIPTION: C++ implementation of a graph that is fully usable at compile time
+#+HUGO_DRAFT: false
+#+KEYWORDS: c++ programming compile-time constexpr
+#+HUGO_TAGS:
+#+HUGO_CATEGORIES: c++
+#+HUGO_WEIGHT: 100
+
+
+
+* Abstract
+
+This is my personal tool now for managing my GitHub repositories, some system software that I use and pretty much everything that can be downloaded, compiled locally and then installed on a Debian based Linux system. Through this utility one can quickly download and install random things from all over the internet. I've always wanted some small program that would allow me to quickly bring my GitHub repositories on my local machine so I end it up writing this in my spare time. The program is focused on automation but also flexibility in the installation process. A lot of software is compiled and installed in some standard way but some things are a little bit trickier. The utility -- named appropriately ~code_manager~ -- aims to provide a unified interface for the installation process of all types of software, the trickier kind included.
+
+\\
+
+In a way, I see ~code_manager~ as a substitute for an [[https://wiki.archlinux.org/index.php/AUR_helpers][AUR Helper]] on Arch-based Linux systems. My idea is, however, not to have a dedicated repository with packages like the [[https://wiki.archlinux.org/index.php/Arch_User_Repository][AUR]] but rather have the "entire internet" as a source for packages. If I install something once, I can quickly update some of the configuration files for the ~code_manger~ and have that thing automatically installable for the future. My final goal for the project is to be able to download the utility on a fresh Debian System, execute a couple of commands on the console and then let ~code_manger~ do the magic of pulling everything, compiling the necessary packages and then installing what is needed to be installed. The product should then be ready to use Linux environment.
+
+\\
+
+For more information as well as the source code, check out the [[https://github.com/palikar/code_manager][GitHub page]] of the project.
+
+* Usage
+
+When running ~code_manger~ for the first time, several configuration files should be copied at the right place inside of the ~${HOME}/.config~ folder. This should preferably be done by executing:
+
+#+BEGIN_SRC sh
+./code_manager.py --setup-only
+#+END_SRC
+Upon running this, ~code_manager~ will setup everything needed on the system. The user will also be prompted for several things. Those are:
+
+- CODE directory - this is the location where the source code of the packages will be fetched. Each package will have its own directory within the code directory.
+- USR directory - this is meant to be a user local equivalent of a directory like ~/usr~. Every package that requires some sort of installation will be installed there. ~USR/bin~ will be automatically added to the ~${PATH}~ and ~USR/lib~ to ~$LD_LIBRARY_PATH~.
+- Virtual environment directory - ~code_manager~ will create its own virtual environment in this directory. All python packages that will be installed through ~code_manger~ will in the newly created environment.
+- Python executable - it will be used to create the virtual environment. This will define which version of python will be used.
+  
+~code_manager~ will also create the shell file ~CODE/setenv.sh~. This file must be sourced before using ~code_manager~. It will activate the virtual environment and will export the needed environment variables.
+
+ \\
+
+Once the ~code_manager~ is set up, you can start using it immediately. The file that defines what kind of packages can be installed is ~${HOME}/.config/package.json~. For more information on what exactly is defined in the file and how, see the [[https://github.com/palikar/code_manager#packagesjson][guide]] on GitHub or my personal [[https://github.com/palikar/dotfiles/blob/master/.config/code_manager/packages.json][packages.json]].
+
+\\
+
+To install my CTGraph project, for example, all I have to execute is:
+
+#+BEGIN_SRC sh
+code_manager install ctgraph
+#+END_SRC
+In my packages.json, ctgraph is defined as:
+#+BEGIN_SRC json
+"ctgraph": {
+    "fetch": "git",
+    "git":{
+        "url" :  "@arnaud_base/ctgraph"
+    },
+    "install": ["cmake", "make"],
+    "cmake_args": "",
+    "make_extra_targets" : ["install"],
+    "make_args": "-j3"
+}
+#+END_SRC
+
+This means that the package will be fetched with git from https://github.com/palikar/ctgraph/. ~@arnaud_base~ is a variable and its value is my github account. When fetched, the project will be built first with [[https://cmake.org/][cmake]] and then with [[https://www.gnu.org/software/make/][make]]. Make will be run with ~-j3~ and also the ~make install~ target will be executed.
+
+* Installers
+
+~code_manger~ has a decent collection of installers that can be run automatically. With "installer" I mean a separate utility or system that can be executed and it will compile, build and\slash or install the given package. In the long term, I plan to add a lot more installers and make ~code_manger~ as versatile as possible. Every installer is used a little bit differently. This means that the package node in the packages.json file has to have certain properties. I'll briefly go over the current installers here. You can find an example ~packages.json~ file [[https://raw.githubusercontent.com/palikar/dotfiles/master/.config/code_manager/packages.json][here]] where most of the installers are used and it should be self-explanatory.
+
+** autoreconf
+For configuring projects that use [[https://wiki.debian.org/Autoreconf][autoreconf tools]].
+
+\\
+
+Example:
+#+BEGIN_SRC json
+"example": {
+    "fetch": "git",
+    "git":{
+        "url" :  "@arnaud_base/example"
+    },
+    "install": ["autoreconf"],
+    "autoreconf_args": ""
+}
+#+END_SRC
+** bashrc
+For adding things in the current user's ~${HOME}/.bashrc~ file. Alternatively, shell executable code can be inserted in the ~CODE/setenv.sh~ file. Only valid lines will be added
+
+\\
+
+Example:
+#+BEGIN_SRC json
+"example": {
+    "fetch": "git",
+    "git":{
+        "url" :  "@arnaud_base/example"
+    },
+    "install": ["bashrc"],
+    "in_bashrc" : true,
+    "bash_lines": [
+        "this is invalid line",
+        "export VALID_VAR=123"
+    ]
+}
+#+END_SRC
+** cmake
+For running cmake.
+
+\\
+
+Example:
+#+BEGIN_SRC json
+"example": {
+    "fetch": "git",
+    "git":{
+        "url" :  "@arnaud_base/example"
+    },
+    "install": ["cmake"],
+    "cmake_args": "DBUILD_TESTS=1"
+}
+#+END_SRC
+** command
+For executing a custom shell command inside of the package's directory
+
+\\
+
+Example:
+#+BEGIN_SRC json
+"example": {
+    "fetch": "git",
+    "git":{
+        "url" :  "@arnaud_base/example"
+    },
+    "install": ["command"],
+    "command" : "echo this is command"
+}
+#+END_SRC
+** cp
+For copying arbitrary files to arbitrary locations.
+
+\\
+
+Example:
+#+BEGIN_SRC json
+"example": {
+    "fetch": "git",
+    "git":{
+        "url" :  "@arnaud_base/example"
+    },
+    "install": ["cp"],
+    "cp" : [
+        {
+            "source" : "example.txt",
+            "dest" : "${HOME}/.config/example"
+        }
+    ]
+}
+
+#+END_SRC
+** emacs
+For adding files to he [[https://www.gnu.org/software/emacs/][Emacs]] [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html][init file]].
+
+\\
+
+Example:
+#+BEGIN_SRC json
+"example": {
+    "fetch": "git",
+    "git":{
+        "url" :  "@arnaud_base/example"
+    },
+    "install": "emacs",
+    "el_files" : ["example.el"]
+}
+#+END_SRC
+
+** make
+For running targets of a Makefile.
+
+\\
+
+Example:
+#+BEGIN_SRC json
+"example": {
+    "fetch": "git",
+    "git":{
+        "url" :  "@arnaud_base/example"
+    },
+    "install": ["make"],
+    "make_extra_targets" : ["install"],
+    "make_args": "-j3"
+}
+#+END_SRC
+** pip
+For installing packages through [[https://www.w3schools.com/python/python_pip.asp][pipy]]. It will also install the packages in ~requirements.txt~ if the file is present inside the package's directory.
+
+\\
+
+Example:
+#+BEGIN_SRC json
+"example": {
+    "fetch": "git",
+    "git":{
+        "url" :  "@arnaud_base/example"
+    },
+    "install": ["pip"],
+    "pip_packages" : ["python-package-example"]
+}
+#+END_SRC
+** script
+For running custom script to build and install a package. For more information see [[https://github.com/palikar/code_manager#installation-scripts][here]].
+
+\\
+
+Example:
+#+BEGIN_SRC json
+"example": {
+    "fetch": "git",
+    "git":{
+        "url" :  "@arnaud_base/example"
+    },
+    "install": ["script"],
+    "script": "install_example.sh",
+    "script_args": "--example",
+}
+#+END_SRC
+** setup_py
+For installing python projects with ~setup.py~.
+
+\\
+
+Example:
+#+BEGIN_SRC json
+"example": {
+    "fetch": "git",
+    "git":{
+        "url" :  "@arnaud_base/example"
+    },
+    "install": {"setup.py"},
+    "setup_args" : ["--optimize=1", "--record=install_log.txt"],
+}
+#+END_SRC

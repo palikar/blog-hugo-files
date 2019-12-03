@@ -7,7 +7,7 @@
 #+TITLE: Multidimensional Array size deduction in C++
 #+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
 #+AUTHOR: Stanislav Arnaudov
-#+DATE: <2019-04-10 Thu>
+#+DATE: <2019-10-31 Thu>
 #+EMAIL: stanislav_ts@abv.bg
 #+CREATOR: Emacs 26.1 (Org mode 9.2.1 + ox-hugo)
 #+HUGO_FRONT_MATTER_FORMAT: toml
@@ -22,30 +22,58 @@
 #+DESCRIPTION: A workaround for deducing the dimensions of multidimensional array in C++.
 #+HUGO_DRAFT: false
 #+KEYWORDS: c++ templates array templete-type-deduction c++-17
-#+HUGO_TAGS: 
+#+HUGO_TAGS: c++ programming
 #+HUGO_CATEGORIES: c++
 #+HUGO_WEIGHT: 100
 
- 
 * Abstract
+Recently I encountered a small particularity of the C++ standard that I've known about previously but didn't really care about up this point. The whole thing has to do with template type parameters. It turns out that C++ can't deduce the type of a braced initializer. This has some funny consequences when you are designing a function that can take "everything" including arrays and you want to be able to call the function as ~function({1,3,4,5})~. The desired outcome is that ~{1,3,4,5}~ is deduced to a one-dimensional array but at the same time ~{{1,3,4,5}}~ is two-dim array, ~{{{1,3,4,5}}}~ is a three-dim array and so forth. Turns out, this is a bit tricky.
+
 
 * Problem
 
+The exact details of my situation are not important. The gist of it is as follows.
+
+\\
+
+We have a templated function ~value~ that can take "everything" and "pipes" it's inputs to other helper functions. The ~value~ function is simply defined as:
 #+BEGIN_SRC c++
 template<typename... Args>
 auto value(Args&&... args)
 {
-    return DataBlockHelper::get(std::forward<Args>(args)...);
+    return APIHelper::get(std::forward<Args>(args)...);
 }
 #+END_SRC
 
+~APIHelper~ is just a struct with a whole bunch of static functions, all named ~get~ and each function is responsible for some kind of input that can be passed to ~value~. The ~get~ function creates some object and returns it. In this sense, the ~value~ function can be used to create an object in arbitrary ways. In my case, I wanted one of those cases to be through a multidimensional array. As mentioned, however, the following calls can't be used as the template arguments can't be deduced.
+
 #+BEGIN_SRC c++
+//calling value with one-dimensional array
 value({1,3,4,5}); // cant't be deduced
+
+//calling value with two-dimensional array
 value({{1,3,4,5},
-			 {1,3,4,5},
-			 {1,3,4,5}}); // cant't be deduced
+       {1,3,4,5},
+       {1,3,4,5}}); // cant't be deduced
 #+END_SRC
 
+As far as I understand, this is because of some weird specification of the C++11 standard. =§ 14.8.2.5/5= says:
+
+#+BEGIN_QUOTE
+A function parameter for which the associated argument is an initializer list (8.5.4) but the parameter does not have std::initializer_list or reference to possibly cv-qualified std::initializer_list type. [Example:
+
+template<class T> void g(T);
+\\
+g({1,2,3}); // error: no argument deduced for T
+
+— end example ]
+#+END_QUOTE
+
+This essentially boils down to the fact that we just can't call a function as ~value({...})~ and expect reasonable type deduction.
+
+\\
+
+A possible workaround for my problem is to define an overload of ~value~ that can accept a one-dimensional array. This can be done like:
 #+BEGIN_SRC c++
 template<typename T, size_t N>
 auto value(const (&values)[N])
@@ -53,37 +81,60 @@ auto value(const (&values)[N])
     return API::get(std::forward<Args>(values)...);
 }
 #+END_SRC
-
-
+This definition even deduces the size of the passed array. This is great and all but it doesn't work with two-dimensional arrays. 
 
 #+BEGIN_SRC c++
 value({1,3,4,5}); // deduces OK
 value({{1,3,4,5},
-			 {1,3,4,5},
-			 {1,3,4,5}}); // cant't be deduced
+       {1,3,4,5},
+       {1,3,4,5}}); // cant't be deduced
 #+END_SRC
+
+For two-dimensional arrays, we have to define another function. And another one for a three-dimensional array. And then another one and so forth.
 
 
 * Solution
-#+BEGIN_SRC
 
-#+END_SRC
+I researched the whole topic of multidimensional array dimensions deduction for a good couple of hours but I couldn't find anything. My conclusion, for now, is that this cannot currently be done, even with C++17. For this reason, I had to come up with something on my own.
+
+\\
+
+My solutions is the following. In the ~APIHelper~ struct I have a function defined as:
 
 #+BEGIN_SRC c++
-struct API
+struct APIHelper
 {
-	template<typename T, size_t...N>
-	inline static auto get(const T* values)
-    {
-			constexpr size_t SIZE = (N * ... );
-			for (size_t i = 0; i < SIZE; ++i) {
-				values[i]; // doing something with values
-			}
-			return 0;
+template<typename T, size_t...N>
+inline static auto get(const T* values)
+{
+    constexpr size_t SIZE = (N * ... );
+    for (size_t i = 0; i < SIZE; ++i) {
+        values[i]; // doing something with values
     }
+    return 0;
+}
+};
+#+END_SRC
+This function should handle all object constructions involving an array. The template pack ~N~ should contain the dimensions, ~T~ is the type of the array and ~values~ is a pointer to the first element of the array. ~SIZE~ is constant that tells us how many elements there are in the array. If everything is used correctly, ~values[SIZE-1]~ should be safe to access.
+
+\\
+
+We now have to look at the ~value~ function. It should be able to handle all sorts of multidimensional arrays and forward everything to the ~APIHelper::get~ in the right format. The function should have some the general form of:
+
+#+BEGIN_SRC c++
+template<typename T, size_t N>
+inline static auto value(const T(&values)[N])
+{
+    const T* s = reinterpret_cast<const T*>(&values);
+    return API::get<T, N>(s);
 }
 #+END_SRC
 
+This works just fine for one-dimensional arrays. For higher dimensions, we have to define more functions. Defining lots of things per hand is tedious. Thankfully, C++ provides as with mechanism for saving typing -- the [[https://en.wikipedia.org/wiki/C_preprocessor][C preprocessor]]. Using macros is generally considers a bad programming practice but in some situations, I say it is justified. This seems like one of those.
+
+\\
+
+I spend around 15 minutes on [[https://godbolt.org/][Compiler Explorer]] (you can test only macro expansions with the -E flag for GCC) and I came up a this set of definitions.
 #+BEGIN_SRC c++
 #define SIZE_T_S_0 size_t N
 #define SIZE_T_S_1 SIZE_T_S_0 , size_t M
@@ -92,6 +143,7 @@ struct API
 #define SIZE_T_S_4 SIZE_T_S_3 , size_t J
 #define SIZE_T_S_5 SIZE_T_S_4 , size_t I
 #define SIZE_T_S_6 SIZE_T_S_5 , size_t H
+#define SIZE_T_S_7 SIZE_T_S_6 , size_t F
 
 #define BRACKETS_S_0 [N]
 #define BRACKETS_S_1 BRACKETS_S_0[M]
@@ -100,6 +152,7 @@ struct API
 #define BRACKETS_S_4 BRACKETS_S_3[J]
 #define BRACKETS_S_5 BRACKETS_S_4[I]
 #define BRACKETS_S_6 BRACKETS_S_5[H]
+#define BRACKETS_S_7 BRACKETS_S_6[F]
 
 #define LETTERS_S_0 N
 #define LETTERS_S_1 LETTERS_S_0, M
@@ -108,18 +161,17 @@ struct API
 #define LETTERS_S_4 LETTERS_S_3, J
 #define LETTERS_S_5 LETTERS_S_4, I
 #define LETTERS_S_6 LETTERS_S_4, H
+#define LETTERS_S_7 LETTERS_S_5, F
 
-#define VALUE_FUN(dim) template<typename T, SIZE_T_S_##dim>		\
-	inline static auto value(const T(&values) BRACKETS_S_##dim) \
-	{                                                           \
-		const T* s = reinterpret_cast<const T*>(&values);         \
-		return API::get<T, LETTERS_S_##dim>(s);       \
-	}
+#define VALUE_FUN(dim) template<typename T, SIZE_T_S_##dim>        \
+    inline static auto value(const T(&values) BRACKETS_S_##dim)     \
+    {                                                               \
+        const T* s = reinterpret_cast<const T*>(&values);       \
+        return API::get<T, LETTERS_S_##dim>(s);                 \
+    }
 
 #+END_SRC
-
-
-The macro can then be used serveral times to generate the functions for arrays of different dimensionality.
+The macro can then be used several times to generate the functions for arrays of different dimensionality.
 #+BEGIN_SRC c++
 VALUE_FUN(0) // one-dim array
 VALUE_FUN(1) // two-dim array
@@ -127,7 +179,7 @@ VALUE_FUN(2) // three-dim array
 VALUE_FUN(3) // four-dim array
 VALUE_FUN(4) // five-dim array
 VALUE_FUN(5) // six-dim array
-VALUE_FUN(7) // seven-dim array
+VALUE_FUN(6) // seven-dim array
+VALUE_FUN(7) // eight-dim array
 #+END_SRC
-There. Now we can handle up to 8-dimensional arrays. This should be enough for know.
-
+There. Now we can handle up to 8-dimensional arrays. This should be enough for know. If more dimensions are need, we just have to add more definitions of ~SIZE_T_S_*~, ~BRACKETS_S_*~ and ~LETTERS_S_*~

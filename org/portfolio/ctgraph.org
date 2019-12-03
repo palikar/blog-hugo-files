@@ -12,17 +12,17 @@
 #+CREATOR: Emacs 26.1 (Org mode 9.2.1 + ox-hugo)
 
 
-#+TITLE: Code manager
-#+DESCRIPTION: Python appliation for managing and installing code packages.
+#+TITLE: CTGraph
+#+DESCRIPTION: C++ implementation of a graph that is fully usable at compile time
 #+DATE: <2019-05-11 Thu>
 #+HUGO_SECTION: portfolio
 #+HUGO_BASE_DIR: ~/code/blog-hugo-files/
-#+HUGO_CUSTOM_FRONT_MATTER: :link "https://github.com/palikar/mflower"
-#+HUGO_CUSTOM_FRONT_MATTER: :screenshot "cm_logo.png"
+#+HUGO_CUSTOM_FRONT_MATTER: :screenshot "ct_graph.png"
+#+HUGO_CUSTOM_FRONT_MATTER: :link "/projects/ctgraph/"
 #+HUGO_CUSTOM_FRONT_MATTER: :layout "portfolio"
 
-A command line utility that helps me manage my git repositories as well as other programming packages.
 
+Single header library for doing fancy things at compile-time.
 
 
 
