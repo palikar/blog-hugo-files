@@ -1,0 +1,162 @@
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK")
+#+OPTIONS: date:t e:t email:nil f:t inline:t num:t p:nil pri:nil
+#+OPTIONS: prop:nil stat:t tags:t tasks:t tex:t timestamp:t title:t
+#+OPTIONS: toc:t todo:t |:t
+
+#+TITLE: Generic Execution Around Pointer
+#+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
+#+AUTHOR: Stanislav Arnaudov
+#+DATE: <2019-12-3 Thu>
+#+EMAIL: stanislav_ts@abv.bg
+#+CREATOR: Emacs 26.1 (Org mode 9.2.1 + ox-hugo)
+#+HUGO_FRONT_MATTER_FORMAT: toml
+#+HUGO_LEVEL_OFFSET: 1
+#+HUGO_PRESERVE_FILLING:
+#+HUGO_SECTION: posts
+#+HUGO_BASE_DIR: ~/code/blog-hugo-files/
+#+HUGO_PREFER_HYPHEN_IN_TAGS: t 
+#+HUGO_ALLOW_SPACES_IN_TAGS: nil
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
+#+DESCRIPTION: A set of generic classes for constructing the execution-around-pointer idiom 
+#+HUGO_DRAFT: false
+#+KEYWORDS: c++ templates idioms execution-around-pointer
+#+HUGO_TAGS: c++ templates 
+#+HUGO_CATEGORIES: c++
+#+HUGO_WEIGHT: 100
+
+
+* Abstract
+I recently found out what the [[https://en.wikibooks.org/wiki/More_C%252B%252B_Idioms/Execute-Around_Pointer][Execute-Around_Pointer]] idiom in C++ is. What it does is, track the access to a specific object. For exampole, when you want to observe how certain properties of an object change on each method call, you would employ the use of this idiom. Think of it like wrapping each method call for an object with additional function calls. This, for empale, is ugly code:
+
+#+BEGIN_SRC c++
+std::vector<int> vec{1,2,3,4};
+
+std::cout << std::size(vec)
+vec.push_back(5);
+std::cout << std::size(vec)
+
+std::cout << std::size(vec)
+vec.push_back(6);
+std::cout << std::size(vec)
+#+END_SRC
+
+With the =Execute-Around_Pointer= you can "prettify" this pattern by constructiong a special "tracer" object that internally keeps a reference to the vector. The undelying object is then accessed through the ~->~ operator. The code then can become:
+
+#+BEGIN_SRC c++
+std::vector<int> vec{1,2,3,4};
+VecotSizeTracer vec_tracer{vec};
+vec_tracer->push_back(5);
+vec_tracer->push_back(6);
+#+END_SRC
+
+On the weeky [[https://en.wikibooks.org/wiki/More_C%252B%252B_Idioms/Execute-Around_Pointer][page]] there is a similar example. The implemention there is, however, non-genric and does not use any templated code. I decided to write several classes that realize the logic of the idiom. Those can be then used to quickly construct different tracers for different types of types.
+
+
+* Making it generic
+
+** Iterating over tuple
+First of, we'll need one utility method. Namely, ~for_each~ for iterating over a tuple. Weirdly enough, there is no such method in the the standard library. It's not that hard to implement something ourselves though:
+#+BEGIN_SRC c++
+template<std::size_t I = 0, typename FuncT, typename... Tp>
+inline std::enable_if_t<I == sizeof...(Tp), void>
+for_each(std::tuple<Tp...> &, FuncT)
+{ }
+
+template<std::size_t I = 0, typename FuncT, typename... Tp>
+inline std::enable_if_t<I < sizeof...(Tp), void>
+for_each(std::tuple<Tp...>& t, FuncT && f)
+{
+    f(std::get<I>(t));
+    for_each<I + 1, FuncT, Tp...>(t, std::forward<FuncT>(f));
+};
+
+#+END_SRC
+Special thanks to [[https://stackoverflow.com/a/6894436][this]] stackoverflow answer. The function just recusuverly loops over the tuple by keeping track of the current index in the ~I~ template parameter. The recusion is terminated when ~I~ is equal to the size of the tuple. If you've program in Haskel, this should not be too hard for you.
+
+** The proxy class
+
+Next we need that calss that can keep a pointer to an object as well as several othe objects that will be notified when the pointer is accessed. 
+#+BEGIN_SRC c++
+template<typename T, typename...Tracker>
+struct proxy
+{
+public:
+    
+    proxy(T& obj, Tracker && ... track) :
+        m_obj(&obj),
+        m_track(std::forward<decltype(track)>(track)...)  
+    {
+        (track.before(obj), ...);   
+    }
+
+    ~proxy()
+    {
+        detail::for_each(m_track, [&](auto& tracker){tracker.after(*m_obj);});
+    }
+
+    T* operator ->() { return m_obj;}
+private:
+    T* m_obj;
+    std::tuple<Tracker ...> m_track;
+};
+#+END_SRC
+
+The pointer is stored in the  ~m_obj~ memeber. The notified objects are stored in the ~m_track~ tuple. Those can be of different types but must implement a ~before~ and a ~after~ method. The ~before~ methos of each object will be called before any operation on the object pointed by ~m_obj~ is performed, and the ~after~ method -- after. We call the ~after~ method in the destructor by using our ~for_each~ function the we previously implemented. In the constructor, I've simply used [[https://arne-mertz.de/2016/11/more-variadic-templates/][pack expansion]].
+
+** The Tracer
+
+Now we have every that we need to write the final tracer class:
+#+BEGIN_SRC c++
+template<typename T, typename ...Tracker>
+class Tracked : public Tracker ...
+{
+  public :
+    explicit Tracked(T& obj) : m_obj(obj)
+    {}
+
+    detail::proxy<T, Tracker...> operator ->() {
+        return detail::proxy<T, Tracker...>(m_obj, static_cast<Tracker>(*this)...);
+    }
+    
+  private :
+    T& m_obj;
+
+};
+#+END_SRC
+On construction, the ~Tracked~ class takes the object that needs to be traced as well as several types -- the ~Tracker~ variadic template aegument. The ~Tracker~ class will be derived from each of the passed types. This means that it will "have" all of the methods definied by the ~Tracker~ types. In the overload of the ~->~ operator we create a proxy object with the underlying object and casted version of the ~this~ object with each of the given ~Tracker~ types. This is possible because we've dereived the ~Tracked~ from each of those types.
+
+** Usage
+
+With our defined classes, we can realize the logic of the Execute-Around-Pointer idiom in an easy manner. For example, if we want to track the size of a vector we can write something lile:
+#+BEGIN_SRC c++
+// class with before and after methods
+class SizeTracker
+{
+    public:
+    static void before(std::vector<int>& vec) {
+        std::cout << "Size Before:" << std::size(vec) << "\n";
+    }
+
+    static void after(std::vector<int>& vec) {
+        std::cout << "Size After:" << std::size(vec) << "\n";
+    }
+};
+
+// tracker type for vector of ints. 
+using VectorSizeTracker = Tracked<std::vector<int>, SizeTracker>;
+#+END_SRC
+With this, we can rewrite the example that I gave at the beginning of the post.
+#+BEGIN_SRC c++
+int main()
+{
+    std::vector<int> vec{1,2,3,4};
+    VectorSizeTracker vec_track{vec};
+    
+    vec_track->push_back(5);
+    vec_track->push_back(6);
+
+    return 0;
+}
+#+END_SRC
