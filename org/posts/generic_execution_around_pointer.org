@@ -125,11 +125,11 @@ class Tracked : public Tracker ...
 
 };
 #+END_SRC
-On construction, the ~Tracked~ class takes the object that needs to be traced as well as several types -- the ~Tracker~ variadic template aegument. The ~Tracker~ class will be derived from each of the passed types. This means that it will "have" all of the methods definied by the ~Tracker~ types. In the overload of the ~->~ operator we create a proxy object with the underlying object and casted version of the ~this~ object with each of the given ~Tracker~ types. This is possible because we've dereived the ~Tracked~ from each of those types.
+On construction, the ~Tracked~ class takes the object that needs to be traced as well as several types -- the ~Tracker~ variadic template argument. The ~Tracker~ class will be derived from each of the passed in types. This means that it will "have" all of the methods defined by the ~Tracker~ types. In the overload of the ~->~ operator, we create a proxy object with the underlying object and statically cast version of the ~this~ object with each of the given ~Tracker~ types. This is possible because we've derived the ~Tracked~ from each of those types.
 
 ** Usage
 
-With our defined classes, we can realize the logic of the Execute-Around-Pointer idiom in an easy manner. For example, if we want to track the size of a vector we can write something lile:
+With our defined classes, we can realize the logic of the Execute-Around-Pointer idiom in an easy manner. For example, if we want to track the size of a vector we can write something like:
 #+BEGIN_SRC c++
 // class with before and after methods
 class SizeTracker
