@@ -28,7 +28,7 @@
 
 
 * Abstract
-I recently found out what the [[https://en.wikibooks.org/wiki/More_C%252B%252B_Idioms/Execute-Around_Pointer][Execute-Around_Pointer]] idiom in C++ is. What it does is, track the access to a specific object. For exampole, when you want to observe how certain properties of an object change on each method call, you would employ the use of this idiom. Think of it like wrapping each method call for an object with additional function calls. This, for empale, is ugly code:
+I recently found out what the [[https://en.wikibooks.org/wiki/More_C%252B%252B_Idioms/Execute-Around_Pointer][Execute-Around_Pointer]] idiom in C++ is. What it does is track access to a specific object. For example, when you want to observe how certain properties of an object change on each method call, you would employ the use of this idiom. Think of it like wrapping each method call for an object with additional function calls. This, for empale, is ugly code:
 
 #+BEGIN_SRC c++
 std::vector<int> vec{1,2,3,4};
@@ -42,7 +42,7 @@ vec.push_back(6);
 std::cout << std::size(vec)
 #+END_SRC
 
-With the =Execute-Around_Pointer= you can "prettify" this pattern by constructiong a special "tracer" object that internally keeps a reference to the vector. The undelying object is then accessed through the ~->~ operator. The code then can become:
+With the =Execute-Around_Pointer= you can "prettify" this pattern by constructing a special "tracer" object that internally keeps a reference to the vector. The underlying object is then accessed through the ~->~ operator. The code then can become:
 
 #+BEGIN_SRC c++
 std::vector<int> vec{1,2,3,4};
@@ -51,13 +51,13 @@ vec_tracer->push_back(5);
 vec_tracer->push_back(6);
 #+END_SRC
 
-On the weeky [[https://en.wikibooks.org/wiki/More_C%252B%252B_Idioms/Execute-Around_Pointer][page]] there is a similar example. The implemention there is, however, non-genric and does not use any templated code. I decided to write several classes that realize the logic of the idiom. Those can be then used to quickly construct different tracers for different types of types.
+On the wiki [[https://en.wikibooks.org/wiki/More_C%252B%252B_Idioms/Execute-Around_Pointer][page]] there is a similar example. The implementation there is, however, non-genric and does not use any templated code. I decided to write several classes that realize the logic of the idiom. Those can be then used to quickly construct different tracers for different types of types.
 
 
 * Making it generic
 
 ** Iterating over tuple
-First of, we'll need one utility method. Namely, ~for_each~ for iterating over a tuple. Weirdly enough, there is no such method in the the standard library. It's not that hard to implement something ourselves though:
+First off, we'll need one utility method. Namely, ~for_each~ for iterating over a tuple. Weirdly enough, there is no such method in the standard library. It's not that hard to implement something ourselves though:
 #+BEGIN_SRC c++
 template<std::size_t I = 0, typename FuncT, typename... Tp>
 inline std::enable_if_t<I == sizeof...(Tp), void>
@@ -73,11 +73,11 @@ for_each(std::tuple<Tp...>& t, FuncT && f)
 };
 
 #+END_SRC
-Special thanks to [[https://stackoverflow.com/a/6894436][this]] stackoverflow answer. The function just recusuverly loops over the tuple by keeping track of the current index in the ~I~ template parameter. The recusion is terminated when ~I~ is equal to the size of the tuple. If you've program in Haskel, this should not be too hard for you.
+Special thanks to [[https://stackoverflow.com/a/6894436][this]] StackOverflow answer. The function just recursively loops over the tuple by keeping track of the current index in the ~I~ template parameter. The recursion is terminated when ~I~ is equal to the size of the tuple. If you've programmed in Haskel, this should not be too hard for you.
 
 ** The proxy class
 
-Next we need that calss that can keep a pointer to an object as well as several othe objects that will be notified when the pointer is accessed. 
+Next, we need that class that can keep a pointer to an object as well as several other objects that will be notified when the pointer is accessed. 
 #+BEGIN_SRC c++
 template<typename T, typename...Tracker>
 struct proxy
@@ -103,7 +103,7 @@ private:
 };
 #+END_SRC
 
-The pointer is stored in the  ~m_obj~ memeber. The notified objects are stored in the ~m_track~ tuple. Those can be of different types but must implement a ~before~ and a ~after~ method. The ~before~ methos of each object will be called before any operation on the object pointed by ~m_obj~ is performed, and the ~after~ method -- after. We call the ~after~ method in the destructor by using our ~for_each~ function the we previously implemented. In the constructor, I've simply used [[https://arne-mertz.de/2016/11/more-variadic-templates/][pack expansion]].
+The pointer is stored in the  ~m_obj~ member. The notified objects are stored in the ~m_track~ tuple. Those can be of different types but must implement a ~before~ and a ~after~ method. The ~before~ methods of each object will be called before any operation on the object pointed by ~m_obj~ is performed, and the ~after~ method -- after. We call the ~after~ method in the destructor by using our ~for_each~ function that we previously implemented. In the constructor, I've simply used [[https://arne-mertz.de/2016/11/more-variadic-templates/][pack expansion]].
 
 ** The Tracer
 
