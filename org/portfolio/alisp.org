@@ -1,0 +1,24 @@
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK")
+#+OPTIONS: date:t e:t email:nil f:t inline:t num:t p:nil pri:nil
+#+OPTIONS: prop:nil stat:t tags:t tasks:t tex:t timestamp:t title:t
+#+OPTIONS: toc:t todo:t |:t
+
+
+#+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
+#+AUTHOR: Stanislav Arnaudov
+#+DATE: <2020-02-20 Thu>
+#+EMAIL: stanislav_ts@abv.bg
+#+CREATOR: Emacs 26.1 (Org mode 9.2.1 + ox-hugo)
+
+
+#+TITLE: Alisp
+#+DESCRIPTION: Interpreted Lisp-language written in C++.
+#+DATE: <2020-02-20 Thu>
+#+HUGO_SECTION: portfolio
+#+HUGO_BASE_DIR: ~/code/blog-hugo-files/
+#+HUGO_CUSTOM_FRONT_MATTER: :screenshot "al_logo.png"
+#+HUGO_CUSTOM_FRONT_MATTER: :link "/projects/alisp"
+#+HUGO_CUSTOM_FRONT_MATTER: :layout "portfolio"
+
+Alisp is a general purpose lisp based language written in C++ over the course of several months. It comes with an interpreter, REPL environment, and several modules that comprise the standard library of the language.
