@@ -13,7 +13,7 @@
 
 
 #+TITLE: Code manager
-#+DESCRIPTION: Python appliation for managing and installing code packages.
+#+DESCRIPTION: Python application for managing and installing code packages.
 #+DATE: <2019-05-11 Thu>
 #+HUGO_SECTION: portfolio
 #+HUGO_BASE_DIR: ~/code/blog-hugo-files/
