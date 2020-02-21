@@ -5,8 +5,8 @@ baseurl = "https://palikar.github.io/"
 theme = "hyde-hyde"
 
 disqusShortname = "palikar-github-io"
-# googleAnalytics = "your-google-analytics-id"
-# enableRobotsTXT = true
+
+googleAnalytics = "UA-158773896-1"
 
 enableEmoji = true
 enableGitInfo = true
