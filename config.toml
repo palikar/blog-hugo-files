@@ -8,12 +8,12 @@ disqusShortname = "palikar-github-io"
 # googleAnalytics = "your-google-analytics-id"
 # enableRobotsTXT = true
 
-# pygmentsCodeFences = true
-# pygmentsUseClasses = false
-# pygmentsUseClassic = false
-# pygmentsStyle = "friendly"
-
+enableEmoji = true
+enableGitInfo = true
+enableRobotsTXT = true
+canonifyURLs = true
 relatedPosts = true
+
 postNavigation = true
 
 ## Site Settings
