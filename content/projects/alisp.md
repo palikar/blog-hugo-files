@@ -1,10 +1,10 @@
 +++
-title = "Alisp"
+title = "Alisp [PART 1]"
 author = ["Stanislav Arnaudov"]
 description = "Interpreted Lisp-language written in C++."
 date = 2020-02-20T00:00:00+01:00
 keywords = ["c++", "language", "lisp"]
-lastmod = 2020-02-21T00:38:53+01:00
+lastmod = 2020-05-27T22:55:07+02:00
 categories = ["c++"]
 draft = false
 weight = 100
@@ -60,7 +60,7 @@ The documentation is not at all complete but there is enough to get you started 
 
 ## Examples {#examples}
 
-Here I'll present several simple programs. The point is just to illustrate the syntax and prove that that there is, in fact, something that can be done with Alisp.^
+Here I'll present several simple programs. The point is just to illustrate the syntax and prove that that there is, in fact, something that can be done with Alisp.
 
 
 ### Hello world {#hello-world}

@@ -5,7 +5,7 @@
 #+OPTIONS: toc:nil todo:t |:t
 
 
-#+TITLE: Alisp
+#+TITLE: Alisp [PART 1]
 #+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
 #+AUTHOR: Stanislav Arnaudov
 #+DATE: <2020-02-20 Thu>
@@ -71,7 +71,7 @@ By now, I've put quite the work into the language and the utilities around it, s
 The documentation is not at all complete but there is enough to get you started [[https://alisp.readthedocs.io/en/latest/][here]]. Also, check out the [[https://github.com/palikar/alisp][Github repository]]. The code has its own documentation.
 
 * Examples
-Here I'll present several simple programs. The point is just to illustrate the syntax and prove that that there is, in fact, something that can be done with Alisp.^
+Here I'll present several simple programs. The point is just to illustrate the syntax and prove that that there is, in fact, something that can be done with Alisp.
 
 ** Hello world
 

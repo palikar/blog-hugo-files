@@ -1,0 +1,136 @@
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK")
+#+OPTIONS: date:t e:t email:nil f:t inline:t num:t p:nil pri:nil
+#+OPTIONS: prop:nil stat:t tags:t tasks:t tex:t timestamp:t title:t
+#+OPTIONS: toc:nil todo:t |:t
+
+#+TITLE: Alisp [PART 2]
+#+OPTIONS: ':nil -:nil ^:{} num:nil toc:nil
+#+AUTHOR: Stanislav Arnaudov
+#+DATE: <2020-05-27 Thu>
+#+EMAIL: stanislav_ts@abv.bg
+#+CREATOR: Emacs 25.2.2 (Org mode 9.1.13 + ox-hugo)
+#+HUGO_FRONT_MATTER_FORMAT: toml
+#+HUGO_LEVEL_OFFSET: 1
+#+HUGO_PRESERVE_FILLING:
+#+HUGO_SECTION: projects
+
+#+HUGO_BASE_DIR: ~/code/blog-hugo-files
+#+HUGO_PREFER_HYPHEN_IN_TAGS: t
+#+HUGO_ALLOW_SPACES_IN_TAGS: nil
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_DATE_FORMAT: %Y-%m-%dT%T%z
+#+DESCRIPTION: Building Alisp from source
+#+HUGO_DRAFT: false
+#+KEYWORDS: c++ language lisp interpreter
+#+HUGO_TAGS:
+#+HUGO_CATEGORIES: c++
+#+HUGO_WEIGHT: 100
+
+
+[[./files/alisp.png]]
+
+* Abstract
+In this post I want to give a little more details on how [[https://github.com/palikar/alisp][Alisp]] can build from sources. ALisp is an interpreted language I've developed in C++. Over the last half an year, the project has become quite big (currently around 24K LOC) and thus the build process is so trivial as in the beginning. In the process of development, I've added numerous options for how the code can be compiled and all of those can be confusing at times. Depending on the purpose of the build and what you want to do with it, different options has to enabled and here I want to give a brief overview of the options and the reasoning behind them.
+
+* Prerequisites
+
+Alisp is written in C++ (17) and uses [[https://cmake.org/][CMake]] as its build generator. The project is tested and it compiles with
+- gcc 8,9
+- clang 9
+Currently, only Linux builds are tested and I can't guarantee that everything will work on Windows (hopefully supports comes soon). The code requires features of C++17 so it may not be compatible with older compilers.
+
+\\
+
+On Debian based systems, for minimal builds the package [[https://packages.debian.org/sid/build-essential][build-essential]] should be enough:
+#+BEGIN_SRC sh
+sudo apt-get install build-essential
+#+END_SRC
+
+
+\\
+
+For more advanced builds, you'll need more things:
+#+BEGIN_SRC sh
+sudo apt-get install valgrind gcov doxygen
+#+END_SRC
+[[https://www.doxygen.nl/][Doxygen]] is used to generate the documentation for the source, [[https://www.valgrind.org/][valgrind]] performs some run-time checks and [[https://gcc.gnu.org/onlinedocs/gcc/Gcov.html][gcov]].
+
+\\
+
+The code itself should not have any external dependencies. The project's repository contains everything needed for building all executable and libraries of the language form source. Alisp does however uses third party C++ libraries and those are:
+- [[https://github.com/ChaiScript/ChaiScript/][Catch2]] - used for testing
+- [[https://github.com/muellan/clipp][Clipp]] - used for command line arguments parsing
+- [[https://www.google.com/search?q=c%2B%2B+rang&ie=utf-8&oe=utf-8&client=firefox-b-e][Rang]] - used for printing in colors on the terminal
+- [[https://github.com/leethomason/tinyxml2][TinyXML2]] - used for parsing xml documents
+- [[https://github.com/arun11299/cpp-subprocess][Subprocess]] - used for spawning child processes
+- [[https://github.com/nbsdx/SimpleJSON][SimpleJSON]] - used for parsing json documents.
+- [[Https://fmt.dev/latest/index.html][Fmt]] - used for formatting strings
+
+* Building
+
+Once you have everything you need, you can proceed to the actual build process. The way I usually do this is to create a build folder in the source directory and build the project there. The build commands are standard for any cmake project.
+
+#+BEGIN_SRC sh
+git clone https://github.com/palikar/alisp
+cd alisp
+mkdir build && cd build
+cmake .. <options>
+make <targets>
+#+END_SRC
+Optionally, after cloning you can checkout the project to any of the [[https://github.com/palikar/alisp/releases][current stable version]].
+
+~<options>~ and ~<targets>~ are, of course, placeholder and will be discussed in the next section.
+
+* Options
+
+- ~LIBCPP~ - when compiling with clang, this option allows you to use llvm's implementation of the C++ standard library [[https://libcxx.llvm.org/ ][libc++]]. In certain situation, libc++ can improve the performance of a program and reduce the compilation time. For the majority of the development of Alisp, however, I've used GNU's standard library [[https://gcc.gnu.org/onlinedocs/libstdc++/][libstdc++]] and I haven't got any problems with it. If the ~LIBCPP~ option is set to ~TRUE~ (default ~FALSE~), libc++ will be used.
+
+- ~ENABLE_COVERAGE~ - if set to ~TRUE~ (default ~FALSE~), the project will be compiled with coverage flags (~--coverage -O0 -g~) and special make targets will be created that allow you to run coverage of the code ans generate nice HTML pages with the results.
+
+- ~ENABLE_ASAN~ - if set to ~TRUE~ (default ~FALSE~), the project will be compiled with address sanitizer flags (~-fsanitize=address~). When an executable is build with address sanitizer, running it will execute the program while checking for any memory issues (buffer overflows, invalid reads\slash writes, etc.) More information on address sanitizers [[https://github.com/google/sanitizers/wiki/AddressSanitizer][here]].
+
+
+- ~BUILD_SHARED_LIBS~ - if set to ~TRUE~ (default ~FALSE~), all of the libraries will be build as shared libraries. This usually reduces the recompilation time but may cause some overhead on startup. By now, I use Alisp almost exclusively in shared libraries mode.
+
+- ~ENABLE_TESTING~ - if set to ~TRUE~ (default ~FALSE~), all of the tests for the project will be compiled and build. Also, a several make targets will be created for running the added tests.
+
+- ~ENABLE_CLANG_TIDY~ - if set to ~TRUE~ (default ~FALSE~), [[https://clang.llvm.org/extra/clang-tidy/][clang-tidy]] will be run over the source code during compilation. Clang-tidy is a code linter and static analyzer and can report on some common problems with the code.
+
+- ~ENABLE_CPPCHECK~ - if set to ~TRUE~ (default ~FALSE~), [[http://cppcheck.sourceforge.net/][cppcheck]] will be run over the source code during compilation. Cppcheck is a static analysis tool for C/C++ code that detects bugs and focuses on detecting undefined behaviour and dangerous coding constructs.
+
+- ~ENABLE_LTO~  - if set to ~TRUE~ (default ~FALSE~), the project is compiled with [[https://gcc.gnu.org/wiki/LinkTimeOptimization][link time optimizations]] enabled.
+
+- ~BUILD_DOC~ - if set to ~TRUE~ (default ~FALSE~), a special make target is created that will generate documentation of the source code with doxygen.
+
+- ~FORCE_COLORED_OUTPUT~ - if set to ~TRUE~ (default ~TRUE~), the output of the compilation will use coloring. This is handy when compiling and looking at the output on the screen. It could be annoying when the output of the compilation is dumped into a file.
+
+- ~ELF_HASHING~ - if set to ~TRUE~ (default ~FALSE~), the default hashing algorithm that alisp uses internally will be the [[https://en.wikipedia.org/wiki/PJW_hash_function][PJW hash function]]. By default, alisp uses the [[https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function][Fowler–Noll–Vo function]] for hashing strings.
+
+- ~JENKINS_HASHING~ - if set to ~TRUE~ (default ~FALSE~), the default hashing algorithm that alisp uses internally will be the [[https://en.wikipedia.org/wiki/Jenkins_hash_function][Jenkins hash function]]. If this option is ~TRUE~, ~ELF_HASHING~ should be set to ~FALSE~.
+
+- ~DEBUG_LOGGING~ - if set to ~TRUE~ (default ~FALSE~), the project will be compiled with support for enabling lots of logging. The interpreter will have a extra CLI flag (~-DL~) that will print lots of debugging information during execution.
+
+- ~BUILD_EXAMPLES~ - if set to ~TRUE~ (default ~FALSE~), the example scripts in the ~scripts~ folder will be copied in the build directory. Also an extra make target will be created (~test_examples~) that will execute all of the examples and verify they execute without errors.
+
+- ~VALGRIND_CHECKS~ - if set to ~TRUE~ (default ~FALSE~), an extra make target (~valgrind_checks~) will be created that executes the language tests while checking the execution with various valgrind tools. This includes checking for memory leaks, running the tests with [[https://valgrind.org/docs/manual/ms-manual.html][massif]], [[https://valgrind.org/docs/manual/mc-manual.html][memcheck]] and [[https://valgrind.org/docs/manual/cl-manual.html][callgrind]].
+
+- ~RUN_PERFORMANCE_TESTS~ - if set to ~TRUE~ (default ~FALSE~), the scripts in the ~performance_tests~ will be copied in the build directory and an extra make target will be created (~timing_check~). The target will execute the copied scripts and will create a file ~timing_checks.txt~ with their execution time. The scripts are designed in such a way to load the interpreter and tests its performance.
+
+- ~DISABLE_DYN_MODULES~ - if set to ~TRUE~ (default ~FALSE~), the dynamic alisp modules will not be compiled. Those are modules that are not loaded in each interpreter executable but are loaded dynamically at run time. Disabling the compilation of those can be handy when you don't want to compile the entirety of the project but just the core interpreter.
+
+- ~DISABLE_DEFAULT_MODULES~ - if set to ~TRUE~ (default ~FALSE~), the builtin alisp modules will not be compiled and linked to the interpreter. The point of this is again to reduce the compilation time if you don't need these modules.
+
+- ~ENABLE_STACK_TRACE~ - if set to ~TRUE~ (default ~TRUE~), the interpreter will keep track of each function call and will print out a stacktrace in case of error in the execution. Disabling this option can potentially increase performance.
+
+- ~ENABLE_LINE_TRACE~ - if set to ~TRUE~ (default ~TRUE~), the interpreter will keep track of the line number where a list-form object was defined in a file. This makes the stracktrace more understandable but also requires a tiny bit more memory. The line numbers will be saved as object properties (~--line--~) of list-forms that appear in the source code of an alisp script.
+
+- ~ENABLE_OBJECT_DOC~ - if set to ~TRUE~ (default ~TRUE~), the interpreter will keep the documentation for symbols. If this optioned is disabled, the given in the source code documentation for the symbols will be left out and won't be part of the symbols. The documentation for a symbol is save in the ~--doc--~ property.
+
+- ~DISABLE_RUN_TIME_CHECKS~ - if set to ~TRUE~ (default ~FALSE~), a lot of run-time checks (among which arity checks by function calling and type checks) will be removed from the code. This can potentially increase performance but will make the interpreter extremely unstable. Segmentation faults are to be expected if this option is enabled. It is, however, guaranteed that a valid program in alisp will run correctly if these checks are disabled.
+
+- ~ENABLE_MTEL~ - if set to ~TRUE~ (default ~FALSE~), the project will be build with multi-threaded event loop. Usually the event loops runs on a single thread that does all of the asynchronous dispatching. With this option, multiple threads will be used to handle asynchronous events and callbacks.
+
+- ~TIME_CHECK_SAMPLES~ - this is an integer value (default 10) that signifies how many times should the performance test scripts should be ran in order to get a stable average items.
+
+* Targets
