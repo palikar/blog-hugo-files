@@ -4,8 +4,8 @@ author = ["Stanislav Arnaudov"]
 description = "Interpreted Lisp-language written in C++."
 date = 2020-02-20T00:00:00+01:00
 keywords = ["c++", "language", "lisp"]
-lastmod = 2020-05-27T22:55:07+02:00
-categories = ["c++"]
+lastmod = 2020-05-29T01:51:13+02:00
+categories = ["c++", "alisp"]
 draft = false
 weight = 100
 +++

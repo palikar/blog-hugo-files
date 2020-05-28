@@ -25,7 +25,7 @@
 #+HUGO_DRAFT: false
 #+KEYWORDS: c++ language lisp
 #+HUGO_TAGS:
-#+HUGO_CATEGORIES: c++
+#+HUGO_CATEGORIES: c++ alisp
 #+HUGO_WEIGHT: 100
 
 
