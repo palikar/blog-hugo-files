@@ -47,7 +47,6 @@ On Debian based systems, for minimal builds the package [[https://packages.debia
 sudo apt-get install build-essential
 #+END_SRC
 
-
 \\
 
 For more advanced builds, you'll need more things:
@@ -55,6 +54,13 @@ For more advanced builds, you'll need more things:
 sudo apt-get install valgrind gcov doxygen
 #+END_SRC
 [[https://www.doxygen.nl/][Doxygen]] is used to generate the documentation for the source, [[https://www.valgrind.org/][valgrind]] performs some run-time checks and [[https://gcc.gnu.org/onlinedocs/gcc/Gcov.html][gcov]].
+
+\\
+
+Optionally, the build setup can take advantage of [[https://ccache.dev/][ccache]] if you have on your system. This is a compiler cache that can reduce compilation times. For Debian systems, to install ccach, you can run:
+#+BEGIN_SRC sh
+sudo apt-get install ccache
+#+END_SRC
 
 \\
 
@@ -84,6 +90,13 @@ Optionally, after cloning you can checkout the project to any of the [[https://g
 
 * Options
 
+As shown, options are given when executing the cmake command. The format is ~-D<OPTION>=<VALUE>~. For example, ~DOPTION_1=TRUE~ sets the option ~OPTION_1~ to ~TRUE~.
+
+\\
+
+First we'll go over the project specific options. Those have been declared in the [[https://github.com/palikar/alisp/blob/master/CMakeLists.txt][CMakeList.txt]] file with the [[https://cmake.org/cmake/help/v3.13/command/option.html][option]] function of CMake. Next I'll also mention couple of other general CMake options that are commonly used.
+
+** Project specific options
 - ~LIBCPP~ - when compiling with clang, this option allows you to use llvm's implementation of the C++ standard library [[https://libcxx.llvm.org/ ][libc++]]. In certain situation, libc++ can improve the performance of a program and reduce the compilation time. For the majority of the development of Alisp, however, I've used GNU's standard library [[https://gcc.gnu.org/onlinedocs/libstdc++/][libstdc++]] and I haven't got any problems with it. If the ~LIBCPP~ option is set to ~TRUE~ (default ~FALSE~), libc++ will be used.
 
 - ~ENABLE_COVERAGE~ - if set to ~TRUE~ (default ~FALSE~), the project will be compiled with coverage flags (~--coverage -O0 -g~) and special make targets will be created that allow you to run coverage of the code ans generate nice HTML pages with the results.
@@ -129,8 +142,39 @@ Optionally, after cloning you can checkout the project to any of the [[https://g
 
 - ~DISABLE_RUN_TIME_CHECKS~ - if set to ~TRUE~ (default ~FALSE~), a lot of run-time checks (among which arity checks by function calling and type checks) will be removed from the code. This can potentially increase performance but will make the interpreter extremely unstable. Segmentation faults are to be expected if this option is enabled. It is, however, guaranteed that a valid program in alisp will run correctly if these checks are disabled.
 
-- ~ENABLE_MTEL~ - if set to ~TRUE~ (default ~FALSE~), the project will be build with multi-threaded event loop. Usually the event loops runs on a single thread that does all of the asynchronous dispatching. With this option, multiple threads will be used to handle asynchronous events and callbacks.
-
 - ~TIME_CHECK_SAMPLES~ - this is an integer value (default 10) that signifies how many times should the performance test scripts should be ran in order to get a stable average items.
 
-* Targets
+- ~ENABLE_MTEL~ - if set to ~TRUE~ (default ~FALSE~), the project will be build with multi-threaded event loop. Usually the event loops runs on a single thread that does all of the asynchronous dispatching. With this option, multiple threads will be used to handle asynchronous events and callbacks.
+
+
+** General Options To Keep in Mind
+
+- ~CMAKE_INSTALL_PREFIX~ - this is a path indicating where the compiled libraries and executable should be installed (copied to when everything is build) through ~make install~. On Linux systems this is usually ~/usr~ but I often change this to some local ~usr~ directory. Executable will be put in ~CMAKE_INSTALL_PREFIX/bin~, libraries in ~CMAKE_INSTALL_PREFIX/lib~ and header files in ~CMAKE_INSTALL_PREFIX/include/alisp~.
+
+- ~CMAKE_BUILD_TYPE~ - string variable indicating the type of the build that is to be build. It can be "Debug", "Release", "RelWithDebInfo" or "MinSizeRel". In most cases I use either "Debug" (debug information is compiled in) or "Release" (the compilation is optimized fully and there is no debug information).
+
+* Make Targets overview
+
+
+With the options being enplaned now, here I'll give a brief overview of all possible make targets. Those can be run after Cmake has executed, build files are ready and we can proceed to compilation and testing.
+
+- ~all~ - compile the project
+
+- ~test~ - run all of the tests.  The project has to be built with ~-DENABLE_TESTING=TRUE~
+
+- ~alisp_coverage_html~ - execute the tests, gather coverage information and generate a web site with the results. The project has to be built with ~-DENABLE_COVERAGE=TRUE~
+
+- ~alisp_coverage_xml~ - execute the tests, gather coverage information and generate a web site with the results. The project has to be built with ~-DENABLE_COVERAGE=TRUE~
+
+- ~doc~ - build the documentation of the source code
+
+- ~install~ - copy the compiled executable, libraries and public headers at the appropriate places.
+
+- ~package~ - package the project files with [[https://cmake.org/cmake/help/latest/module/CPack.html][CPack]]. This will generate [[https://en.wikipedia.org/wiki/Deb_(file_format)][.deb]] and .tar.gz files.
+
+- ~test_examples~ - execute all of the examples in the ~scripts~ directory. The project has to be built with ~-DBUILD_EXAMPLES=TRUE~
+
+- ~valgrind_checks~ - execute ~./bin/alisp_language_test~ with valgrind for all of the defined valgrind checks. The project has to be built with ~-DVALGRIND_CHECKS=TRUE~
+
+- ~timing_check~ - execute the scripts that test the performance of the interpreter.  The project has to be built with ~-DRUN_PERFORMANCE_TESTS=TRUE~
+
