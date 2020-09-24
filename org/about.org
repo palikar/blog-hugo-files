@@ -29,7 +29,7 @@
 
 * Formal CV
 
-A PDF of my real [[file:posts/files/cv.pdf][resume]].
+A PDF of my real [[https://github.com/palikar/resume/raw/master/cv.pdf][resume]].
 
 
 * My assigned character
@@ -55,48 +55,47 @@ As previously implied, the delusion I've chosen to believe in is that I'll do CS
     
    As much as I loved AI, I only had the opportunity to have the time and necessity to learn about all the cool tools that exist in the python ecosystem that enable you to make awesome machine learning and AI applications. Libraries and tool-kits as /numpy/, /SciKit-learn/, /Tensorflow/, /Keras/, /Eward/... etc.
 
-2. Computer Graphics/Game engine design - as every naive young boy at one point in my life I wanted to make games for a living. Unfortunately, I was also kinda smart enough to start doing something even thou I had no idea what was I doing. The first engines that I've "used" were Unity, Unreal Engine 3 and... Macromedia Studio 8. Myeah, that last one is a thing that existed and it's not game engine at all but hell, I was pretty much making a flash game on it. Over the years my focus shifted and transitioned to programming but my interest in games stayed. Thanks to that, at some point I picked up a little OpenGL, a little general 2D/3D Rendering and concepts and a good amount of making a rudimentary engine that can run a "game". At university, I took a course in Computer Graphics where I learned a whole lot of other interesting topics such as ray tracing, realistic image generation, seep-up structures, colors, and others. As far as I'm concerned - I still find everything in the subject incredibly exciting.
+2. Computer Graphics/Game engine design - as every naive young boy at one point in my life I wanted to make games for a living. Unfortunately, I was also kinda smart enough to start doing something even thou I had no idea what was I doing. The first engines that I've "used" were Unity, Unreal Engine 3 and... Macromedia Studio 8. Myeah, that last one is a thing that existed and it's not game engine at all but hell, I was pretty much making a flash game on it. Over the years my focus shifted and transitioned to programming but my interest in games stayed. Thanks to that, at some point I picked up a little OpenGL, a little general 2D/3D Rendering and concepts and a good amount of making a rudimentary engine that can run a "game". At university, I took a course in Computer Graphics where I learned a whole lot of other interesting topics such as ray tracing, realistic image generation, seep-up structures, colors, and others. I still find everything in the subject incredibly exciting. In 2020 I decided to work on a simple [[https://github.com/palikar/anything][Game Engine]] project of mine where I delve a little bit deeper in game programming concepts like materials, animation systems, particle systems, instanced rendering, and entity component system among others.
+
 3. EMACS! [[https://www.gnu.org/software/emacs/][EMACS]] is everything. Emacs is an operating system, lacking a decent text editor. At my first job, I saw my supervisor using it and then a guy told me not to touch that thing ever. But I did! And I hated it! It was so difficult and unintuitive. Then I forced myself to use it because every other editor/IDE was a pain to use when programming in C++. I spend a good couple of days configuring Emacs and... I made it usable. Then I started investing more and more and it became second nature. An extension of my hands, if you will. And now I am writing this blog with Emacs. Be sure to check out my configuration file [[https://github.com/palikar/dotfiles/blob/master/.emacs.d/myinit.org][here]].
+
 4. Web Development - it's one of the things where you learn even that you don't want. I am not proud of myself with this one but hey, it impresses the employers. I have my fair share with AnuglarJS, VueJS, Bootstrap, Foundation, JQuery, ExpressJS, and other little and big JavaScript libraries. On the back-end side, a have a little bit of experience with [[http://flask.pocoo.org/][Flask]]
-5. Some small interests I've picked in recent times
+
+5. Language design - the idea of creating my own programming language has stuck with me ever since I learned about the basics of compiler design in university. More recently, I was somewhat inspired by [[https://en.wikipedia.org/wiki/Jonathan_Blow][Jonathan Blow]] and his work on the [[https://github.com/BSVino/JaiPrimer/blob/master/JaiPrimer.md][Jai Programming language]] as well as the source code of [[https://github.com/lefticus][Jason Turner's]] [[https://github.com/ChaiScript/ChaiScript/][ChaiScript]]. This has urged me to start working on [[https://github.com/palikar/alisp][Alisp]], my biggest project so far and the thing I am most proud of. It is a lisp based programming language written in C++ and its development has helped me learn a ton on how interpreted languages work, what problems arise when you work on them, and how to use C++ effectively among many other things. You can checkout the [[https://github.com/palikar/alisp][Github repository]] or the [[https://alisp.readthedocs.io/][website]] of the project for more information.
+
+6. Some small interests I've picked in recent times
    - Operating systems in general, Linux in general (Debian for life!) - It _really_ help to know what is happening on OS-level when writing c++.
    - CPU-Design and what happens in the computer of relatively low level - a lot of effects that happen on a transistor-ish level are exploitable in code, if you know they exist, of course.
-   - Compiler Design - that one course at uni! Compilers are technological marvels, lexers and parser are awesome.
    - Functions optimization, Non-linear optimization, Computational linear algebra, Numerical analysis. In my defense being a bigger nerd doesn't really hurt your career.
    - Lambda calculus - a computational model that has a completely different way of reasoning about things. I love it. I fund the whole idea interesting, "fresh", mind-boggling and.....just different and unconventional.
 
 
 * Supported Languages
-- Java, C++, Python, HTML/CSS/JavaScript, ELisp
-- Haskell, Prolog
+- Java, C++, Python, HTML/CSS/JavaScript, ELisp, Go
 - PHP, Scala, Processing
-
+- Haskell, Prolog
 
 * Technologies
-- git
 - Tensorflow, SciKit-learn, Pandas, Jupytor, PyTorch
+- OpenGL 4, GLFW
+- ROS, RabbitMQ
 - Cmake, make, g++, Robot Operating System(ROS), RabbitMQ, OpenCV
-- JavaFX/Java-Swing, JUnit, Maven 
+- JavaFX/Java-Swing, JUnit, Maven
 - Frontend(AngularJS, VueJS), Backend(NodeJS, Express, Flask), Websockets, Karma, Jasmine, SQL
-- LaTeX, [[https://orgmode.org/][Emacs Org-mode]], UML
-
-
-* Current work
-- Working as a research assistant at [[https://www.fraunhofer.de/en.html][Fraunhofer IOSB]]. I deal mainly with "intelligent systems".
-- Right now I am taking part in a research-oriented practical course at my University. The goal is to write a research paper and publish it in two semesters. My work is dealing with the application of neural networks in the context of numerical simulations. 
+- git, LaTeX, [[https://orgmode.org/][Emacs Org-mode]], UML
 
 
 * Previous work
+- For three years I was working as a research assistant at [[https://www.fraunhofer.de/en.html][Fraunhofer IOSB, Karlsruhe]]. I dealt mainly with "intelligent systems" with application in different production industries. During my time I worked on projects for Daimler, Bosch and Porsche.
 
-- My Bachelor thesis had to do with Machine Learning, stochastic probability models (Bayesian Neural Networks and Mixture of Gaussian Process Experts) and data from pollution sensors. One of my supervisors currently working in [[https://www.h-its.org/en/][HITS]].
+- In my second and third semester of my masters program I took part in a research-oriented practical course at my University. The goal was to write a research paper and publish it in two semesters. My work is dealing with the application of neural networks in the context of numerical simulations. The project can be found [[https://github.com/palikar/flow_predict][here]]
 
-- At Uni I took a Practical Course in Computational Geometry about drawing curves (with BSplines) in the plane, doing tricks with them (finding a parallel curve, creating a closed curve, interpolating curve) and extending those to surfaces(tensor product surfaces)
+- My Bachelor thesis had to do with Machine Learning, stochastic probability models (Bayesian Neural Networks and Mixture of Gaussian Process Experts) and data from pollution sensors. One of my supervisors is currently working in [[https://www.h-its.org/en/][HITS]]. The project can be found [[https://github.com/palikar/PollutionDev][here]]
 
-- A practical course in software development - I and five other students, developing a Software product (a Web App) following the waterfall methodology (waterfall can be the better choice when you are new to everything)
+- At Uni I took a Practical Course in Computational Geometry about drawing curves (with BSplines) in the plane, doing tricks with them (finding a parallel curve, creating a closed curve, interpolating curve) and extending those to surfaces(tensor product surfaces). 
 
-- Algorithms Teaching assistant in [[https://www.kit.edu/][KIT]] - teaching basic data structures, algorithms for sorting, graphs and spanning trees, complexity, algorithm analysis, and algorithm engineering. Also, again, checking homework.
+- A practical course in software development - I and five other students, developing a Software product (a Web App) following the waterfall methodology (waterfall can be the better choice when you are new to everything). 
 
-- Linear Algebra Teaching assistant in [[https://www.kit.edu/][KIT]] - teaching a bunch of people about basic mathematical notation, group theory, rings, bodies, vector spaces, and some other things. Also checking the homework of said people.
+- Algorithms Teaching assistant at [[https://www.kit.edu/][KIT]] - teaching basic data structures, algorithms for sorting, graphs and spanning trees, complexity, algorithm analysis, and algorithm engineering. Also, again, checking homework.
 
-
-
+- Linear Algebra Teaching assistant at [[https://www.kit.edu/][KIT]] - teaching a bunch of people about basic mathematical notation, group theory, rings, bodies, vector spaces, and some other things. Also checking the homework of said people.
